@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.plantation.AddPlantation">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/txtFarmerRegistration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/appColor"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Plantation"
+                    android:textSize="50dp"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txtFarmerRegistration"
+                    android:orientation="vertical"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="18dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Plot Id"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+
+                        <TextView
+                            android:id="@+id/txtPlotId"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:backgroundTint="@color/greyBg"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Planting Date"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+                        <TextView
+                            android:id="@+id/txtPlantingDate"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:text="Crop"
+                            android:textSize="30sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spCrop"
+                            style="@style/CustomspinnersPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="montserrat_regular"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Plant Type"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spPlantType"
+                            style="@style/CustomspinnersPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="montserrat_regular"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Plant SubType"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spPlantSubType"
+                            style="@style/CustomspinnersPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="montserrat_regular"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:text="Variety"
+                            android:textSize="30sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spVariety"
+                            style="@style/CustomspinnersPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="montserrat_regular"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Cultivated Area"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+
+                        <TextView
+                            android:id="@+id/txtCultivatedArea"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Demo plot area"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtDemoPlotArea"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Reported area"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtReportedArea"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:text="Agremented area"
+                            android:textSize="30sp" />
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtAgreementedArea"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Net area"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtNetArea"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_12sdp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Measure area"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtMeasureArea"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_12sdp" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:text="Agreed Ton"
+                            android:textSize="30sp" />
+
+                        <TextView
+                            android:id="@+id/txtAgreedTon"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:backgroundTint="@color/greyBg"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:text="Estimated Ton"
+                            android:textSize="30sp" />
+
+                        <TextView
+                            android:id="@+id/txtEstimatedTon"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:backgroundTint="@color/greyBg"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Spacing"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spSpacing"
+                            style="@style/CustomspinnersPadding5dp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="montserrat_regular"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Setts Type"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="30sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spSettsType"
+                            style="@style/CustomspinnersPadding5dp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="montserrat_regular"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:text="Seed material used"
+                            android:textSize="30sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spSeedMaterialUsed"
+                            style="@style/CustomspinnersPadding5dp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/rectangular_box"
+                            android:fontFamily="montserrat_regular"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/txtSave"
+                android:layout_gravity="center"
+                android:layout_margin="20dp"
+                android:padding="20dp"
+                android:background="@drawable/btn_bg_corner_orange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save"
+                android:textSize="40sp" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.farmerPlot.farmer.ViewFarmerListActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtFarmerRegistration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/appColor"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Doc-10 plots(Reported)"
+            android:textSize="50dp" />
+
+        <TextView
+            android:id="@+id/txtAddPlotOffer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:background="@color/appColor"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:text="Add Offer"
+            android:textSize="25sp"
+            android:visibility="gone" />
+
+
+
+    </RelativeLayout>
+
+
+    <androidx.appcompat.widget.SearchView
+        android:visibility="gone"
+        android:id="@+id/svFarmerName"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_23sdp"
+        android:background="@drawable/bg_ui_white_box1"
+        android:fontFamily="@font/montserrat"
+        android:outlineAmbientShadowColor="@color/appColor"
+        android:outlineSpotShadowColor="@color/appColor"
+        app:queryHint="Search here"
+        app:searchIcon="@drawable/search_icon"
+        >
+
+    </androidx.appcompat.widget.SearchView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="20dp"
+        android:id="@+id/rvFarmer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

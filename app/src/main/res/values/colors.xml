@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#20c997</color>
+    <color name="colorPrimaryDark">#20c997</color>
+    <color name="colorAccent">#20c997</color>
+    <color name="purple_200">#20c997</color>
+    <color name="purple_500">#20c997</color>
+    <color name="purple_700">#20c997</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+<!--    <color name="appColor">#3A3A3A</color>-->
+    <color name="buttonBg">#275618</color>
+    <color name="greenCardBg">#275618</color>
+    <color name="buttonGreyed">#999999</color>
+    <color name="btnSubmit">#474747</color>
+    <color name="appColor">#20c997</color>
+
+    <color name="bfil_green">#3f8008</color>
+    <color name="bfil_orange">#fe5722</color>
+    <color name="bfil_blue">#3F51B5</color>
+    <color name="bfil_blue_overlay">#bb3F51B5</color>
+
+    <color name="error">#C93B48</color>
+    <color name="success">#0F9795</color>
+    <color name="alert">#CC7832</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="dark_red">#C93B48</color>
+    <color name="notification_icon_bg_color">#FF0000</color>
+    <color name="card_bg_color">#FFFFFF</color>
+    <!-- Dialog colors -->
+    <color name="colorRed">#ff3943</color>
+    <color name="colorRedLight">#E57373</color>
+    <color name="colorRedDark">#801b20</color>
+    <color name="colorYellow">#FFD600</color>
+    <color name="colorYellowLight">#FFFF8D</color>
+    <color name="colorYellowDark">#F9A825</color>
+    <color name="colorBlue">#1A237E</color>
+    <color name="colorBlueLight">#8C9EFF</color>
+    <color name="colorBlueDark">#1A237E</color>
+    <color name="colorGreenLight">#abffc0</color>
+    <color name="colorGreen">#247b37</color>
+    <color name="color_orange_bg">#0C8480</color>
+    <color name="colorGreen1">#3eb959</color>
+    <color name="dark_white">#ffffff</color>
+    <color name="colorDialogPrimary">#848cb7</color>
+    <color name="colorDialogPrimaryDark">#6d749f</color>
+    <color name="colorDialogAccent">#ff4081</color>
+    <color name="ce1fbfd">#e1fbfd</color>
+    <color name="app_bg">#f8f8f8</color>
+    <color name="c2899c0">#2899c0</color>
+    <color name="cd82c1c">#d82c1c</color>
+    <color name="c11b86b">#11b86b</color>
+    <color name="cf1ab00">#f1ab00</color>
+    <color name="cfceecc">#fceecc</color>
+    <color name="colorGreyDark">#8C8A8A</color>
+    <color name="gray_background">#efeded</color>
+    <color name="color_black">#000D02</color>
+    <color name="color_orange">#ff7000</color>
+    <color name="color_text_gray">#4f4d4e</color>
+    <color name="color_icon_background">#f6f6f6</color>
+    <color name="color_red_text">#d92c1b</color>
+    <color name="title_color_label">#222222</color>
+    <color name="slight_black_color">#222222</color>
+    <color name="colot_text_label">#222222</color>
+    <color name="enabled_color">#777777</color>
+    <color name="yellowish_color">#F3852A</color>
+    <color name="primary">#275618</color>
+    <color name="gray">#434343</color>
+    <color name="greyBg">#707070</color>
+    <color name="greyCardBg">#999999</color>
+    <color name="colorGrey">#dddddd</color>
+</resources>

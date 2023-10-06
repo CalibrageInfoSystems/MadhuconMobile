@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.trst01.locationtracker">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.media.action.IMAGE_CAPTURE" />
+    <uses-permission
+        android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.android.hardware.location.gps" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
+    <application
+        android:name=".dagger.App"
+        android:allowBackup="true"
+        android:hardwareAccelerated="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.LocationTracker"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
+        <activity
+            android:name=".GuarantorListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WeedicideActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BioFertilizerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PestsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DiseaseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".NetAreaDetailsGrowthMonitoringActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MeasuredDetailsGrowthMonitoringActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportedDetails1Details2Activity"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".AgreementedAreaActivity" -->
+        <!-- android:exported="false" /> -->
+        <!-- <activity -->
+        <!-- android:name=".ReportedAreaActivity" -->
+        <!-- android:exported="false" /> -->
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".MastersResponseDTO" -->
+        <!-- android:exported="false" /> -->
+        <activity
+            android:name=".activity.farmerPlot.farmer.ViewFarmerListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.plantation.AddPlantation"
+            android:exported="false" />
+        <activity
+            android:name=".activity.farmerPlot.plot.ViewPlotActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.farmerPlot.farmer.ViewFarmerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.DashBoardActivity"
+            android:keepScreenOn="true"
+            android:exported="false" />
+        <!--
+             TODO: Before you run your application, you need a Google Maps API key.
+
+             To get one, follow the directions here:
+
+                https://developers.google.com/maps/documentation/android-sdk/get-api-key
+
+             Once you have your API key (it starts with "AIza"), define a new property in your
+             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
+             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBESyc3qsmfvBaErpDx2FSHKu4KNnVBo18" /> <!-- //network -->
+        <receiver
+            android:name=".helper.NetworkReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver> <!-- service -->
+        <!-- <service android:name=".areacalculator.LocationService" /> -->
+        <service
+            android:name=".services.FaLogTracking.FalogService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.trst01.locationtracker.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths"
+                tools:replace="android:resource" />
+        </provider>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/title_activity_maps">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.farmerPlot.plot.ViewFarmerPlotListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ChooseFarmerPlotActivity"
+            android:exported="false" />
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.plantation.ChoosePlantationActivity" />
+        <activity android:name=".activity.plantation.PlotOfferActivity" />
+        <activity android:name=".services.areacalculator.FieldCalculatorActivity" />
+        <activity android:name=".activity.plantation.ViewStatusPlotListActivity" />
+        <activity android:name=".activity.plantation.ViewStatusPlotOfferListActivity" />
+        <activity android:name=".activity.plantation.ReportedAreaActivity" />
+        <activity android:name=".activity.plantation.AgreementedAreaActivity" />
+        <activity android:name=".activity.plantation.ViewStatusPlotOfferReportedAreaListActivity" />
+        <activity android:name=".activity.plantation.ViewFarmerListPlantationActivity" />
+        <activity android:name=".activity.growthMonitoring.ReportedDetailsGrowthMonitoringActivity" />
+        <activity android:name=".activity.growthMonitoring.AgreementedDetailsGrowthMonitoringActivity" />
+        <activity android:name=".activity.growthMonitoring.MeasuredDetailsGrowthMonitoringActivity" />
+        <activity android:name=".activity.growthMonitoring.NetAreaDetailsGrowthMonitoringActivity" />
+        <activity android:name=".activity.growthMonitoring.DiseaseActivity" />
+        <activity android:name=".activity.growthMonitoring.PestsActivity" />
+        <activity android:name=".activity.growthMonitoring.WeedicideActivity" />
+        <activity android:name=".activity.growthMonitoring.ChooseGrowthMonitoringActivity" />
+        <activity android:name=".activity.growthMonitoring.BioFertilizerActivity" />
+        <activity android:name=".activity.complains.ComplainListDetailsActivity" />
+        <activity android:name=".activity.complains.ComplainListsActivity" />
+        <activity android:name=".activity.complains.ComplainFormActivity" />
+        <activity android:name=".activity.plantation.GuarantorListActivity" />
+    </application>
+
+</manifest>

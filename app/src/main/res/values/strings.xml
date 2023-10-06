@@ -1,0 +1,84 @@
+<resources>
+    <string name="app_name">MSPL</string>
+    <string name="title_activity_maps">MSPL</string>
+    <string name="EMPTY_ERROR">This field cannot be empty</string>
+
+    <string name="AADHAAR_TAG">AADHAAR</string>
+    <string name="AADHAAR_LENGTH">12</string>
+    <string name="AADHAAR_LENGTH_ERROR">Aadhaar Number should have 12 digits</string>
+    <string name="AADHAAR_INVALID_ERROR">Invalid Aadhaar Number</string>
+
+    <string name="VID_TAG">VID</string>
+    <string name="VID_LENGTH">16</string>
+    <string name="VID_LENGTH_ERROR">VID should have 16 digits</string>
+    <string name="VID_INVALID_ERROR">Invalid VID</string>
+    <string name="aadhar">Aadhar</string>
+    <string name="pin_code">Pin Code</string>
+    <string name="CLIENTCODE_TAG">CLIENTCODE</string>
+    <string name="CLIENTCODE_LENGTH">16</string>
+    <string name="CLIENTCODE_LENGTH_ERROR">Client Code should have 16 digits</string>
+    <string name="CLIENTCODE_INVALID_ERROR">Invalid Client Code</string>
+
+    <string name="AADHAAR_4_TAG">AADHAAR_4</string>
+    <string name="AADHAAR_4_LENGTH">4</string>
+    <string name="AADHAAR_4_LENGTH_ERROR">Enter last 4 digits</string>
+    <string name="AADHAAR_4_INVALID_ERROR">Invalid Aadhaar Number</string>
+
+    <string name="MOBILE_TAG">MOBILE</string>
+    <string name="MOBILE_LENGTH">10</string>
+    <string name="MOBILE_LENGTH_ERROR">Mobile Number should have 10 digits</string>
+    <string name="MOBILE_INVALID_ERROR">Invalid Mobile Number</string>
+
+    <string name="PINCODE_TAG">PINCODE</string>
+    <string name="PINCODE_LENGTH">6</string>
+    <string name="PINCODE_LENGTH_ERROR">Pincode should have 6 digits</string>
+
+    <string name="MANDATORY_TAG">MANDATORY</string>
+    <string name="MANDATORY_LENGTH">0</string>
+    <string name="MANDATORY_LENGTH_ERROR">This field cannot be empty</string>
+
+    <string name="PANCARD_TAG">PANCARD</string>
+    <string name="PANCARD_LENGTH">10</string>
+    <string name="PANCARD_LENGTH_ERROR">Pancard Number should have 10 letters</string>
+    <string name="PANCARD_INVALID_ERROR">Invalid Pancard Number</string>
+
+    <string name="AGE_TAG">AGE</string>
+    <string name="AGE_LENGTH">2</string>
+    <string name="AGE_LENGTH_ERROR">should be at least 18 years and maximum age limit is 75 years</string>
+    <string name="AGE_INVALID_ERROR_18">Age must be greater than 18 years</string>
+    <string name="AGE_INVALID_ERROR_75">Age must be less than 75 years</string>
+
+    <string name="MIN_3_TAG">"MIN_3</string>
+    <string name="MIN_3_LENGTH">3</string>
+    <string name="MIN_3_LENGTH_ERROR">Minimum 3 characters required</string>
+
+    <string name="str_Ok">OK</string>
+    <string name="Print">Print</string>
+    <string name="str_yes">Yes</string>
+    <string name="str_no">No</string>
+
+
+    <string name="positive_popup_text_default">Successfully Completed</string>
+    <string name="positive_popup_title_default">Success ! </string>
+    <string name="negative_popup_text_default">Something went wrong</string>
+    <string name="negative_popup_title_default">Failure !</string>
+    <string name="alert_popup_title_default">Alert !</string>
+    <string name="alert_popup_text_default">Something went wrong</string>
+    <string name="confirmation_popup_title_default">Confirmation !</string>
+    <string name="confirmation_popup_text_default">Are you sure ?</string>
+
+    <string name="district">District</string>
+    <string name="comment_hint">Type Your Comment Here</string>
+    <string name="loading">master sync in progress please wait</string>
+    <string name="save">Save</string>
+    <string name="colon">:</string>
+
+    <string name="Reset">Reset</string>
+    <string name="Record">Record</string>
+    <string name="GPS_Points">GPS Points</string>
+    <string name="Distance">Distance</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="content_desc">content_desc</string>
+
+</resources>

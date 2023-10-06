@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    <declare-styleable name="CustomTextView">-->
+<!--        <attr name="font_typeface" format="enum">-->
+<!--            <enum name="OpenSans-Light" value="0" />-->
+<!--            <enum name="OpenSans-Medium" value="1" />-->
+<!--            <enum name="OpenSans-Bold" value="2" />-->
+<!--            <enum name="OpenSans-BoldItalic" value="3" />-->
+<!--            <enum name="OpenSans-ExtraBold" value="4" />-->
+<!--            <enum name="OpenSans-ExtraBoldItalic" value="5" />-->
+<!--            <enum name="OpenSans-Italic" value="6" />-->
+<!--            <enum name="OpenSans-LightItalic" value="7" />-->
+<!--            <enum name="OpenSans-Regular" value="8" />-->
+<!--            <enum name="OpenSans-SemiBold" value="9" />-->
+
+<!--        </attr>-->
+
+
+<!--    </declare-styleable>-->
+<!--    <declare-styleable name="CustomEditText">-->
+
+
+<!--        <attr name="e_font_typeface" format="enum">-->
+<!--            <enum name="OpenSans-Light" value="0" />-->
+<!--            <enum name="OpenSans-Medium" value="1" />-->
+<!--            <enum name="OpenSans-Bold" value="2" />-->
+<!--            <enum name="OpenSans-BoldItalic" value="3" />-->
+<!--            <enum name="OpenSans-ExtraBold" value="4" />-->
+<!--            <enum name="OpenSans-ExtraBoldItalic" value="5" />-->
+<!--            <enum name="OpenSans-Italic" value="6" />-->
+<!--            <enum name="OpenSans-LightItalic" value="7" />-->
+<!--            <enum name="OpenSans-Regular" value="8" />-->
+<!--            <enum name="OpenSans-SemiBold" value="9" />-->
+
+<!--        </attr>-->
+
+<!--    </declare-styleable>-->
+
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
+
+
+</resources>

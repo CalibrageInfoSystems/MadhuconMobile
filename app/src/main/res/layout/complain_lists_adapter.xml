@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/rl_complain_details"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:layout_margin="@dimen/_5sdp"
+    app:cardElevation="@dimen/_10sdp"
+    app:cardCornerRadius="@dimen/_10sdp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:background="@color/transparent"
+        android:elevation="@dimen/_10sdp"
+        app:cardCornerRadius="@dimen/_5sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:padding="10dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ll_status1"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.4"
+                    android:maxLines="1"
+                    android:text="Complaint Id"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.9"
+                    android:maxLines="4"
+                    android:text="@string/colon"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tv_complain_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight=".7"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center|start"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colot_text_label" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ll_status11"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.4"
+                    android:maxLines="1"
+                    android:text="LogBook No "
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.9"
+                    android:maxLines="4"
+                    android:text="@string/colon"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tv_logbook_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight=".7"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center|start"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colot_text_label" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone"
+                android:gravity="center"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.2"
+                    android:maxLines="1"
+                    android:id="@+id/txt_from_namehead_status1"
+                    android:text="Complaint type"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.9"
+                    android:maxLines="4"
+                    android:text="@string/colon"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tv_complain_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight=".9"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center|start"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colot_text_label" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.2"
+                    android:maxLines="1"
+                    android:text="Complaint Status"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.9"
+                    android:maxLines="4"
+                    android:text="@string/colon"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tv_complain_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight=".9"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center|start"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colot_text_label" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.4"
+                    android:maxLines="1"
+                    android:text="Comments"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.9"
+                    android:maxLines="4"
+                    android:text="@string/colon"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tv_comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight=".7"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center|start"
+                    android:textSize="@dimen/_10sdp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colot_text_label" />
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.2"
+                    android:maxLines="1"
+                    android:text="Display images"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.9"
+                    android:maxLines="4"
+                    android:text="@string/colon"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/imageview_complain_first"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight=".9"
+                    android:fontFamily="serif"
+                    android:gravity="center|start"
+                    android:textColor="@color/colorGrey"
+                    android:contentDescription="@string/content_desc" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.2"
+                    android:maxLines="1"
+                    android:text="Display images"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start"
+                    android:layout_weight="1.9"
+                    android:maxLines="4"
+                    android:text="@string/colon"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:textColor="@color/title_color_label"
+                    android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/imageview_complain_second"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_50sdp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight=".9"
+                    android:textSize="@dimen/_10sdp"
+                    android:fontFamily="serif"
+                    android:gravity="center|start"
+                    android:textColor="@color/colorGrey"
+                    android:contentDescription="@string/content_desc" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

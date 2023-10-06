@@ -1,0 +1,984 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SettingsActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!--header-->
+            <RelativeLayout
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35sdp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:src="@drawable/ic_baseline_arrow_back_24"
+                    android:tintMode="@color/white"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/ccx_logo_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_35ssp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:src="@drawable/img"
+                    android:visibility="visible"
+                    tools:ignore="RtlCompat" />
+
+
+                <TextView
+                    android:id="@+id/txtVersion"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="version : 08.11.22"
+                    android:textColor="#0C8480"
+                    android:textSize="@dimen/_10ssp" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/img_cancel_refresh"
+                    android:layout_width="@dimen/_16sdp"
+                    android:layout_height="@dimen/_16sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:src="@drawable/ic_baseline_arrow_back_24" />
+
+
+                <TextView
+                    android:id="@+id/txtRefreshData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Refresh Data"
+                    android:textColor="#0C8480"
+                    android:textSize="@dimen/_10ssp" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:fontFamily="@font/montserrat_medium"
+                android:gravity="center_horizontal"
+                android:text="Refresh Details"
+                android:textColor="#0C8480"
+                android:textSize="@dimen/_14sdp"
+                android:visibility="gone" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_15ssp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_15ssp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Farmer"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txt_farmer_not_sync_count"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Document"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txt_doc_not_sync_count"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Bank"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txt_bank_not_sync_count"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Plot"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txt_plot_not_sync_count"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Geo Boundaries"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtGeoboundariesNotSync"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Field Tracking"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtFiledTracking"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Plot Offer"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtPlotOffer"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="D10(Reported)"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtD10"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="D20(Measured)"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtD20"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="D30(Agreemented)"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtD30"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/CustomTextViewPadding5dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Growth Monitoring D10"
+                                android:textColor="@color/title_color_label"
+                                android:textSize="@dimen/_8ssp" />
+
+
+                            <TextView
+                                android:id="@+id/txtGMD10"
+                                style="@style/CustomEditTextPadding5dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_weight="1"
+                                android:enabled="false"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:paddingStart="@dimen/_6ssp"
+                                android:tag="@string/MANDATORY_TAG"
+                                android:text="0"
+                                android:textColor="@color/enabled_color"
+                                android:textCursorDrawable="@null"
+                                android:textSize="@dimen/_8ssp" />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/CustomTextViewPadding5dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Growth Monitoring D20"
+                                android:textColor="@color/title_color_label"
+                                android:textSize="@dimen/_8ssp" />
+
+
+                            <TextView
+                                android:id="@+id/txtGMD20"
+                                style="@style/CustomEditTextPadding5dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_weight="1"
+                                android:enabled="false"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:paddingStart="@dimen/_6ssp"
+                                android:tag="@string/MANDATORY_TAG"
+                                android:text="0"
+                                android:textColor="@color/enabled_color"
+                                android:textCursorDrawable="@null"
+                                android:textSize="@dimen/_8ssp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/CustomTextViewPadding5dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Growth Monitoring D30"
+                                android:textColor="@color/title_color_label"
+                                android:textSize="@dimen/_8ssp" />
+
+
+                            <TextView
+                                android:id="@+id/txtGMD30"
+                                style="@style/CustomEditTextPadding5dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_weight="1"
+                                android:enabled="false"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:paddingStart="@dimen/_6ssp"
+                                android:tag="@string/MANDATORY_TAG"
+                                android:text="0"
+                                android:textColor="@color/enabled_color"
+                                android:textCursorDrawable="@null"
+                                android:textSize="@dimen/_8ssp" />
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                style="@style/CustomTextViewPadding5dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_weight="0.6"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:text="Growth Monitoring D40"
+                                android:textColor="@color/title_color_label"
+                                android:textSize="@dimen/_8ssp" />
+
+
+                            <TextView
+                                android:id="@+id/txtGMD40"
+                                style="@style/CustomEditTextPadding5dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_weight="1"
+                                android:enabled="false"
+                                android:fontFamily="@font/montserrat_regular"
+                                android:paddingStart="@dimen/_6ssp"
+                                android:tag="@string/MANDATORY_TAG"
+                                android:text="0"
+                                android:textColor="@color/enabled_color"
+                                android:textCursorDrawable="@null"
+                                android:textSize="@dimen/_8ssp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Growth Monitoring Fertilizers"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtFertilizers"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Growth Monitoring Pests"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtPests"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Growth Monitoring Weedicides"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtWeedicides"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Growth Monitoring Diseases"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtDiseases"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Complaints"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtComplaints"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Growth Monitoring"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtGM"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="0.6"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Plantation"
+                            android:textColor="@color/title_color_label"
+                            android:textSize="@dimen/_8ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txtPlantation"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:enabled="false"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:paddingStart="@dimen/_6ssp"
+                            android:tag="@string/MANDATORY_TAG"
+                            android:text="0"
+                            android:textColor="@color/enabled_color"
+                            android:textCursorDrawable="@null"
+                            android:textSize="@dimen/_8ssp" />
+
+                    </LinearLayout>
+
+                    <!-- buttons -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10ssp"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/txt_send_data_to_server"
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_bg_corner_orange"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:text="Send Data To Server"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_10ssp" />
+
+                        <TextView
+
+                            android:id="@+id/txt_master_sync"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/yellowish_border"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:text="Master Sync"
+                            android:textColor="@color/enabled_color"
+                            android:textSize="@dimen/_10ssp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_15sdp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txt_get_data_from_server"
+                            style="@style/CustomTextViewPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/btn_bg_corner_orange"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:text="Get Data From Server"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_10ssp" />
+
+
+                        <TextView
+                            android:id="@+id/txt_upload_database"
+                            style="@style/CustomEditTextPadding5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="1"
+                            android:background="@drawable/yellowish_border"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:gravity="center"
+                            android:text="Upload Database"
+                            android:textColor="@color/enabled_color"
+                            android:textSize="@dimen/_10ssp" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_gravity="end"
+                        android:id="@+id/txtLogOut"
+                        android:layout_marginBottom="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="@dimen/_20sdp"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:padding="5dp"
+                        android:text="Logout"
+                        android:textColor="#0C8480"
+                        android:textSize="@dimen/_10ssp" />
+
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</RelativeLayout>
