@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,6 +36,9 @@ import com.trst01.locationtracker.services.areacalculator.FieldCalculatorActivit
 import com.trst01.locationtracker.uiLibrary.dialogs.ConfirmationDialog;
 import com.trst01.locationtracker.view_models.AppViewModel;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -329,6 +333,47 @@ public class ViewStatusPlotListActivity extends BaseActivity implements HasSuppo
 //                Intent intent = new Intent(DashBoardActivity.this, ChooseFarmerPlotActivity.class);
             startActivity(intent);
         } else {
+
+            Log.e("===========plot Report created date",farmer.get(position).getCreatedDate() +farmer.get(position).getFarmerCode() );
+            String inputDate = farmer.get(position).getCreatedDate();
+
+            // Define a SimpleDateFormat for parsing the input date
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            // Get the current date
+            Date currentDate = new Date();
+
+            // Define a SimpleDateFormat for parsing the formatted date
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            Date parsedDate;
+            Date date;
+
+            try {
+                date = inputFormat.parse(inputDate);
+
+                // Define a SimpleDateFormat for formatting the date in the desired format
+                SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+                // Format the date as "yyyy-MM-dd"
+                String formattedDate = outputFormat.format(date);
+
+                System.out.println("Formatted Date: " + formattedDate);
+                // Parse the formatted date string
+                parsedDate = dateFormat.parse(formattedDate);
+
+                // Calculate the time difference in milliseconds
+              //  long timeDifferenceMillis = parsedDate.getTime() - currentDate.getTime();
+                // Calculate the difference in days
+                long differenceInMillis = parsedDate.getTime() - currentDate.getTime();
+                int differenceInDays = (int) (differenceInMillis / (24 * 60 * 60 * 1000));
+
+                // Convert the time difference to days
+
+                System.out.println("Days Difference: " + differenceInDays);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
         Intent intent = new Intent(ViewStatusPlotListActivity.this, FieldCalculatorActivity.class);
         intent.putExtra("plot",farmerTable.getPlotNo());
         intent.putExtra("seasonCode",farmerTable.getSeasonCode());

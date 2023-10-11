@@ -33,6 +33,7 @@ import com.trst01.locationtracker.database.entity.DiseaseTable;
 import com.trst01.locationtracker.database.entity.DistrictTable;
 import com.trst01.locationtracker.database.entity.DivisionTable;
 import com.trst01.locationtracker.database.entity.FertilizerTable;
+import com.trst01.locationtracker.database.entity.KeyValue;
 import com.trst01.locationtracker.database.entity.LookUpDropDownDataTable;
 import com.trst01.locationtracker.database.entity.LookupDtlTable;
 import com.trst01.locationtracker.database.entity.LookupHDRTable;
@@ -63,7 +64,7 @@ import com.trst01.locationtracker.database.entity.WeedTable;
         LookupHDRTable.class, PlotExistOnTable.class, AddPlotOfferTable.class, ResonForNotPlantingTable.class, AddPlantationTable.class, AddD20Table.class,
         AddD10Table.class, AddD30Table.class,WarehouseTable.class, WeedTable.class, AddFarmerTable.class, AddPlotTable.class, UserSectionTable.class,
         AddGeoBoundariesTrackingTable.class, D20FertilizerTable.class, D20DiseaseTable.class, D20WeedTable.class, D20PestTable.class,
-        SavingComplainImagesTable.class, AddComplaintsDetailsTable.class, LookUpDropDownDataTable.class, AddGrowthMonitoringTable.class }, version = DB_VERSION, exportSchema = false )
+        SavingComplainImagesTable.class, AddComplaintsDetailsTable.class, LookUpDropDownDataTable.class, AddGrowthMonitoringTable.class , KeyValue.class}, version = DB_VERSION, exportSchema = false )
 
 @TypeConverters({DateConverter.class, ArrayListConverter.class})
 public abstract class  AppDatabase extends RoomDatabase {

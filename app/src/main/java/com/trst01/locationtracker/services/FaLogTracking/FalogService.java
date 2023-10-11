@@ -45,6 +45,7 @@ import com.trst01.locationtracker.uiLibrary.helpers.AppHelper;
 import com.trst01.locationtracker.view_models.AppViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
@@ -94,7 +95,7 @@ public class FalogService extends Service implements LocationListener {
     PowerManager.WakeLock wakeLock;
     public Context context;
     double latitude, longitude;
-//    private Palm3FoilDatabase palm3FoilDatabase;
+    //    private Palm3FoilDatabase palm3FoilDatabase;
     private static final int MIN_UPDATE_TIME = 0;
     private static final int MIN_UPDATE_DISTANCE = 250;
     private Location location;
@@ -116,7 +117,7 @@ public class FalogService extends Service implements LocationListener {
     int delay = 10000;
     Handler handler = new Handler();
     Runnable runnable;
-//    public AppHelper appHelper;
+    //    public AppHelper appHelper;
     public AppHelper appHelper;
     @Override
     public void onCreate() {
@@ -163,54 +164,42 @@ public class FalogService extends Service implements LocationListener {
         return latLong;
     }
 
-
     public void startLocationService(ApplicationThread.OnComplete onComplete) {
         Log.d(LOG_TAG, "start location service");
         String providerType = null;
+
         try {
             locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
             boolean gpsProviderEnabled = locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean networkProviderEnabled = locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            if (gpsProviderEnabled) {
-                if (ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
+
+            if (gpsProviderEnabled || networkProviderEnabled) {
+                if (networkProviderEnabled) {
+                    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, this);
+                        location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                        providerType = "network";
+                        d(LOG_TAG, "network lbs provider:" + (location == null ? "null" : String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())));
+
+                    } else {
+                        // Request network location permissions here
+                        d(LOG_TAG, "network permission check");
+                    }
                 }
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, this);
-                if (locationManager != null) {
-                    location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    providerType = "gps";
-                    d(LOG_TAG, "gps lbs provider:" + (location == null ? "null" : String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())));
-                    //updateLocation(location);
-                }
-            }
-            if (networkProviderEnabled) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, this);
-                if (locationManager != null) {
-                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    providerType = "network";
-                    d(LOG_TAG, "network lbs provider:" + (location == null ? "null" : String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())));
-//                     updateLocation(location);
-                }
+                if (gpsProviderEnabled && location == null) {
+
+                        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, this);
+                            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                            providerType = "network";
+                            d(LOG_TAG, "network lbs provider:" + (location == null ? "null" : String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())));
+
+                        } else {
+                            // Request network location permissions here
+                            d(LOG_TAG, "network permission check");
+                        }
+                    }
             }
 
 
@@ -222,6 +211,9 @@ public class FalogService extends Service implements LocationListener {
             onComplete.execute(location != null, location, providerType);
         }
     }
+
+
+
 
 
     @Nullable
@@ -285,7 +277,6 @@ public class FalogService extends Service implements LocationListener {
         super.onDestroy();
     }
 
-
     @Override
     public void onLocationChanged(Location location) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("appprefs", MODE_PRIVATE);
@@ -295,11 +286,14 @@ public class FalogService extends Service implements LocationListener {
 
 //            if (latitude != 0.0 && longitude != 0.0) {
 
-                if (isFreshInstall) {
+            if (isFreshInstall) {
                 LocationDTO locationDTO = new LocationDTO();
                 Doc doc = new Doc();
                 doc.setLat(latitude);
                 doc.setLon(longitude);
+                String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+                Log.d("TAG", "onClick: date" + dateTime);
+                doc.setCreatedDate(dateTime);
                 ArrayList<Doc> docs = new ArrayList<>();
                 docs.add(doc);
                 locationDTO.setDoc(docs);
@@ -311,14 +305,17 @@ public class FalogService extends Service implements LocationListener {
                 sharedPreferences.edit().putBoolean(CommonConstants.IS_FRESH_INSTALL, false).apply();
             }
 
-
             String latlong[] = getLatLong(FalogService.this, false).split("@");
+            //   Toast.makeText(getApplicationContext(), "location "+ latitude+ "/" +longitude, Toast.LENGTH_SHORT).show();
 
-//            Toast.makeText(getApplicationContext(), "location "+ String.valueOf(location.getLatitude()) + "/" + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(getApplicationContext(), "location "+ String.valueOf(location.getLatitude()) + "/" + String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
 
             Log.d(LOG_TAG, "updateTracking location:" + String.valueOf(location.getLatitude()) + "/" + String.valueOf(location.getLongitude()));
             latitude = Double.parseDouble(latlong[0]);
             longitude = Double.parseDouble(latlong[1]);
+
+            Log.d(LOG_TAG, "location latlongds " + latitude+ "/" +longitude);
+
             CommonConstants.Current_Latitude = latitude;
             CommonConstants.Current_Longitude = longitude;
 
@@ -330,13 +327,16 @@ public class FalogService extends Service implements LocationListener {
             UpdatedByUserId = USER_ID_TRACKING;
 
             IsActive = "1";
+
             String TestLo = appHelper.getSharedPrefObj().getString(TestLoc, "");
-//            Log.e("token", appHelper.getSharedPrefObj().getString(TestLoc, ""));
+            Log.d(LOG_TAG, "Saved data from shared preferences: " + TestLo);
             LocationDTO locationDTOs = new LocationDTO();
             Gson gson = new Gson();
             gson.fromJson(TestLo, LocationDTO.class);
             locationDTOs = gson.fromJson(TestLo, LocationDTO.class);
+
             String selectedLatLong = "";
+
             if (locationDTOs != null) {
 
                 if (locationDTOs.getDoc() != null && locationDTOs.getDoc().size() > 0) {
@@ -360,7 +360,6 @@ public class FalogService extends Service implements LocationListener {
                     docs.add(doc);
                     locationDTO.setDoc(docs);
 
-                    locationDTOs.setDoc(docs);
                     Gson gsons = new Gson();//for adding new points
                     String jsonArray = gsons.toJson(locationDTOs, LocationDTO.class);
                     appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
@@ -369,7 +368,7 @@ public class FalogService extends Service implements LocationListener {
 
             }
 
-
+            Log.d(LOG_TAG, "selectedLatLong ====359" + selectedLatLong);
             //fetch last inserted data.
 
 
@@ -389,46 +388,48 @@ public class FalogService extends Service implements LocationListener {
 
                 Log.v(LOG_TAG, "@@@@ actual distance " + actualDistance);
 
-                if (actualDistance >= 10) {
+//                if (actualDistance >= 10) {
 //                if (actualDistance >= 30) {
-//                if (actualDistance >= 250) {
+                if (actualDistance >= 10) {
+
                     LocationDTO locationDTO = new LocationDTO();
                     Doc doc = new Doc();
                     doc.setLat(latitude);
                     doc.setLon(longitude);
-                    ArrayList<Doc> docs = new ArrayList<>();
-                    docs = locationDTOs.getDoc();
-                    docs.add(doc);
-                    locationDTO.setDoc(docs);
+                    String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+                    Log.d("TAG", "onClick: date" + dateTime);
+                    doc.setCreatedDate(dateTime);
 
-                    locationDTOs.setDoc(docs);
-                    Gson gsons = new Gson();//for adding new points
-                    String jsonArray = gsons.toJson(locationDTOs, LocationDTO.class);
+                    ArrayList<Doc> docs = locationDTOs.getDoc();
+                    docs.add(doc);
+
+// Sort the Doc list based on the CreatedDate property
+                    Collections.sort(docs, (doc1, doc2) -> {
+                        String createdDate1 = doc1.getCreatedDate();
+                        String createdDate2 = doc2.getCreatedDate();
+                        return createdDate1.compareTo(createdDate2);
+                    });
+
+                    locationDTO.setDoc(docs);
+                    Gson gsons = new Gson();
+                    String jsonArray = gsons.toJson(locationDTO, LocationDTO.class);
                     appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
-//                    Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
                     Log.e("testLocation", latitude + "-" + longitude);
-                    //insertToDB
-//                    palm3FoilDatabase.insertLatLong(latitude, longitude, IsActive, CreatedByUserId, CreatedDate, UpdatedByUserId, UpdatedDate, IMEINumber, ServerUpdatedStatus);
-                    //sendDataToServer
-//                    DataSyncHelper.sendTrackingData(context, new ApplicationThread.OnComplete() {
-//                        @Override
-//                        public void execute(boolean success, Object result, String msg) {
-//                            if (success) {
-//                                Log.v(LOG_TAG, "sent success");
-//                            } else {
-//                                Log.e(LOG_TAG, "sent failed");
-//                            }
-//                        }
-//                    });
+
                     Log.e("locationTest", "changed and added");
                     Log.e("new set", String.valueOf(locationDTOs.getDoc().size()));
 
-                } else {
+                }
+                else {
+                    Log.e("locationTest", "not added");
 
 //                    UiUtils.showCustomToastMessage("plz wiat for 250M", context, 0);
 
                 }
-            } else {
+            }
+            else {
+
                 LocationDTO locationDTO = new LocationDTO();
                 Doc doc = new Doc();
                 doc.setLat(latitude);
@@ -444,40 +445,16 @@ public class FalogService extends Service implements LocationListener {
                 locationDTOs.setDoc(docs);
                 Gson gsons = new Gson();//for adding new points
                 String jsonArray = gsons.toJson(locationDTOs, LocationDTO.class);
+
                 appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
                 Toast.makeText(context, "added", Toast.LENGTH_SHORT).show();
                 Log.e("testLocation", latitude + "-" + longitude);
-                //insertToDB
-//                    palm3FoilDatabase.insertLatLong(latitude, longitude, IsActive, CreatedByUserId, CreatedDate, UpdatedByUserId, UpdatedDate, IMEINumber, ServerUpdatedStatus);
-                //sendDataToServer
-//                    DataSyncHelper.sendTrackingData(context, new ApplicationThread.OnComplete() {
-//                        @Override
-//                        public void execute(boolean success, Object result, String msg) {
-//                            if (success) {
-//                                Log.v(LOG_TAG, "sent success");
-//                            } else {
-//                                Log.e(LOG_TAG, "sent failed");
-//                            }
-//                        }
-//                    });
+
                 Log.e("locationTest", "changed and added");
                 Log.e("new set", String.valueOf(locationDTOs.getDoc().size()));
 
-//                palm3FoilDatabase.insertLatLong(latitude, longitude, IsActive, CreatedByUserId, CreatedDate, UpdatedByUserId, UpdatedDate, IMEINumber, ServerUpdatedStatus);
-//
-//                DataSyncHelper.sendTrackingData(context, new ApplicationThread.OnComplete() {
-//                    @Override
-//                    public void execute(boolean success, Object result, String msg) {
-//                        if (success) {
-//                            com.matrixoilpalm.mainapp.cloudhelper.Log.v(LOG_TAG, "sent success");
-//                        } else {
-//                            com.matrixoilpalm.mainapp.cloudhelper.Log.e(LOG_TAG, "sent failed");
-//                        }
-//                    }
-//                });
-            }
-//        }
 
+            }
         }
 
 

@@ -27,6 +27,7 @@ import com.trst01.locationtracker.database.entity.DiseaseTable;
 import com.trst01.locationtracker.database.entity.DistrictTable;
 import com.trst01.locationtracker.database.entity.DivisionTable;
 import com.trst01.locationtracker.database.entity.FertilizerTable;
+import com.trst01.locationtracker.database.entity.KeyValue;
 import com.trst01.locationtracker.database.entity.LookUpDropDownDataTable;
 import com.trst01.locationtracker.database.entity.LookupDtlTable;
 import com.trst01.locationtracker.database.entity.LookupHDRTable;
@@ -287,6 +288,8 @@ public class AppViewModel extends ViewModel {
     private LiveData<AddPlantationTable> insertPlantationListIntoLocalDBQueryLiveData;
     private LiveData<AddGrowthMonitoringTable> insertGrowthMonitoringDBQueryLiveData;
     private LiveData<List<AddGrowthMonitoringTable>> insertGrowthMonitoringListDBQueryLiveData;
+
+    private LiveData<KeyValue> insertKeyValueListIntoLocalDBQueryLiveData;
 
 //
 //    public void logInServiceList(String userId) {
@@ -3971,6 +3974,15 @@ public class AppViewModel extends ViewModel {
     }
     public LiveData<WeedTable> getInsertWeedIntoLocalDBQueryLiveDataLocalDB() {
         return insertWeedListIntoLocalDBQueryLiveData;
+    }
+
+
+    public void insertkeyvalueintoLocalDBQuery(KeyValue keyvaluetable) {
+        try {
+            insertKeyValueListIntoLocalDBQueryLiveData = appRepository.insertKeyValueIntoLocalDB(keyvaluetable);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void insertLog(String methodName, String message, String staffId, String screenNo, String screenName, String clientId, String loanType, String moduleType) {

@@ -14,6 +14,7 @@ import com.trst01.locationtracker.database.entity.DiseaseTable;
 import com.trst01.locationtracker.database.entity.DistrictTable;
 import com.trst01.locationtracker.database.entity.DivisionTable;
 import com.trst01.locationtracker.database.entity.FertilizerTable;
+import com.trst01.locationtracker.database.entity.KeyValue;
 import com.trst01.locationtracker.database.entity.LookupDtlTable;
 import com.trst01.locationtracker.database.entity.LookupHDRTable;
 import com.trst01.locationtracker.database.entity.MandalTable;
@@ -123,6 +124,10 @@ public class MastersResponseDTO implements Serializable {
         @SerializedName("LookupDtl")
         @Expose
         private List<LookupDtlTable> lookupDtl = null;
+
+    @SerializedName("KeyValue")
+    @Expose
+    private List<KeyValue> KeyValue = null;
 
     public List<PlotExistOnTable> getPlotExistOn() {
         return plotExistOn;
@@ -346,5 +351,13 @@ public class MastersResponseDTO implements Serializable {
 
     public void setReson(List<ResonForNotPlantingTable> reson) {
         this.reson = reson;
+    }
+
+    public List<KeyValue> getKeyValue() {
+        return KeyValue;
+    }
+
+    public void setKeyValue(List<KeyValue> keyValue) {
+        KeyValue = keyValue;
     }
 }

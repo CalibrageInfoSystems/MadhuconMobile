@@ -34,6 +34,7 @@ import com.trst01.locationtracker.database.entity.DiseaseTable;
 import com.trst01.locationtracker.database.entity.DistrictTable;
 import com.trst01.locationtracker.database.entity.DivisionTable;
 import com.trst01.locationtracker.database.entity.FertilizerTable;
+import com.trst01.locationtracker.database.entity.KeyValue;
 import com.trst01.locationtracker.database.entity.LookUpDropDownDataTable;
 import com.trst01.locationtracker.database.entity.LookupDtlTable;
 import com.trst01.locationtracker.database.entity.LookupHDRTable;
@@ -229,7 +230,8 @@ public abstract class AppDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insertPlotGeoBoundsListTableLocalDB(AddGeoBoundriesTable addGeoBoundriesTable);
-
+    @Insert(onConflict = REPLACE)
+    public abstract void insertKeyvalues(KeyValue keyTable);
 
 //    @Query("SELECT distinct * FROM AddPlotOfferTable where serverStatus =:value order by PlotOfferId desc")
 //    public abstract List<AddPlotOfferTable> getAddFertilizerDetailsListFromLocalDBNotSync(String value);
@@ -710,9 +712,14 @@ public abstract List<AddD20Table> getPlotListByStatusSeasonCode(String seasonCod
                                          String isTrash,String plotNO,String earthArea,String ratoonArea,
                                          String trashArea, String loadArea);
 
+
+    @Query("SELECT value FROM KeyValue WHERE `key` = :searchKey")
+    public abstract int getValueForKey(String searchKey);
+
+
 //    @Query("UPDATE AddPlotTable set Stage = :stage  WHERE  PlotNo = :plotNO")
 //    public abstract void updatePLotNoReported(String measureArea, String updatedDate,String plotNO,String stage);
-
+//
 //    @Query("select *  from GeoBoundariesTable order by GeoID desc")
 //    public abstract List<GeoBoundariesTable> getGeoBoundariesTableDataList();
 

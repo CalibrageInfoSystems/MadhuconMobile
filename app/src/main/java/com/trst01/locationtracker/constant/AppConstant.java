@@ -11,7 +11,10 @@ import java.io.File;
      //     TODO: DEV
 //           http://120.138.8.8:9040/api/Master/MasterSync
 //     public static String BASE_AUTH_URL = "http://120.138.8.8:9040/api/";
-     public static String BASE_AUTH_URL = "http://144.48.227.107:3333/api/";
+   //  public static String BASE_AUTH_URL = "http://144.48.227.107:3333/api/"; //live
+
+
+ public static String BASE_AUTH_URL = "http://182.18.157.215/Madhucon/api/";  // CIS Local
 
  //    // TODO: 2/22/2022 for Live URl
  //    public static String BASE_AUTH_URL = "https://corecorban.trst01.in/api/";
@@ -42,7 +45,7 @@ import java.io.File;
      public static String DB_NAME = "Location.db";
      //public static final int DB_VERSION = 8-9(Released apk db );
      //public static final int DB_VERSION = 10 sathish device(Released apk db );
-     public static final int DB_VERSION = 6;  //1_2
+     public static final int DB_VERSION = 7;  //1_2
      public static String APP_FOLDER = "Location";
      public static String APK_FOLDER = "APK";
      public static String DB_FOLDER = "Location_DB";

@@ -147,7 +147,18 @@ public class CommonUtils {
 
     }
 
+    public static String getCurrentDateTime(String strDateFormat) {
+        String strCurrDate = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(strDateFormat);
+            Calendar c1 = Calendar.getInstance(); // today
+            strCurrDate = sdf.format(c1.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return strCurrDate;
 
+    }
     @SuppressLint("MissingPermission")
     public static String getIMEInumber(final Context context) {
         String deviceId;

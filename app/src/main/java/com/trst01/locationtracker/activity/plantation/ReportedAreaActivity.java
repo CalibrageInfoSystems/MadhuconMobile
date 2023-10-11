@@ -748,11 +748,12 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
         txtSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddD10Table addD10Table = new AddD10Table();
-                addD10Table.setVarietyId(varietyId);
-                addD10Table.setSeasonCode(strSelectSeason);
-                addD10Table.setOfferedNo(Integer.parseInt(edtOfferedNo.getText().toString()));
-                addD10Table.setCropTypeId(Integer.parseInt(cropTypeId));
+                if (validateUI()) {
+                    AddD10Table addD10Table = new AddD10Table();
+                    addD10Table.setVarietyId(varietyId);
+                    addD10Table.setSeasonCode(strSelectSeason);
+                    addD10Table.setOfferedNo(Integer.parseInt(edtOfferedNo.getText().toString()));
+                    addD10Table.setCropTypeId(Integer.parseInt(cropTypeId));
 //                addD10Table.setCropTypeId(2);
 //                addD10Table.setOfferedNo(Integer.parseInt(edtOfferedNo.getText().toString()));
 //                if(spCropType.getSelectedItemPosition()==0){
@@ -766,73 +767,91 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
 
 //                addD10Table.setCropTypeId(Integer.parseInt(strCropType));
 //                addD10Table.setCropTypeId(Integer.parseInt(cropId));
-                addD10Table.setIrrigationTypeId(methodOfIrrigationId);
+                    addD10Table.setIrrigationTypeId(methodOfIrrigationId);
 //                addD10Table.setIrrigationTypeId(addPlotTable.getIrrigationTypeId());
-                addD10Table.setGuarantor1("");
-                addD10Table.setGuarantor2("");
-                addD10Table.setGuarantor3("");
-                addD10Table.setRelationShipTypeId("");
-                addD10Table.setIsSettsHotWaterTreatment("0");
-                addD10Table.setIsGreenManures("0");
-                addD10Table.setIsFilterPressMud("0");
-                addD10Table.setIsCompositeFormYard("0");
-                addD10Table.setIsPreviousRedPlot("0");
-                addD10Table.setIsTrashMulching("0");
-                addD10Table.setIsBasalFertilization("0");
-                addD10Table.setIsDustApplied("0");
-                addD10Table.setPlantSubTypeId(Integer.parseInt(plantSubTypeId));
-                addD10Table.setTotalArea(edtTotalArea.getText().toString());
-                addD10Table.setDistanceFromPlot(edtDistanceFromPlot.getText().toString());
-                addD10Table.setSpacingId(spacingId);
-                addD10Table.setPreviousCropId(cropId);
-                addD10Table.setPlotExistOnId(plotExistsOnId);
-                addD10Table.setProfile(edtProfiles.getText().toString());
-                addD10Table.setCultivatedArea(edtCultivatedArea.getText().toString());
+                    addD10Table.setGuarantor1("");
+                    addD10Table.setGuarantor2("");
+                    addD10Table.setGuarantor3("");
+                    addD10Table.setRelationShipTypeId("");
+                    addD10Table.setIsSettsHotWaterTreatment("0");
+                    addD10Table.setIsGreenManures("0");
+                    addD10Table.setIsFilterPressMud("0");
+                    addD10Table.setIsCompositeFormYard("0");
+                    addD10Table.setIsPreviousRedPlot("0");
+                    addD10Table.setIsTrashMulching("0");
+                    addD10Table.setIsBasalFertilization("0");
+                    addD10Table.setIsDustApplied("0");
+                    addD10Table.setPlantSubTypeId(Integer.parseInt(plantSubTypeId));
+                    addD10Table.setTotalArea(edtTotalArea.getText().toString());
+                    addD10Table.setDistanceFromPlot(edtDistanceFromPlot.getText().toString());
+                    addD10Table.setSpacingId(spacingId);
+                    addD10Table.setPreviousCropId(cropId);
+                    addD10Table.setPlotExistOnId(plotExistsOnId);
+                    addD10Table.setProfile(edtProfiles.getText().toString());
+                    addD10Table.setCultivatedArea(edtCultivatedArea.getText().toString());
 //                addD10Table.setOfferedNo(Integer.parseInt(cropId));//offered
-                addD10Table.setFarmerCode(addPlotTable.getFarmerCode());
-                addD10Table.setFatherName(addPlotTable.getFatherName());
-                addD10Table.setFarmerVillageId(addPlotTable.getFarmerVillageId());
-                addD10Table.setPlotVillageId(addPlotTable.getPlotVillageId());
-                addD10Table.setPlantTypeId(plantTypeId);
-                addD10Table.setPlotNo("");
+                    addD10Table.setFarmerCode(addPlotTable.getFarmerCode());
+                    addD10Table.setFatherName(addPlotTable.getFatherName());
+                    addD10Table.setFarmerVillageId(addPlotTable.getFarmerVillageId());
+                    addD10Table.setPlotVillageId(addPlotTable.getPlotVillageId());
+                    addD10Table.setPlantTypeId(plantTypeId);
+                    addD10Table.setPlotNo("");
 //                addD10Table.setVarietyId("");
-                addD10Table.setSurveyNo(edtSurveyNo.getText().toString());
-                addD10Table.setReportedArea(edtReportedArea.getText().toString().trim());
-                addD10Table.setPlantingDate(strFinalDate);
+                    addD10Table.setSurveyNo(edtSurveyNo.getText().toString());
+                    addD10Table.setReportedArea(edtReportedArea.getText().toString().trim());
+                    addD10Table.setPlantingDate(strFinalDate);
 //                addD10Table.setPlantingDate(edtExpectedPlantingDate.getText().toString());
 
-                addD10Table.setAgreedTon(edtAgreedTon.getText().toString());
-                addD10Table.setFieldName(edtFieldName.getText().toString());
-                addD10Table.setBIRNo(edtBirNo.getText().toString().trim());
-                addD10Table.setDemoPlotArea(edtDemoPlotArea.getText().toString());
-                addD10Table.setBIRDate(strBirDate);
+                    addD10Table.setAgreedTon(edtAgreedTon.getText().toString());
+                    addD10Table.setFieldName(edtFieldName.getText().toString());
+                    addD10Table.setBIRNo(edtBirNo.getText().toString().trim());
+                    addD10Table.setDemoPlotArea(edtDemoPlotArea.getText().toString());
+                    addD10Table.setBIRDate(strBirDate);
 //                addD10Table.setBIRDate(edtBirDate.getText().toString());
-                addD10Table.setPlotTypeId(plotTypeId);
-                addD10Table.setSeedMaterialUsedId(seedMaterialId);
-                addD10Table.setPlantingMethodId(plantingMethodsId);
+                    addD10Table.setPlotTypeId(plotTypeId);
+                    addD10Table.setSeedMaterialUsedId(seedMaterialId);
+                    addD10Table.setPlantingMethodId(plantingMethodsId);
 //                addD10Table.setPlantingMethodId(plantingMethodsId);
-                addD10Table.setServerStatus("0");
-                addD10Table.setSync(false);
-                addD10Table.setActive(true);
+                    addD10Table.setServerStatus("0");
+                    addD10Table.setSync(false);
+                    addD10Table.setActive(true);
 //                addD10Table.setSeedMaterialUsedId(seedMaterialId);
-                String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
-                Log.d("TAG", "onClick: date" + dateTime);
-                addD10Table.setCreatedDate(dateTime);
-                addD10Table.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
-                addD10Table.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
-                addD10Table.setUpdatedDate(dateTime);
+                    String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+                    Log.d("TAG", "onClick: date" + dateTime);
+                    addD10Table.setCreatedDate(dateTime);
+                    addD10Table.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+                    addD10Table.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+                    addD10Table.setUpdatedDate(dateTime);
 
-                viewModel.insertD10IntoLocalDBQuery(addD10Table);
+                    viewModel.insertD10IntoLocalDBQuery(addD10Table);
 //                viewModel.updatePLotNoStage(String.valueOf(measuredArea),"1",dateTime,plot);
-                Intent intent = new Intent(ReportedAreaActivity.this, ViewStatusPlotOfferReportedAreaListActivity.class);
-                intent.putExtra("farmerCode",addPlotTable.getFarmerCode());
-                startActivity(intent);
-                finish();
+                    Intent intent = new Intent(ReportedAreaActivity.this, ViewStatusPlotOfferReportedAreaListActivity.class);
+                    intent.putExtra("farmerCode", addPlotTable.getFarmerCode());
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
 //        spPlantType.setSelection();
 
+    }
+
+    private boolean validateUI() {
+
+        double reportedArea = Double.valueOf(edtReportedArea.getText().toString());
+
+        if (reportedArea <= 5) { // Check if reportedArea is less than or equal to 5
+            if (plantTypePosition > 0) {
+                edtAgreedTon.setText(String.valueOf(reportedArea * Double.valueOf(plantTypeTableList.get(plantTypePosition - 1).getEstimatedTon())));
+            }
+        } else {
+            Toast.makeText(ReportedAreaActivity.this, "reportedArea is greater than 5", Toast.LENGTH_SHORT).show();
+            return false;
+            // Handle the case where reportedArea is greater than 5, if needed
+            // You can display an error message or take appropriate action.
+        }
+        return true;
     }
 
 
@@ -2143,18 +2162,21 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
             DecimalFormat decimalFormatter = new DecimalFormat("########.##");
             switch (view.getId()) {
                 case R.id.edtReportedArea:
-                    if(edtReportedArea.getText().toString().trim().length()>0){
+                    if(edtReportedArea.getText().toString().trim().length()>0) {
 
-                        if(plantTypePosition>0){
-                            edtAgreedTon.setText(String.valueOf(Double.valueOf(edtReportedArea.getText().toString())*Double.valueOf(plantTypeTableList.get(plantTypePosition-1).getEstimatedTon())));
+                        double reportedArea = Double.valueOf(edtReportedArea.getText().toString());
+
+                        if (reportedArea <= 5) { // Check if reportedArea is less than or equal to 5
+                            if (plantTypePosition > 0) {
+                                edtAgreedTon.setText(String.valueOf(reportedArea * Double.valueOf(plantTypeTableList.get(plantTypePosition - 1).getEstimatedTon())));
+                            }
+                        } else {
+                            Toast.makeText(ReportedAreaActivity.this, "reportedArea is greater than 5", Toast.LENGTH_SHORT).show();
+                            return ;
+                            // Handle the case where reportedArea is greater than 5, if needed
+                            // You can display an error message or take appropriate action.
                         }
-//                        etAmount.setText(decimalFormatter.format(Double.valueOf(etFuelLtr.getText().toString().trim())*
-//                                Double.valueOf(etFueRate.getText().toString().trim())));
-                    } else {
-
-//                        etAmount.setText("0");
                     }
-
                     break;
                 case R.id.edtOfferedNo:
 

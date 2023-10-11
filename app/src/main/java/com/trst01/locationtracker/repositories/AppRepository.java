@@ -43,6 +43,7 @@ import com.trst01.locationtracker.database.entity.DiseaseTable;
 import com.trst01.locationtracker.database.entity.DistrictTable;
 import com.trst01.locationtracker.database.entity.DivisionTable;
 import com.trst01.locationtracker.database.entity.FertilizerTable;
+import com.trst01.locationtracker.database.entity.KeyValue;
 import com.trst01.locationtracker.database.entity.LookUpDropDownDataTable;
 import com.trst01.locationtracker.database.entity.LookupDtlTable;
 import com.trst01.locationtracker.database.entity.LookupHDRTable;
@@ -5303,7 +5304,15 @@ public class AppRepository {
         return data;
     }
 
-
+    public LiveData<KeyValue> insertKeyValueIntoLocalDB(KeyValue keyvalueTable) {
+        final MutableLiveData<KeyValue> data = new MutableLiveData<>();
+        executor.execute(() -> {
+            // FarmerDetailListTable topFarmerDetailListTableTableData = appDAO.getTopFarmerDetailListTableTableData(farmerDetailListTable.getFirstName(), farmerDetailListTable.getFarmerCode());
+            appDAO.insertKeyvalues(keyvalueTable);
+            //data.postValue(appDAO.getTopMasterSyncClusterTablDataLocalDBQuery(clusterHDRTable.getCode()));
+        });
+        return data;
+    }
 //
 //
 //    public LiveData<SeasonTable> insertSeasonDataIntoLocalDBRepository(SeasonTable seasonTable) {

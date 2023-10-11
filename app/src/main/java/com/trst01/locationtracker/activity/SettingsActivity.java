@@ -9,6 +9,7 @@ import static com.trst01.locationtracker.constant.AppConstant.TestLoc;
 import static com.trst01.locationtracker.constant.AppConstant.accessToken;
 import static com.trst01.locationtracker.constant.AppConstant.isTouched;
 import static com.trst01.locationtracker.constant.CommonUtils.isLocationPermissionGranted;
+import static com.trst01.locationtracker.dagger.App.context;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -412,10 +414,10 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         getD20Weed();
         getD20Pest();
         getD20Disease();
-
-
-        String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
-//        Log.e("token",appHelper.getSharedPrefObj().getString(TestLoc,""));
+        SharedPreferences sharedPreferences = context.getSharedPreferences("appprefs", MODE_PRIVATE);
+      //  String TestLo = sharedPreferences.getString(TestLoc, "");
+     String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
+     Log.e("token",appHelper.getSharedPrefObj().getString(TestLoc,""));
         LocationDTO locationDTO = new LocationDTO();
         Gson gson = new Gson();
         gson.fromJson(TestLo, LocationDTO.class);
@@ -625,14 +627,18 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                         addGeoBoundariesTrackingTable.setUserId(Integer.parseInt(appHelper.getSharedPrefObj().getString(DeviceUserID,"")));
                         addGeoBoundariesTrackingTable.setSeqNo(i);
                         addGeoBoundariesTrackingTable.setIsActive(true);
-                        addGeoBoundariesTrackingTable.setIsActive(true);
+                      //  addGeoBoundariesTrackingTable.setIsActive(true);
                         String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
                         Log.d("TAG", "onClick: date" + dateTime);
                         addGeoBoundariesTrackingTable.setServerStatus(false);
-                        addGeoBoundariesTrackingTable.setCreatedDate(dateTime);
-                        addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
-                        addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
-                        addGeoBoundariesTrackingTable.setUpdatedDate(dateTime);
+                            addGeoBoundariesTrackingTable.setCreatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+                            addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+                            addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+                            addGeoBoundariesTrackingTable.setUpdatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+//                        addGeoBoundariesTrackingTable.setCreatedDate(dateTime);
+//                        addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+//                        addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+//                        addGeoBoundariesTrackingTable.setUpdatedDate(dateTime);
 
                             viewModel.insertTrackingIntoLocalDBQuery(addGeoBoundariesTrackingTable);
                         }

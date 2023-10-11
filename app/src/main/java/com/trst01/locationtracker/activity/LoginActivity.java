@@ -74,6 +74,7 @@ import com.trst01.locationtracker.database.entity.DiseaseTable;
 import com.trst01.locationtracker.database.entity.DistrictTable;
 import com.trst01.locationtracker.database.entity.DivisionTable;
 import com.trst01.locationtracker.database.entity.FertilizerTable;
+import com.trst01.locationtracker.database.entity.KeyValue;
 import com.trst01.locationtracker.database.entity.LookupDtlTable;
 import com.trst01.locationtracker.database.entity.LookupHDRTable;
 import com.trst01.locationtracker.database.entity.MandalTable;
@@ -661,23 +662,23 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
                                     viewModel.insertDiseaseIntoLocalDBQuery(divisionTable);
                                     //getClusterHDRList.add(clusterHDr_value);
                                 }
-
-                                for (int i = 0; i < mastersResponseDTO.getDistrict().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                    DistrictTable divisionTable = new DistrictTable();
-                                    divisionTable.setId(mastersResponseDTO.getDistrict().get(i).getId());
-                                    divisionTable.setCode(mastersResponseDTO.getDistrict().get(i).getCode());
-                                    divisionTable.setName(mastersResponseDTO.getDistrict().get(i).getName());
-                                    divisionTable.setStateId(mastersResponseDTO.getDistrict().get(i).getStateId());
-                                    divisionTable.setActive(mastersResponseDTO.getDistrict().get(i).getActive());
-                                    divisionTable.setCreatedDate(mastersResponseDTO.getDistrict().get(i).getCreatedDate());
-                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getDistrict().get(i).getCreatedByUserId());
-                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getDistrict().get(i).getUpdatedByUserId());
-                                    divisionTable.setUpdatedDate(mastersResponseDTO.getDistrict().get(i).getUpdatedDate());
-                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                    viewModel.insertDistrictIntoLocalDBQuery(divisionTable);
-                                    //getClusterHDRList.add(clusterHDr_value);
-                                }
+//
+//                                for (int i = 0; i < mastersResponseDTO.getKeyValue().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                                    DistrictTable divisionTable = new DistrictTable();
+//                                    divisionTable.setId(mastersResponseDTO.getDistrict().get(i).getId());
+//                                    divisionTable.setCode(mastersResponseDTO.getDistrict().get(i).getCode());
+//                                    divisionTable.setName(mastersResponseDTO.getDistrict().get(i).getName());
+//                                    divisionTable.setStateId(mastersResponseDTO.getDistrict().get(i).getStateId());
+//                                    divisionTable.setActive(mastersResponseDTO.getDistrict().get(i).getActive());
+//                                    divisionTable.setCreatedDate(mastersResponseDTO.getDistrict().get(i).getCreatedDate());
+//                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getDistrict().get(i).getCreatedByUserId());
+//                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getDistrict().get(i).getUpdatedByUserId());
+//                                    divisionTable.setUpdatedDate(mastersResponseDTO.getDistrict().get(i).getUpdatedDate());
+//                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                                    viewModel.insertDistrictIntoLocalDBQuery(divisionTable);
+//                                    //getClusterHDRList.add(clusterHDr_value);
+//                                }
 
                                 for (int i = 0; i < mastersResponseDTO.getFertilizer().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
@@ -1067,6 +1068,47 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
                                     //getClusterHDRList.add(clusterHDr_value);
                                 }
 
+
+
+                                for (int i = 0; i < mastersResponseDTO.getReson().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                                    ResonForNotPlantingTable divisionTable = new ResonForNotPlantingTable();
+                                    divisionTable.setId(mastersResponseDTO.getReson().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getReson().get(i).getCode());
+                                    divisionTable.setActive(mastersResponseDTO.getReson().get(i).getActive());
+                                    divisionTable.setName(mastersResponseDTO.getReson().get(i).getName());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getReson().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getReson().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getReson().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getReson().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertReasonIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
+//
+                                for (int i = 0; i < mastersResponseDTO.getKeyValue().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                                    KeyValue KeyValueTable = new KeyValue();
+                                    KeyValueTable.setId(mastersResponseDTO.getKeyValue().get(i).getId());
+                                    KeyValueTable.setKey(mastersResponseDTO.getKeyValue().get(i).getKey());
+                                    KeyValueTable.setValue(mastersResponseDTO.getKeyValue().get(i).getValue());
+                                    KeyValueTable.setValue1(mastersResponseDTO.getKeyValue().get(i).getValue1());
+                                    KeyValueTable.setValue2(mastersResponseDTO.getKeyValue().get(i).getValue2());
+                                    KeyValueTable.setValue3(mastersResponseDTO.getKeyValue().get(i).getValue3());
+                                    KeyValueTable.setValue4(mastersResponseDTO.getKeyValue().get(i).getValue4());
+                                    KeyValueTable.setValue5(mastersResponseDTO.getKeyValue().get(i).getValue5());
+
+
+                                    KeyValueTable.setIsActive(mastersResponseDTO.getKeyValue().get(i).getIsActive());
+                                    KeyValueTable.setCreatedDate(mastersResponseDTO.getKeyValue().get(i).getCreatedDate());
+                                    KeyValueTable.setCreatedByUserId(mastersResponseDTO.getKeyValue().get(i).getCreatedByUserId());
+                                    KeyValueTable.setUpdatedDate(mastersResponseDTO.getKeyValue().get(i).getUpdatedDate());
+                                    KeyValueTable.setUpdatedByUserId(mastersResponseDTO.getKeyValue().get(i).getUpdatedByUserId());
+
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertkeyvalueintoLocalDBQuery(KeyValueTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
                                 progressDialog.dismiss();
                                 Toast.makeText(LoginActivity.this, "Master Sync Successfully", Toast.LENGTH_LONG).show();
 
@@ -1577,10 +1619,10 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
 //                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
 //                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
 //                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
-//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
-//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
-//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
-//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
+                       divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc10().get(i).getCreatedDate());
+                     divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc10().get(i).getCreatedByUserId());
+                       divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc10().get(i).getUpdatedByUserId());
+                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc10().get(i).getUpdatedDate());
 //                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
 
                         viewModel.insertD10IntoLocalDBQuery(divisionTable);
