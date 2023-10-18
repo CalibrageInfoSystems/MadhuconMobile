@@ -55,6 +55,8 @@ import com.trst01.locationtracker.view_models.AppViewModel;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -162,6 +164,7 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
     List<AddPlotOfferTable> plotOfferList = new ArrayList<AddPlotOfferTable>();
 
     String farmerCode;
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD, Locale.US);
     String strFinalDate;
     TextView txtComplain;
 
@@ -383,7 +386,25 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
             date = inputFormat.parse(addPlotTable.getExpectedPlantingDate());
 //            date = inputFormat.parse(addPlotTable.getPlantingDate());
             strFinalDates = outputFormat.format(date);
-            strFinalDate = addPlotTable.getExpectedPlantingDate();
+          //  strFinalDate =addPlotTable.getExpectedPlantingDate();
+      //      Log.e("===========>",strFinalDate);
+
+            // Parse the original date string
+            OffsetDateTime dateTime = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                dateTime = OffsetDateTime.parse(addPlotTable.getExpectedPlantingDate(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+            }
+
+            // Format the date in the desired format
+          //  String strFinalDate = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                strFinalDate = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE);
+            }
+
+            System.out.println("Original Date: " + addPlotTable.getExpectedPlantingDate());
+            System.out.println("Formatted Date: " + strFinalDate);
+
+           // strFinalDate = simpleDateFormat.format(addPlotTable.getExpectedPlantingDate());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -443,7 +464,7 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         date.set(year, monthOfYear, dayOfMonth);
 
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD, Locale.US);
+                   //     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD, Locale.US);
                         SimpleDateFormat displayDate = new SimpleDateFormat(DATE_FORMAT_DD_MMM_YYYY2, Locale.US);
                         String strdisplayDate = displayDate.format(date.getTime());
                         strBirDate = simpleDateFormat.format(date.getTime());
@@ -470,7 +491,7 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
                         public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             date.set(year, monthOfYear, dayOfMonth);
 
-                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD, Locale.US);
+
                             SimpleDateFormat displayDate = new SimpleDateFormat(DATE_FORMAT_DD_MMM_YYYY2, Locale.US);
                             String strdisplayDate = displayDate.format(date.getTime());
                             strFinalDate = simpleDateFormat.format(date.getTime());
@@ -838,19 +859,31 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
     }
 
     private boolean validateUI() {
-
-        double reportedArea = Double.valueOf(edtReportedArea.getText().toString());
-
-        if (reportedArea <= 5) { // Check if reportedArea is less than or equal to 5
-            if (plantTypePosition > 0) {
-                edtAgreedTon.setText(String.valueOf(reportedArea * Double.valueOf(plantTypeTableList.get(plantTypePosition - 1).getEstimatedTon())));
-            }
-        } else {
-            Toast.makeText(ReportedAreaActivity.this, "reportedArea is greater than 5", Toast.LENGTH_SHORT).show();
+        String reportedAreaText = edtReportedArea.getText().toString();
+        if (reportedAreaText.isEmpty()) {
+            // Handle the case where the input is empty
+            Toast.makeText(ReportedAreaActivity.this, "Please enter a reported area", Toast.LENGTH_SHORT).show();
             return false;
-            // Handle the case where reportedArea is greater than 5, if needed
-            // You can display an error message or take appropriate action.
         }
+
+        try {
+            double reportedArea = Double.valueOf(reportedAreaText);
+            int MAX_ACRE_FOR_AGGREMENT = viewModel.getlockedkeyvalue("MAX_ACRE_FOR_AGGREMENT");
+            System.out.println("MAX_ACRE_FOR_AGGREMENT: " + MAX_ACRE_FOR_AGGREMENT);
+            if (reportedArea <= MAX_ACRE_FOR_AGGREMENT) {
+                if (plantTypePosition > 0) {
+                    edtAgreedTon.setText(String.valueOf(reportedArea * Double.valueOf(plantTypeTableList.get(plantTypePosition - 1).getEstimatedTon())));
+                }
+            } else {
+                Toast.makeText(ReportedAreaActivity.this, "Entered Reported Area should be less than or equal to " + MAX_ACRE_FOR_AGGREMENT + " Acres", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            // Handle the case where the input cannot be parsed as a double
+            Toast.makeText(ReportedAreaActivity.this, "Invalid input for Reported Area", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         return true;
     }
 
@@ -2165,13 +2198,15 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
                     if(edtReportedArea.getText().toString().trim().length()>0) {
 
                         double reportedArea = Double.valueOf(edtReportedArea.getText().toString());
+                        int MAX_ACRE_FOR_AGGREMENT = viewModel.getlockedkeyvalue("MAX_ACRE_FOR_AGGREMENT");
+                        System.out.println("MAX_ACRE_FOR_AGGREMENT: " + MAX_ACRE_FOR_AGGREMENT);
 
-                        if (reportedArea <= 5) { // Check if reportedArea is less than or equal to 5
+                        if (reportedArea <= MAX_ACRE_FOR_AGGREMENT) { // Check if reportedArea is less than or equal to 5
                             if (plantTypePosition > 0) {
                                 edtAgreedTon.setText(String.valueOf(reportedArea * Double.valueOf(plantTypeTableList.get(plantTypePosition - 1).getEstimatedTon())));
                             }
                         } else {
-                            Toast.makeText(ReportedAreaActivity.this, "reportedArea is greater than 5", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ReportedAreaActivity.this, "Entered Reported Area is Should be less than or equal to "+MAX_ACRE_FOR_AGGREMENT  + "Acres", Toast.LENGTH_SHORT).show();
                             return ;
                             // Handle the case where reportedArea is greater than 5, if needed
                             // You can display an error message or take appropriate action.

@@ -1,5 +1,7 @@
 package com.trst01.locationtracker.view_models;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -53,7 +55,6 @@ import com.trst01.locationtracker.database.entity.WeedTable;
 import com.trst01.locationtracker.models.LoginResponseDTO;
 import com.trst01.locationtracker.repositories.AppRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -290,6 +291,7 @@ public class AppViewModel extends ViewModel {
     private LiveData<List<AddGrowthMonitoringTable>> insertGrowthMonitoringListDBQueryLiveData;
 
     private LiveData<KeyValue> insertKeyValueListIntoLocalDBQueryLiveData;
+    private int keyvalue;
 
 //
 //    public void logInServiceList(String userId) {
@@ -1426,6 +1428,7 @@ public class AppViewModel extends ViewModel {
     {
         try {
             appRepository.updatePLotNo(measureArea,agreedTon,updateByUserId,updatedate,plotNo);
+            Log.e("========>updatedate",updatedate);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1574,6 +1577,22 @@ public class AppViewModel extends ViewModel {
             appRepository.updatePestControlDate(controlDate,identifiedDate,updatedate,id,isControl);
         } catch (Exception ex) {
             ex.printStackTrace();
+        }
+    }
+
+
+    public int getlockedkeyvalue(String lockedkey) {
+        System.out.println("maxLockPeriod: " + lockedkey);
+        try {
+            // Call the repository to retrieve the value associated with the given key
+            int lockedValue = appRepository.lockedvalue(lockedkey);
+
+            // Return the retrieved value
+            return lockedValue;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // Handle the exception or return a specific error code
+            return -1;
         }
     }
 
@@ -3407,6 +3426,7 @@ public class AppViewModel extends ViewModel {
     public void insertD20IntoLocalDBQuery(AddD20Table divisionTable) {
         try {
             insertD20ListIntoLocalDBQueryLiveData = appRepository.insertD20IntoLocalDB(divisionTable);
+            Log.e("========>date",divisionTable.getInspectionDate());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

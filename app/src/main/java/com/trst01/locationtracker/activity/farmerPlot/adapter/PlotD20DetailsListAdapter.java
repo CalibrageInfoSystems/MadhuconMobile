@@ -29,6 +29,7 @@ import com.trst01.locationtracker.uiLibrary.dialogs.ConfirmationDialog;
 import com.trst01.locationtracker.uiLibrary.helpers.AppHelper;
 import com.trst01.locationtracker.view_models.AppViewModel;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -160,7 +161,11 @@ public class PlotD20DetailsListAdapter extends RecyclerView.Adapter<PlotD20Detai
                 loanTypeViewHolder.card_view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        syncCallbackInterface.openScreenCallback(i, farmerTable,rawDataTableList, String.valueOf(farmerTable.getId()));
+                        try {
+                            syncCallbackInterface.openScreenCallback(i, farmerTable,rawDataTableList, String.valueOf(farmerTable.getId()));
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
 
@@ -391,7 +396,7 @@ public class PlotD20DetailsListAdapter extends RecyclerView.Adapter<PlotD20Detai
 
 
     public interface SyncCallbackInterface {
-        void openScreenCallback(int position, AddD10Table farmerTable, List<AddD10Table> farmer, String applicationType);
+        void openScreenCallback(int position, AddD10Table farmerTable, List<AddD10Table> farmer, String applicationType) throws ParseException;
 
         void updateItemCallback(int position, AddD10Table applicationStatusTable, String strFarmerID);
 

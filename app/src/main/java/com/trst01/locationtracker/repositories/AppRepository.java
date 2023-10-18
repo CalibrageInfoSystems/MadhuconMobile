@@ -4,10 +4,8 @@ package com.trst01.locationtracker.repositories;
 
 import static com.trst01.locationtracker.constant.AppConstant.DeviceUserID;
 import static com.trst01.locationtracker.constant.AppConstant.FAILURE_RESPONSE_MESSAGE;
-import static com.trst01.locationtracker.constant.AppConstant.LOGIN_URL;
 import static com.trst01.locationtracker.constant.AppConstant.RAW_DATA_URL;
 import static com.trst01.locationtracker.constant.AppConstant.SUCCESS_RESPONSE_MESSAGE;
-import static com.trst01.locationtracker.constant.AppConstant.accessToken;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -66,20 +64,11 @@ import com.trst01.locationtracker.database.entity.VarietyTable;
 import com.trst01.locationtracker.database.entity.VillageTable;
 import com.trst01.locationtracker.database.entity.WarehouseTable;
 import com.trst01.locationtracker.database.entity.WeedTable;
-import com.trst01.locationtracker.helper.ApplicationThread;
 import com.trst01.locationtracker.models.LoginResponseDTO;
 import com.trst01.locationtracker.models.TransactionSyncResponseDTO;
 import com.trst01.locationtracker.services.api.AppAPI;
 import com.trst01.locationtracker.services.webservice.AppWebService;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -87,7 +76,6 @@ import java.util.concurrent.Executor;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -3538,6 +3526,7 @@ public class AppRepository {
     public void updatePLotNo(String measureArea,String agreedTon,String updatedByUserId,String updateddate,String plotNo) {
         executor.execute(() -> {
             appDAO.updatePLotNo(measureArea,agreedTon,false,updateddate,plotNo,"0");
+            Log.e("========>updateddate",updateddate);
         });
     }
 
@@ -9617,6 +9606,22 @@ public class AppRepository {
         return data;
     }
 
+
+    public int lockedvalue(String key) {
+        // Implement your logic to retrieve the value associated with the key from your data source (e.g., a database or cache)
+        System.out.println("maxLockPeriodkey: " + key);
+        try {
+            // Example: Retrieve the value from a database
+            int value  = Integer.parseInt(appDAO.getValueForKey(key).getValue());
+            System.out.println("maxLockPeriodvalue: " + value);
+            // Return the retrieved value
+            return value;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // Handle the exception or return a specific error code
+            return -1;
+        }
+    }
 
 //
 //    // TODO: 2/21/2022 organic

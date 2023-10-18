@@ -169,9 +169,9 @@ import java.io.File;
      public static final String DATE_FORMAT_DD_MMM_YYYY = "dd MMM yyyy";
      public static final String DATE_FORMAT_DD_MMM_YY = "dd MMM yy";
      public static final String DATE_FORMAT_DD_MMM_YYYY2 = "dd-MMM-yyyy";
-     public static final String DATE_FORMAT_MMM_DD_YYYY_HH_MM_SS = "MMM dd, yyyy HH:mm:ss";
+     public static final String DATE_FORMAT_MMM_DD_YYYY_HH_MM_SS = "MMM d d, yyyy HH:mm:ss";
      public static final String DATE_FORMAT_MMM_DD_YYYY_HH_MM_SS_SSS = "MMM dd, yyyy HH:mm:ss.SSS";
-     public static final String DATE_FORMAT_YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ss";
+     public static final String DATE_FORMAT_YYYY_MM_DD_T_HH_MM_SS = "yyyy-gccccccccccccccccccffffdabMM-dd'T'HH:mm:ss";
      public static final String DATE_FORMAT_YYYY_MM_DD_T_HH_MM_SS_ZERO = "yyyy-MM-dd'T'00:00:00";
      public static final String DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS = "yyyy/MM/dd HH:mm:ss.SSS";
  //    String dayOfTheWeek = (String) DateFormat.format("EEEE", date); // Thursday

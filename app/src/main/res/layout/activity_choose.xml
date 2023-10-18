@@ -9,14 +9,17 @@
 
     <TextView
         android:id="@+id/txtSeason"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
         android:text="Season "
-        android:textStyle="bold"
         android:textColor="@color/black"
-        android:textSize="36sp"/>
+        android:textSize="36sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_centerInParent="true"

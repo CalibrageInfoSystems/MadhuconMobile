@@ -713,8 +713,10 @@ public abstract List<AddD20Table> getPlotListByStatusSeasonCode(String seasonCod
                                          String trashArea, String loadArea);
 
 
-    @Query("SELECT value FROM KeyValue WHERE `key` = :searchKey")
-    public abstract int getValueForKey(String searchKey);
+//    @Query("SELECT * FROM KeyValue WHERE `key` = :searchKey")
+//    public abstract int getValueForKey(String searchKey);
+@Query("SELECT * FROM KeyValue WHERE `key` = :searchKey")
+public abstract KeyValue getValueForKey(String searchKey);
 
 
 //    @Query("UPDATE AddPlotTable set Stage = :stage  WHERE  PlotNo = :plotNO")

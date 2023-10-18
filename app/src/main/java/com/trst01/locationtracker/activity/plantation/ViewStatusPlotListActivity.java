@@ -1,5 +1,6 @@
 package com.trst01.locationtracker.activity.plantation;
 
+import static com.trst01.locationtracker.constant.AppConstant.DeviceUserID;
 import static com.trst01.locationtracker.constant.AppConstant.SeasonCode;
 
 import android.app.SearchManager;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -308,10 +310,13 @@ public class ViewStatusPlotListActivity extends BaseActivity implements HasSuppo
     }
 
     @Override
-    public void openScreenCallback(int position, AddD10Table farmerTable, List<AddD10Table> farmer, String applicationType) {
+    public void openScreenCallback(int position, AddD10Table farmerTable, List<AddD10Table> farmer, String applicationType) throws ParseException {
 //        Intent intent = new Intent(ViewStatusPlotListActivity.this, AddPlantation.class);
 //        intent.putExtra("data",farmerTable);
 //        startActivity(intent);
+
+        int maxLockPeriod = viewModel.getlockedkeyvalue("MAX_LOCK_PERIOD");
+        System.out.println("maxLockPeriod: " + maxLockPeriod);
         if(indicator==3){
             if(farmerTable!=null){
                 Intent intent = new Intent(ViewStatusPlotListActivity.this, ReportedAreaActivity.class);
@@ -337,48 +342,44 @@ public class ViewStatusPlotListActivity extends BaseActivity implements HasSuppo
             Log.e("===========plot Report created date",farmer.get(position).getCreatedDate() +farmer.get(position).getFarmerCode() );
             String inputDate = farmer.get(position).getCreatedDate();
 
-            // Define a SimpleDateFormat for parsing the input date
-            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-            // Get the current date
+
+// Get the current date
             Date currentDate = new Date();
 
-            // Define a SimpleDateFormat for parsing the formatted date
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            Date parsedDate;
-            Date date;
+// Parse the provided date string
 
-            try {
-                date = inputFormat.parse(inputDate);
-
-                // Define a SimpleDateFormat for formatting the date in the desired format
-                SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-                // Format the date as "yyyy-MM-dd"
-                String formattedDate = outputFormat.format(date);
-
-                System.out.println("Formatted Date: " + formattedDate);
-                // Parse the formatted date string
-                parsedDate = dateFormat.parse(formattedDate);
-
-                // Calculate the time difference in milliseconds
-              //  long timeDifferenceMillis = parsedDate.getTime() - currentDate.getTime();
-                // Calculate the difference in days
-                long differenceInMillis = parsedDate.getTime() - currentDate.getTime();
-                int differenceInDays = (int) (differenceInMillis / (24 * 60 * 60 * 1000));
-
-                // Convert the time difference to days
-
-                System.out.println("Days Difference: " + differenceInDays);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+            SimpleDateFormat  sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+            Date specificDate = sdf.parse(inputDate);
 
 
-        Intent intent = new Intent(ViewStatusPlotListActivity.this, FieldCalculatorActivity.class);
-        intent.putExtra("plot",farmerTable.getPlotNo());
-        intent.putExtra("seasonCode",farmerTable.getSeasonCode());
-        intent.putExtra("estimatedTon",farmerTable.getEstimatedTon());
-        startActivity(intent);
+
+// Calculate the time difference in milliseconds
+            long timeDifferenceInMillis = specificDate.getTime() - currentDate.getTime();
+
+// Calculate days as a positive value
+            long days = Math.abs(timeDifferenceInMillis / (24 * 60 * 60 * 1000));
+
+// Calculate days, hours, minutes, and seconds from milliseconds
+
+
+            System.out.println("maxLockPeriod 372: " + maxLockPeriod);
+            int diff_days = Integer.parseInt(String.valueOf(days));
+
+            System.out.println("diff_days 372: " + diff_days);
+
+if(maxLockPeriod >= diff_days) {
+
+
+    Intent intent = new Intent(ViewStatusPlotListActivity.this, FieldCalculatorActivity.class);
+    intent.putExtra("plot", farmerTable.getPlotNo());
+    intent.putExtra("seasonCode", farmerTable.getSeasonCode());
+    intent.putExtra("estimatedTon", farmerTable.getEstimatedTon());
+    startActivity(intent);
+}
+else{
+    Toast.makeText(ViewStatusPlotListActivity.this, "Plot locked. Please contact admin to proceed", Toast.LENGTH_SHORT).show();
+    return ;
+}
 //        finish();
         }
     }
@@ -409,9 +410,63 @@ public class ViewStatusPlotListActivity extends BaseActivity implements HasSuppo
 
     @Override
     public void openScreenCallback(int position, AddD20Table farmerTable, List<AddD20Table> farmer, String applicationType) {
-        Intent intent = new Intent(ViewStatusPlotListActivity.this, AgreementedAreaActivity.class);
-        intent.putExtra("data",farmerTable);
-        startActivity(intent);
+        int maxLockPeriod = viewModel.getlockedkeyvalue("MAX_LOCK_PERIOD");
+        System.out.println("maxLockPeriod: " + maxLockPeriod);
+        String inputDate = farmer.get(position).getInspectionDate();
+
+
+// Get the current date
+        Date currentDate = new Date();
+
+// Parse the provided date string
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        Date specificDate = null;
+
+
+        try {
+            specificDate = sdf1.parse(inputDate);
+        } catch (ParseException e1) {
+            // If parsing with the first format fails, try the second format
+            try {
+                specificDate = sdf2.parse(inputDate);
+            } catch (ParseException e2) {
+                // If both formats fail, handle the exception as needed
+                throw new RuntimeException("Unable to parse the date", e2);
+            }
+        }
+
+// I
+
+
+// Calculate the time difference in milliseconds
+        long timeDifferenceInMillis = specificDate.getTime() - currentDate.getTime();
+
+// Calculate days as a positive value
+        long days = Math.abs(timeDifferenceInMillis / (24 * 60 * 60 * 1000));
+
+// Calculate days, hours, minutes, and seconds from milliseconds
+
+
+        System.out.println("maxLockPeriod 372: " + maxLockPeriod);
+        int diff_days = Integer.parseInt(String.valueOf(days));
+
+        System.out.println("diff_days 372: " + diff_days);
+
+        if(maxLockPeriod >= diff_days) {
+
+
+            Intent intent = new Intent(ViewStatusPlotListActivity.this, AgreementedAreaActivity.class);
+            intent.putExtra("data", farmerTable);
+            startActivity(intent);
+        }
+        else{
+
+                Toast.makeText(ViewStatusPlotListActivity.this, "Plot locked. Please contact admin to proceed", Toast.LENGTH_SHORT).show();
+                return ;
+
+        }
     }
 
     @Override

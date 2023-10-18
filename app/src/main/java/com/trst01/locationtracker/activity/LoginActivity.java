@@ -1508,10 +1508,10 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
 //                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
 //                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
 //                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
-//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
-//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
-//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
-//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
+                  divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20().get(i).getCreatedDate());
+                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20().get(i).getCreatedByUserId());
+                    divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20().get(i).getUpdatedByUserId());
+                       divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20().get(i).getUpdatedDate());
 //                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
 
                         viewModel.insertD20IntoLocalDBQuery(divisionTable);
