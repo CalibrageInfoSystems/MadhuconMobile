@@ -1228,10 +1228,11 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
     public static boolean isLocationPermissionGranted(final Context context) {
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION);
+        int hasbackgroundLocationPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
 
         return (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Build.VERSION.SDK_INT >= 28
                 || (hasFineLocationPermission == PackageManager.PERMISSION_GRANTED
-                && hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED));
+                && hasCoarseLocationPermission == PackageManager.PERMISSION_GRANTED && hasbackgroundLocationPermission == PackageManager.PERMISSION_GRANTED) );
     }
 
     @Override

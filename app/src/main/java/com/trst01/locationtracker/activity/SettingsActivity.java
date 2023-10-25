@@ -69,6 +69,7 @@ import com.trst01.locationtracker.database.entity.DiseaseTable;
 import com.trst01.locationtracker.database.entity.DistrictTable;
 import com.trst01.locationtracker.database.entity.DivisionTable;
 import com.trst01.locationtracker.database.entity.FertilizerTable;
+import com.trst01.locationtracker.database.entity.KeyValue;
 import com.trst01.locationtracker.database.entity.LookupDtlTable;
 import com.trst01.locationtracker.database.entity.LookupHDRTable;
 import com.trst01.locationtracker.database.entity.MandalTable;
@@ -417,6 +418,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         SharedPreferences sharedPreferences = context.getSharedPreferences("appprefs", MODE_PRIVATE);
       //  String TestLo = sharedPreferences.getString(TestLoc, "");
      String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
+
      Log.e("token",appHelper.getSharedPrefObj().getString(TestLoc,""));
         LocationDTO locationDTO = new LocationDTO();
         Gson gson = new Gson();
@@ -1675,6 +1677,29 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                                     divisionTable.setUpdatedDate(mastersResponseDTO.getReson().get(i).getUpdatedDate());
                                     //insertClusterValuesIntoLocalDB(clusterHDr_value);
                                     viewModel.insertReasonIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
+                                for (int i = 0; i < mastersResponseDTO.getKeyValue().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                                    KeyValue KeyValueTable = new KeyValue();
+                                    KeyValueTable.setId(mastersResponseDTO.getKeyValue().get(i).getId());
+                                    KeyValueTable.setKey(mastersResponseDTO.getKeyValue().get(i).getKey());
+                                    KeyValueTable.setValue(mastersResponseDTO.getKeyValue().get(i).getValue());
+                                    KeyValueTable.setValue1(mastersResponseDTO.getKeyValue().get(i).getValue1());
+                                    KeyValueTable.setValue2(mastersResponseDTO.getKeyValue().get(i).getValue2());
+                                    KeyValueTable.setValue3(mastersResponseDTO.getKeyValue().get(i).getValue3());
+                                    KeyValueTable.setValue4(mastersResponseDTO.getKeyValue().get(i).getValue4());
+                                    KeyValueTable.setValue5(mastersResponseDTO.getKeyValue().get(i).getValue5());
+
+
+                                    KeyValueTable.setIsActive(mastersResponseDTO.getKeyValue().get(i).getIsActive());
+                                    KeyValueTable.setCreatedDate(mastersResponseDTO.getKeyValue().get(i).getCreatedDate());
+                                    KeyValueTable.setCreatedByUserId(mastersResponseDTO.getKeyValue().get(i).getCreatedByUserId());
+                                    KeyValueTable.setUpdatedDate(mastersResponseDTO.getKeyValue().get(i).getUpdatedDate());
+                                    KeyValueTable.setUpdatedByUserId(mastersResponseDTO.getKeyValue().get(i).getUpdatedByUserId());
+
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertkeyvalueintoLocalDBQuery(KeyValueTable);
                                     //getClusterHDRList.add(clusterHDr_value);
                                 }
 

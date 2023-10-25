@@ -845,6 +845,9 @@ public abstract KeyValue getValueForKey(String searchKey);
     @Query("DELETE FROM CastTable")
     public abstract void deleteCastTable();
 
+    @Query("DELETE FROM KeyValue")
+    public abstract void deleteKeyvaluesTable();
+
 //    @Query("delete from FarmerTable where pushToServer=:syncStatus")
 //    public abstract void deleteSyncFarmerDetailListTable(String syncStatus);
 
@@ -1031,9 +1034,11 @@ public abstract KeyValue getValueForKey(String searchKey);
         deleteLookupHDRTable();
         deleteLookupDtlTable();
         deleteReasonsTable();
+        deleteKeyvaluesTable();
 //        deleteRefreshTableDateCheck();
 
     }
+
 
 //    @Query("SELECT COUNT(*) FROM AddComplaintsDetailsTable")
 //    public abstract LiveData<Integer> getAddComplaintsDetailsCount();

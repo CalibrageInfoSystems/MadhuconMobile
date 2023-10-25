@@ -2206,7 +2206,7 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
                                 edtAgreedTon.setText(String.valueOf(reportedArea * Double.valueOf(plantTypeTableList.get(plantTypePosition - 1).getEstimatedTon())));
                             }
                         } else {
-                            Toast.makeText(ReportedAreaActivity.this, "Entered Reported Area is Should be less than or equal to "+MAX_ACRE_FOR_AGGREMENT  + "Acres", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ReportedAreaActivity.this, "Entered Reported Area is Should be less than or equal to "+MAX_ACRE_FOR_AGGREMENT  + " Acres", Toast.LENGTH_SHORT).show();
                             return ;
                             // Handle the case where reportedArea is greater than 5, if needed
                             // You can display an error message or take appropriate action.
