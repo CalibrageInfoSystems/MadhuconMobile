@@ -192,12 +192,12 @@ public class FalogService extends Service implements LocationListener {
                         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_UPDATE_TIME, MIN_UPDATE_DISTANCE, this);
                             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                            providerType = "gps";
-                            d(LOG_TAG, "gps lbs provider:" + (location == null ? "null" : String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())));
+                            providerType = "network";
+                            d(LOG_TAG, "network lbs provider:" + (location == null ? "null" : String.valueOf(location.getLatitude()) + "," + String.valueOf(location.getLongitude())));
 
                         } else {
                             // Request network location permissions here
-                            d(LOG_TAG, "gps permission check");
+                            d(LOG_TAG, "network permission check");
                         }
                     }
             }

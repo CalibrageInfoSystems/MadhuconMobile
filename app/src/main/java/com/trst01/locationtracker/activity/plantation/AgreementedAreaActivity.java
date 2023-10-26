@@ -515,10 +515,11 @@ public class AgreementedAreaActivity extends BaseActivity implements HasSupportF
 //            date = inputFormat.parse(addPlotTable.getPlantingDate());
             strFinalDates = outputFormat.format(date);
             strFinalPlantingDate = addPlotTable.getPlantingDate();
+            if(addPlotTable.getBIRDate()!=null){
             date1 = inputFormat.parse(addPlotTable.getBIRDate());
 //            date = inputFormat.parse(addPlotTable.getPlantingDate());
             strFinalBirDates = outputFormat.format(date1);
-            strFinalBirDate = addPlotTable.getBIRDate();
+            strFinalBirDate = addPlotTable.getBIRDate();}
         } catch (ParseException e) {
             e.printStackTrace();
         }
