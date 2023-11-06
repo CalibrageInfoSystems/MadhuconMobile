@@ -12,23 +12,32 @@ import static com.trst01.locationtracker.constant.AppConstant.SeasonCode;
 import static com.trst01.locationtracker.constant.AppConstant.TestLoc;
 import static com.trst01.locationtracker.constant.AppConstant.accessToken;
 import static com.trst01.locationtracker.constant.AppConstant.isTouched;
+import static com.trst01.locationtracker.uiLibrary.helpers.AppConstants.REQUEST_PERMISSIONS_REQUEST_CODE;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +53,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.trst01.locationtracker.MainActivity;
 import com.trst01.locationtracker.R;
@@ -104,10 +115,13 @@ import com.trst01.locationtracker.models.MastersResponseDTO;
 import com.trst01.locationtracker.models.TransactionSyncResponseDTO;
 import com.trst01.locationtracker.repositories.Retrofit_funtion_class;
 import com.trst01.locationtracker.services.FaLogTracking.FalogService;
+import com.trst01.locationtracker.services.FaLogTracking.LocationUpdatesService;
+import com.trst01.locationtracker.services.FaLogTracking.Utils;
 import com.trst01.locationtracker.services.api.AppAPI;
 import com.trst01.locationtracker.uiLibrary.dialogs.ConfirmationDialog;
 import com.trst01.locationtracker.view_models.AppViewModel;
 
+import java.net.SocketTimeoutException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -124,7 +138,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends BaseActivity implements HasSupportFragmentInjector {
+public class LoginActivity extends BaseActivity implements HasSupportFragmentInjector, SharedPreferences.OnSharedPreferenceChangeListener {
     public static final int ALL_PERMISSION_CODE = 1001;
 
     @Inject
@@ -161,10 +175,32 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
     TextView txtLogin;
     TextView tvAppVersion;
     EditText edt_login_id,edt_password_id;
+    private MyReceiver myReceiver;
 
+    // A reference to the service used to get location updates.
+    private LocationUpdatesService mService = null;
+
+    // Tracks the bound state of the service.
+    private boolean mBound = false;
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myReceiver = new MyReceiver();
         setContentView(R.layout.activity_login_new);
 
         txtLogin = findViewById(R.id.txtLogin);
@@ -173,6 +209,11 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
         edt_password_id = (EditText) findViewById(R.id.edt_password_id);
 
         System.out.println(md5("Welcome1"));
+        if (Utils.requestingLocationUpdates(this)) {
+            if (!checkPermissions()) {
+                requestPermissions();
+            }
+        }
 
         ui();
         configureDagger();
@@ -213,51 +254,91 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
 //            }
 //        }, 1 * 2500);
 //
+
         txtLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                username : Madhuri
-//                password: mstr //imei number: df3c07da4a4acf18
-//                appHelper.getSharedPrefObj().edit().putString(DeviceUserID, "110").apply();
-//                appHelper.getSharedPrefObj().edit().putString(DeviceUserID, "101").apply();
-//                Toast.makeText(getApplicationContext(),appHelper.getSharedPrefObj().getString(DeviceUserID,""),Toast.LENGTH_LONG).show();
-//                getLoginCredentials();
-
-
-                String testNav = appHelper.getSharedPrefObj().getString(DeviceUserID,"");
+                String testNav = appHelper.getSharedPrefObj().getString(DeviceUserID, "");
                 Toast.makeText(LoginActivity.this, testNav, Toast.LENGTH_SHORT).show();
-//                if(!appHelper.getSharedPrefObj().getString(DeviceUserID,"").isEmpty()){
-                if(testNav.length()>0){
-                    Boolean  isFirst = appHelper.getSharedPrefObj().getBoolean(AppConstant.isTouched, false);
-                    if(isFirst){
+
+                if (testNav.length() > 0) {
+                    Boolean isFirst = appHelper.getSharedPrefObj().getBoolean(AppConstant.isTouched, false);
+                    if (isFirst) {
                         Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(i);
                         finish();
                     } else {
-//                        getLoginCredentials();
-                        if(!edt_login_id.getText().toString().isEmpty()&&!edt_password_id.getText().toString().isEmpty()){
-                            getLoginDetailsByImeiNumber(edt_login_id.getText().toString(),md5(edt_password_id.getText().toString()),CommonUtils.getIMEInumber(LoginActivity.this));
-                            appHelper.getSharedPrefObj().edit().putBoolean(isTouched,true).apply();
+                        // Handle login logic here
+                        if (!edt_login_id.getText().toString().isEmpty() && !edt_password_id.getText().toString().isEmpty()) {
+                            getLoginDetailsByImeiNumber(edt_login_id.getText().toString(), md5(edt_password_id.getText().toString()), CommonUtils.getIMEInumber(LoginActivity.this));
+                            if (!checkPermissions()) {
+                                // Request location permissions
+                                requestPermissions();
+                            } else {
+                                // Start location updates
+                                mService.requestLocationUpdates();
+                            }
+                            appHelper.getSharedPrefObj().edit().putBoolean(isTouched, true).apply();
                         }
+                        // Check for location permissions
+
                     }
-                } else {
-                    if(!edt_login_id.getText().toString().isEmpty()&&!edt_password_id.getText().toString().isEmpty()){
-                        getLoginDetailsByImeiNumber(edt_login_id.getText().toString(),md5(edt_password_id.getText().toString()),CommonUtils.getIMEInumber(LoginActivity.this));
-                        appHelper.getSharedPrefObj().edit().putBoolean(isTouched,true).apply();
-                    }
-//                    getLoginCredentials();
                 }
+                else {
+                    // Handle login logic here
+                    if (!edt_login_id.getText().toString().isEmpty() && !edt_password_id.getText().toString().isEmpty()) {
+                        getLoginDetailsByImeiNumber(edt_login_id.getText().toString(), md5(edt_password_id.getText().toString()), CommonUtils.getIMEInumber(LoginActivity.this));
+                        if (!checkPermissions()) {
+                            // Request location permissions
+                            requestPermissions();
+                        } else {
+                            // Start location updates
+                            mService.requestLocationUpdates();
+                        }
+                        appHelper.getSharedPrefObj().edit().putBoolean(isTouched, true).apply();
+                    }
+                    // Check for location permissions
 
-
-//                login(edt_login_id.getText().toString(),md5(edt_password_id.getText().toString()));
-//                Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
-//                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                startActivity(i);
-//                finish();
+                }
 
             }
         });
+
+//        txtLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                String testNav = appHelper.getSharedPrefObj().getString(DeviceUserID,"");
+//                Toast.makeText(LoginActivity.this, testNav, Toast.LENGTH_SHORT).show();
+////                if(!appHelper.getSharedPrefObj().getString(DeviceUserID,"").isEmpty()){
+//                if(testNav.length()>0){
+//                    Boolean  isFirst = appHelper.getSharedPrefObj().getBoolean(AppConstant.isTouched, false);
+//                    if(isFirst){
+//                        Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
+//                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        startActivity(i);
+//                        finish();
+//                    } else {
+////                        getLoginCredentials();
+//                        if(!edt_login_id.getText().toString().isEmpty()&&!edt_password_id.getText().toString().isEmpty()){
+//                            getLoginDetailsByImeiNumber(edt_login_id.getText().toString(),md5(edt_password_id.getText().toString()),CommonUtils.getIMEInumber(LoginActivity.this));
+//                            appHelper.getSharedPrefObj().edit().putBoolean(isTouched,true).apply();
+//                        }
+//                    }
+//                } else {
+//                    if(!edt_login_id.getText().toString().isEmpty()&&!edt_password_id.getText().toString().isEmpty()){
+//                        getLoginDetailsByImeiNumber(edt_login_id.getText().toString(),md5(edt_password_id.getText().toString()),CommonUtils.getIMEInumber(LoginActivity.this));
+//                        appHelper.getSharedPrefObj().edit().putBoolean(isTouched,true).apply();
+//                    }
+////                    getLoginCredentials();
+//                }
+//
+//
+//
+//
+//            }
+//        });
 
 //        praveen login
 //        txtLogin.setOnClickListener(new View.OnClickListener() {
@@ -306,7 +387,124 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
 
 //7277597d81181158
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
 
+//        mRequestLocationUpdatesButton = (Button) findViewById(R.id.request_location_updates_button);
+//        mRemoveLocationUpdatesButton = (Button) findViewById(R.id.remove_location_updates_button);
+        txtLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String testNav = appHelper.getSharedPrefObj().getString(DeviceUserID, "");
+                Toast.makeText(LoginActivity.this, testNav, Toast.LENGTH_SHORT).show();
+
+                if (testNav.length() > 0) {
+                    Boolean isFirst = appHelper.getSharedPrefObj().getBoolean(AppConstant.isTouched, false);
+                    if (isFirst) {
+                        Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(i);
+                        finish();
+                    } else {
+                        // Handle login logic here
+                        if (!edt_login_id.getText().toString().isEmpty() && !edt_password_id.getText().toString().isEmpty()) {
+                            getLoginDetailsByImeiNumber(edt_login_id.getText().toString(), md5(edt_password_id.getText().toString()), CommonUtils.getIMEInumber(LoginActivity.this));
+                            if (!checkPermissions()) {
+                                // Request location permissions
+                                requestPermissions();
+                            } else {
+                                // Start location updates
+                                mService.requestLocationUpdates();
+                            }
+                            appHelper.getSharedPrefObj().edit().putBoolean(isTouched, true).apply();
+                        }
+                        // Check for location permissions
+
+                    }
+                } else {
+                    // Handle login logic here
+                    if (!edt_login_id.getText().toString().isEmpty() && !edt_password_id.getText().toString().isEmpty()) {
+                        getLoginDetailsByImeiNumber(edt_login_id.getText().toString(), md5(edt_password_id.getText().toString()), CommonUtils.getIMEInumber(LoginActivity.this));
+
+                        if (!checkPermissions()) {
+                            // Request location permissions
+                            requestPermissions();
+                        } else {
+                            // Start location updates
+                            mService.requestLocationUpdates();
+                        } appHelper.getSharedPrefObj().edit().putBoolean(isTouched, true).apply();
+                    }
+                    // Check for location permissions
+
+                }
+
+            }
+        });
+
+//        txtLogin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (!checkPermissions())
+//                {
+//                    requestPermissions();
+//                } else {
+//                    mService.requestLocationUpdates();
+//                }
+//            }
+//        });
+
+//        mRemoveLocationUpdatesButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mService.removeLocationUpdates();
+//            }
+//        });
+
+        // Restore the state of the buttons when the activity (re)launches.
+    //    setButtonsState(Utils.requestingLocationUpdates(this));
+
+        // Bind to the service. If the service is in foreground mode, this signals to the service
+        // that since this activity is in the foreground, the service can exit foreground mode.
+        bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,
+                Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
+                new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        if (mBound) {
+            // Unbind from the service. This signals to the service that this activity is no longer
+            // in the foreground, and the service can respond by promoting itself to a foreground
+            // service.
+            unbindService(mServiceConnection);
+            mBound = false;
+        }
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+        super.onStop();
+    }
+
+
+
+    private boolean checkPermissions() {
+        return  PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION);
+    }
     private void login(String toString, String md5) {
 
     }
@@ -332,10 +530,11 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
             appVersion = packageInfo.versionName;
             if (!TextUtils.isEmpty(appVersion)) {
                 tvAppVersion.setText(CommonUtils.getIMEInumber(this));
+
 //                tvAppVersion.setText(appVersion);
-                if (isLocationPermissionGranted(LoginActivity.this) ) {
-                    startService(new Intent(this, FalogService.class));
-                }
+//                if (isLocationPermissionGranted(LoginActivity.this) ) {
+//                    startService(new Intent(this, FalogService.class));
+//                }
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -1137,15 +1336,29 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
                     Log.d("Error", ">>>>" + ex.toString());
                 }
             }
-
             @Override
             public void onFailure(Call<MastersResponseDTO> call, Throwable t) {
-//                progressBar.setVisibility(View.GONE);
                 progressDialog.dismiss();
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
+                if (t instanceof SocketTimeoutException) {
+                    // Handle SocketTimeoutException
+                    // You can display an error message to the user or retry the request
+                    Log.e("Error", "SocketTimeoutException: " + t.getMessage());
 
+                    // You may choose to retry the request here, or show an error message to the user.
+                    // Example: Retry the request after a delay
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getLoginDetailsByImeiNumber(TokenAccess,false);
+                            //getLoginDetailsByImeiNumber(token,); // Retry the request
+                        }
+                    }, 5000); // Retry after 5 seconds
+                } else {
+                    // Handle other types of exceptions
+                    Log.e("Error", "Other error: " + t.getMessage());
+                }
             }
+
         });
     }
 
@@ -1218,8 +1431,42 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
                 boolean readExternalStorage = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 if (readExternalStorage) {
                     Toast.makeText(LoginActivity.this, "permission taken alredy", Toast.LENGTH_SHORT).show();
+
                 } else {
                     takePermission();
+                }
+            }
+
+            if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+                if (grantResults.length <= 0) {
+                    // If user interaction was interrupted, the permission request is cancelled and you
+                    // receive empty arrays.
+                    Log.i(TAG, "User interaction was cancelled.");
+                } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted.
+                    mService.requestLocationUpdates();
+                } else {
+                    // Permission denied.
+//                setButtonsState(false);
+//                Snackbar.make(
+//                                findViewById(R.id.activity_main),
+//                                R.string.permission_denied_explanation,
+//                                Snackbar.LENGTH_INDEFINITE)
+//                        .setAction(R.string.settings, new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                // Build intent that displays the App settings screen.
+//                                Intent intent = new Intent();
+//                                intent.setAction(
+//                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//                                Uri uri = Uri.fromParts("package",
+//                                        getApplicationContext().getPackageName(), null);
+//                                intent.setData(uri);
+//                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                startActivity(intent);
+//                            }
+//                        })
+//                        .show();
                 }
             }
         }
@@ -1243,8 +1490,8 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
     public void getSyncFarmerAllDataFromServer() {
         final AppAPI service = Retrofit_funtion_class.getClient().create(AppAPI.class);
         Call<TransactionSyncResponseDTO> callRetrofit = null;
-        callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),"2022-23");
-        appHelper.getSharedPrefObj().edit().putString(SeasonCode,"2022-23").apply();
+        callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),"2023-24");
+        appHelper.getSharedPrefObj().edit().putString(SeasonCode,"2023-24").apply();
 //        callRetrofit = service.getTransactionDetails("101");
 //        callRetrofit = service.getTransactionDetails("28");
 //        callRetrofit = service.getTransactionDetails("1");
@@ -2802,14 +3049,28 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
                     Log.d("Error", ">>>>" + ex.toString());
                 }
             }
-
             @Override
             public void onFailure(Call<TransactionSyncResponseDTO> call, Throwable t) {
                 progressDialog.dismiss();
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
+                if (t instanceof SocketTimeoutException) {
+                    // Handle SocketTimeoutException
+                    // You can display an error message to the user or retry the request
+                    Log.e("Error", "SocketTimeoutException: " + t.getMessage());
 
+                    // You may choose to retry the request here, or show an error message to the user.
+                    // Example: Retry the request after a delay
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getSyncFarmerAllDataFromServer(); // Retry the request
+                        }
+                    }, 5000); // Retry after 5 seconds
+                } else {
+                    // Handle other types of exceptions
+                    Log.e("Error", "Other error: " + t.getMessage());
+                }
             }
+
         });
     }
 
@@ -2853,18 +3114,18 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (isLocationPermissionGranted(LoginActivity.this) ) {
-            try {
-                startService(new Intent(this, FalogService.class));
-            } catch (Exception ex){
-
-            }
-
-        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if (isLocationPermissionGranted(LoginActivity.this) ) {
+//            try {
+//                startService(new Intent(this, FalogService.class));
+//            } catch (Exception ex){
+//
+//            }
+//
+//        }
+//    }
 
     public static String md5(final String s) {
         final String MD5 = "MD5";
@@ -2891,7 +3152,100 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
         return "";
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 
+    }
+
+
+    private void requestPermissions() {
+        boolean shouldProvideRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION);
+
+        // Provide an additional rationale to the user. This would happen if the user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+//            Snackbar.make(
+//                            findViewById(R.id.activity_main),
+//                            R.string.permission_rationale,
+//                            Snackbar.LENGTH_INDEFINITE)
+//                    .setAction(R.string.ok, new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            // Request permission
+//                            ActivityCompat.requestPermissions(MainActivity.this,
+//                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                                    REQUEST_PERMISSIONS_REQUEST_CODE);
+//                        }
+//                    })
+//                    .show();
+        } else {
+            Log.i(TAG, "Requesting permission");
+            // Request permission. It's possible this can be auto answered if device policy
+            // sets the permission in a given state or the user denied the permission
+            // previously and checked "Never ask again".
+            ActivityCompat.requestPermissions(LoginActivity.this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+//                                           @NonNull int[] grantResults) {
+//        Log.i(TAG, "onRequestPermissionResult");
+//        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+//            if (grantResults.length <= 0) {
+//                // If user interaction was interrupted, the permission request is cancelled and you
+//                // receive empty arrays.
+//                Log.i(TAG, "User interaction was cancelled.");
+//            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                // Permission was granted.
+//                mService.requestLocationUpdates();
+//            } else {
+//                // Permission denied.
+////                setButtonsState(false);
+////                Snackbar.make(
+////                                findViewById(R.id.activity_main),
+////                                R.string.permission_denied_explanation,
+////                                Snackbar.LENGTH_INDEFINITE)
+////                        .setAction(R.string.settings, new View.OnClickListener() {
+////                            @Override
+////                            public void onClick(View view) {
+////                                // Build intent that displays the App settings screen.
+////                                Intent intent = new Intent();
+////                                intent.setAction(
+////                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+////                                Uri uri = Uri.fromParts("package",
+////                                        getApplicationContext().getPackageName(), null);
+////                                intent.setData(uri);
+////                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////                                startActivity(intent);
+////                            }
+////                        })
+////                        .show();
+//           }
+//        }
+//    }
+
+    /**
+     * Receiver for broadcasts sent by {@link LocationUpdatesService}.
+     */
+    private class MyReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
+            if (location != null) {
+//                Toast.makeText(MainActivity.this, Utils.getLocationText(location),
+//                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
 
 //                                    for (int clusterDTL = 0; clusterDTL < jsonClusterDTLArray.length(); clusterDTL++) {

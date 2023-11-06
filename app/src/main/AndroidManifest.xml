@@ -123,11 +123,16 @@
             </intent-filter>
         </receiver> <!-- service -->
         <!-- <service android:name=".areacalculator.LocationService" /> -->
+<!--        <service-->
+<!--            android:name=".services.FaLogTracking.FalogService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true"-->
+<!--            android:stopWithTask="false" />-->
+
         <service
-            android:name=".services.FaLogTracking.FalogService"
+            android:name=".services.FaLogTracking.LocationUpdatesService"
             android:enabled="true"
-            android:exported="true"
-            android:stopWithTask="false" />
+            android:exported="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

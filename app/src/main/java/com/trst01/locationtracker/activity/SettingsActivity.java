@@ -24,15 +24,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -97,6 +102,7 @@ import com.trst01.locationtracker.models.MastersResponseDTO;
 import com.trst01.locationtracker.models.TransactionSyncResponseDTO;
 import com.trst01.locationtracker.repositories.Retrofit_funtion_class;
 import com.trst01.locationtracker.services.FaLogTracking.FalogService;
+import com.trst01.locationtracker.services.FaLogTracking.LocationUpdatesService;
 import com.trst01.locationtracker.services.api.AppAPI;
 import com.trst01.locationtracker.uiLibrary.dialogs.ConfirmationDialog;
 import com.trst01.locationtracker.view_models.AppViewModel;
@@ -147,6 +153,25 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
     RecyclerView recAddressList;
     SeasonsAdapter seasonsAdapter;
     String seasonCode ="";
+    private LocationUpdatesService mService = null;
+
+    // Tracks the bound state of the service.
+    private boolean mBound = false;
+    private final ServiceConnection mServiceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            LocationUpdatesService.LocalBinder binder = (LocationUpdatesService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mService = null;
+            mBound = false;
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,14 +213,18 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         txtLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                appHelper.getSharedPrefObj().edit().putBoolean(isTouched,false).apply();
+                   appHelper.getSharedPrefObj().edit().putBoolean(isTouched,false).apply();
                 appHelper.getSharedPrefObj().edit().putString(DeviceUserID,"").apply();
+                mService.removeLocationUpdates();
                 Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 finish();
+
             }
         });
+
+
 
         txt_master_sync.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -415,6 +444,13 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         getD20Weed();
         getD20Pest();
         getD20Disease();
+
+        SharedPreferences sharedPreferencess = getSharedPreferences("location_data", Context.MODE_PRIVATE);
+        String json = sharedPreferencess.getString("locationArray", "[]");
+
+        //   Log.e("======>jsonArrayString1", jsonArrayString);
+        Log.e("======>locationArraymadhucon", sharedPreferencess.getString("locationArray", ""));
+
         SharedPreferences sharedPreferences = context.getSharedPreferences("appprefs", MODE_PRIVATE);
       //  String TestLo = sharedPreferences.getString(TestLoc, "");
      String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
@@ -3954,6 +3990,43 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        txtLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                appHelper.getSharedPrefObj().edit().putBoolean(isTouched,false).apply();
+                appHelper.getSharedPrefObj().edit().putString(DeviceUserID,"").apply();
+                mService.removeLocationUpdates();
+                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+
+            }
+        });
+
+
+
+        // Bind to the service. If the service is in foreground mode, this signals to the service
+        // that since this activity is in the foreground, the service can exit foreground mode.
+        bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,
+                Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        if (mBound) {
+            // Unbind from the service. This signals to the service that this activity is no longer
+            // in the foreground, and the service can respond by promoting itself to a foreground
+            // service.
+            unbindService(mServiceConnection);
+            mBound = false;
+        }
+        super.onStop();
+    }
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

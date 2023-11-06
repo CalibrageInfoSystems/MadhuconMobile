@@ -129,7 +129,7 @@ public class DashBoardActivity extends BaseActivity  implements HasSupportFragme
     String strTodayDate;
 
 
-//    TextView txtGrowth,txtKpi,txtFramer,txtPlantation;
+    //    TextView txtGrowth,txtKpi,txtFramer,txtPlantation;
     ImageView imgRefresh;
     CardView cardFarmer,cardPlantation,cardGrowth,cardKpi,cardComplaints;
     protected PowerManager.WakeLock mWakeLock;
@@ -264,7 +264,7 @@ public class DashBoardActivity extends BaseActivity  implements HasSupportFragme
 //                    appHelper.getSharedPrefObj().edit().remove(DeviceUserPwd).apply();
                     App.createDBPath();
                     viewModel.getDeleteTablesFromLocal();
-                     getLoginDetailsByImeiNumber("0d63f76090ec2f5a",false);
+                    getLoginDetailsByImeiNumber("0d63f76090ec2f5a",false);
 
                     // TODO: 3/7/2022 testing data user deviceID
                     // getLoginDetailsByImeiNumber("6e37ab3a336a1bed");
@@ -305,24 +305,24 @@ public class DashBoardActivity extends BaseActivity  implements HasSupportFragme
 //                    Log.d(TAG, "onResponse: Json_array" + jsonArray);
 //                    if (jsonArray.length() > 0) {
 
-                        //get farmer data as well
-                        if (appHelper.isNetworkAvailable()) {
+                    //get farmer data as well
+                    if (appHelper.isNetworkAvailable()) {
 //                            viewModel.getDeleteGetDataTablesFromLocal();
-                            if(sync){
-
-                            } else {
-                                getSyncFarmerAllDataFromServer( );
-                            }
+                        if(sync){
 
                         } else {
-                            appHelper.getDialogHelper().getConfirmationDialog().show(ConfirmationDialog.ALERT, MESSAGE_NO_INTERNET_CONNECTION);
+                            getSyncFarmerAllDataFromServer( );
                         }
 
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    prefs.edit().putBoolean("firstrun", true).commit();
+                    } else {
+                        appHelper.getDialogHelper().getConfirmationDialog().show(ConfirmationDialog.ALERT, MESSAGE_NO_INTERNET_CONNECTION);
+                    }
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                prefs.edit().putBoolean("firstrun", true).commit();
 
 //                                    JSONArray jsonClusterHDRArray = jsonArray.getJSONArray(0);
 //                                    JSONArray jsonClusterDTLArray = jsonArray.getJSONArray(1);
@@ -336,528 +336,528 @@ public class DashBoardActivity extends BaseActivity  implements HasSupportFragme
 //                                    JSONArray jsonCropListArray = jsonArray.getJSONArray(9);
 //                                    JSONArray jsonCropVariety = jsonArray.getJSONArray(10);
 
-                                    for (int i = 0; i < mastersResponseDTO.getDivision().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getDivision().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        DivisionTable divisionTable = new DivisionTable();
-                                        divisionTable.setId(mastersResponseDTO.getDivision().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getDivision().get(i).getCode());
-                                        divisionTable.setActive(mastersResponseDTO.getDivision().get(i).getActive());
-                                        divisionTable.setName(mastersResponseDTO.getDivision().get(i).getName());
-                                        divisionTable.setIncharge(mastersResponseDTO.getDivision().get(i).getIncharge());
-                                        divisionTable.setInchargePhone(mastersResponseDTO.getDivision().get(i).getInchargePhone());
-                                        divisionTable.setAddress(mastersResponseDTO.getDivision().get(i).getAddress());
-                                        divisionTable.setOrd(mastersResponseDTO.getDivision().get(i).getOrd());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getDivision().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getDivision().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdateByUserId(mastersResponseDTO.getDivision().get(i).getUpdateByUserId());
-                                        divisionTable.setUpdateDate(mastersResponseDTO.getDivision().get(i).getUpdateDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertDivisionIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    DivisionTable divisionTable = new DivisionTable();
+                                    divisionTable.setId(mastersResponseDTO.getDivision().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getDivision().get(i).getCode());
+                                    divisionTable.setActive(mastersResponseDTO.getDivision().get(i).getActive());
+                                    divisionTable.setName(mastersResponseDTO.getDivision().get(i).getName());
+                                    divisionTable.setIncharge(mastersResponseDTO.getDivision().get(i).getIncharge());
+                                    divisionTable.setInchargePhone(mastersResponseDTO.getDivision().get(i).getInchargePhone());
+                                    divisionTable.setAddress(mastersResponseDTO.getDivision().get(i).getAddress());
+                                    divisionTable.setOrd(mastersResponseDTO.getDivision().get(i).getOrd());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getDivision().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getDivision().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdateByUserId(mastersResponseDTO.getDivision().get(i).getUpdateByUserId());
+                                    divisionTable.setUpdateDate(mastersResponseDTO.getDivision().get(i).getUpdateDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertDivisionIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getSection().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getSection().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        SectionTable divisionTable = new SectionTable();
-                                        divisionTable.setId(mastersResponseDTO.getSection().get(i).getId());
-                                        divisionTable.setCircleId(mastersResponseDTO.getSection().get(i).getCircleId());
-                                        divisionTable.setDivisionalId(mastersResponseDTO.getSection().get(i).getDivisionalId());
-                                        divisionTable.setCode(mastersResponseDTO.getSection().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getSection().get(i).getName());
-                                        divisionTable.setIncharge(mastersResponseDTO.getSection().get(i).getIncharge());
-                                        divisionTable.setInchargePhone(mastersResponseDTO.getSection().get(i).getInchargePhone());
-                                        divisionTable.setAddress(mastersResponseDTO.getSection().get(i).getAddress());
-                                        divisionTable.setOrd(mastersResponseDTO.getSection().get(i).getOrd());
-                                        divisionTable.setIsActive(mastersResponseDTO.getSection().get(i).getIsActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getSection().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getSection().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getSection().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getSection().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertSectionIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    SectionTable divisionTable = new SectionTable();
+                                    divisionTable.setId(mastersResponseDTO.getSection().get(i).getId());
+                                    divisionTable.setCircleId(mastersResponseDTO.getSection().get(i).getCircleId());
+                                    divisionTable.setDivisionalId(mastersResponseDTO.getSection().get(i).getDivisionalId());
+                                    divisionTable.setCode(mastersResponseDTO.getSection().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getSection().get(i).getName());
+                                    divisionTable.setIncharge(mastersResponseDTO.getSection().get(i).getIncharge());
+                                    divisionTable.setInchargePhone(mastersResponseDTO.getSection().get(i).getInchargePhone());
+                                    divisionTable.setAddress(mastersResponseDTO.getSection().get(i).getAddress());
+                                    divisionTable.setOrd(mastersResponseDTO.getSection().get(i).getOrd());
+                                    divisionTable.setIsActive(mastersResponseDTO.getSection().get(i).getIsActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getSection().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getSection().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getSection().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getSection().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertSectionIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getCircle().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getCircle().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        CircleTable divisionTable = new CircleTable();
-                                        divisionTable.setId(mastersResponseDTO.getCircle().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getCircle().get(i).getCode());
-                                        divisionTable.setActive(mastersResponseDTO.getCircle().get(i).getActive());
-                                        divisionTable.setName(mastersResponseDTO.getCircle().get(i).getName());
-                                        divisionTable.setIncharge(mastersResponseDTO.getCircle().get(i).getIncharge());
-                                        divisionTable.setInchargePhone(mastersResponseDTO.getCircle().get(i).getInchargePhone());
-                                        divisionTable.setAddress(mastersResponseDTO.getCircle().get(i).getAddress());
-                                        divisionTable.setOrd(mastersResponseDTO.getCircle().get(i).getOrd());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getCircle().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getCircle().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getCircle().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getCircle().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertCircleIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    CircleTable divisionTable = new CircleTable();
+                                    divisionTable.setId(mastersResponseDTO.getCircle().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getCircle().get(i).getCode());
+                                    divisionTable.setActive(mastersResponseDTO.getCircle().get(i).getActive());
+                                    divisionTable.setName(mastersResponseDTO.getCircle().get(i).getName());
+                                    divisionTable.setIncharge(mastersResponseDTO.getCircle().get(i).getIncharge());
+                                    divisionTable.setInchargePhone(mastersResponseDTO.getCircle().get(i).getInchargePhone());
+                                    divisionTable.setAddress(mastersResponseDTO.getCircle().get(i).getAddress());
+                                    divisionTable.setOrd(mastersResponseDTO.getCircle().get(i).getOrd());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getCircle().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getCircle().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getCircle().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getCircle().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertCircleIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
 
-                                    for (int i = 0; i < mastersResponseDTO.getCrop().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getCrop().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        CropTable divisionTable = new CropTable();
-                                        divisionTable.setId(mastersResponseDTO.getCrop().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getCrop().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getCrop().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getCrop().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getCrop().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getCrop().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getCrop().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getCrop().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertCropIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    CropTable divisionTable = new CropTable();
+                                    divisionTable.setId(mastersResponseDTO.getCrop().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getCrop().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getCrop().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getCrop().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getCrop().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getCrop().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getCrop().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getCrop().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertCropIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getBank().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getBank().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        BankTable divisionTable = new BankTable();
-                                        divisionTable.setId(mastersResponseDTO.getBank().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getBank().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getBank().get(i).getName());
-                                        divisionTable.setAbbr(mastersResponseDTO.getBank().get(i).getAbbr());
-                                        divisionTable.setActive(mastersResponseDTO.getBank().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getBank().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getBank().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getBank().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getBank().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertBankIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    BankTable divisionTable = new BankTable();
+                                    divisionTable.setId(mastersResponseDTO.getBank().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getBank().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getBank().get(i).getName());
+                                    divisionTable.setAbbr(mastersResponseDTO.getBank().get(i).getAbbr());
+                                    divisionTable.setActive(mastersResponseDTO.getBank().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getBank().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getBank().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getBank().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getBank().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertBankIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getBranch().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getBranch().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        BranchTable divisionTable = new BranchTable();
-                                        divisionTable.setId(mastersResponseDTO.getBranch().get(i).getId());
-                                        divisionTable.setBankId(mastersResponseDTO.getBranch().get(i).getBankId());
-                                        divisionTable.setCode(mastersResponseDTO.getBranch().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getBranch().get(i).getName());
-                                        divisionTable.setAbbr(mastersResponseDTO.getBranch().get(i).getAbbr());
-                                        divisionTable.setAddress(mastersResponseDTO.getBranch().get(i).getAddress());
-                                        divisionTable.setPinCode(mastersResponseDTO.getBranch().get(i).getPinCode());
-                                        divisionTable.setMobile(mastersResponseDTO.getBranch().get(i).getMobile());
-                                        divisionTable.setEmail(mastersResponseDTO.getBranch().get(i).getEmail());
-                                        divisionTable.setIFSC(mastersResponseDTO.getBranch().get(i).getIFSC());
-                                        divisionTable.setActive(mastersResponseDTO.getBranch().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getBranch().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getBranch().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getBranch().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getBranch().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertBranchIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    BranchTable divisionTable = new BranchTable();
+                                    divisionTable.setId(mastersResponseDTO.getBranch().get(i).getId());
+                                    divisionTable.setBankId(mastersResponseDTO.getBranch().get(i).getBankId());
+                                    divisionTable.setCode(mastersResponseDTO.getBranch().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getBranch().get(i).getName());
+                                    divisionTable.setAbbr(mastersResponseDTO.getBranch().get(i).getAbbr());
+                                    divisionTable.setAddress(mastersResponseDTO.getBranch().get(i).getAddress());
+                                    divisionTable.setPinCode(mastersResponseDTO.getBranch().get(i).getPinCode());
+                                    divisionTable.setMobile(mastersResponseDTO.getBranch().get(i).getMobile());
+                                    divisionTable.setEmail(mastersResponseDTO.getBranch().get(i).getEmail());
+                                    divisionTable.setIFSC(mastersResponseDTO.getBranch().get(i).getIFSC());
+                                    divisionTable.setActive(mastersResponseDTO.getBranch().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getBranch().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getBranch().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getBranch().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getBranch().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertBranchIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getDisease().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getDisease().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        DiseaseTable divisionTable = new DiseaseTable();
-                                        divisionTable.setId(mastersResponseDTO.getDisease().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getDisease().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getDisease().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getDisease().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getDisease().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getDisease().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getDisease().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getDisease().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertDiseaseIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    DiseaseTable divisionTable = new DiseaseTable();
+                                    divisionTable.setId(mastersResponseDTO.getDisease().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getDisease().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getDisease().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getDisease().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getDisease().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getDisease().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getDisease().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getDisease().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertDiseaseIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getDistrict().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getDistrict().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        DistrictTable divisionTable = new DistrictTable();
-                                        divisionTable.setId(mastersResponseDTO.getDistrict().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getDistrict().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getDistrict().get(i).getName());
-                                        divisionTable.setStateId(mastersResponseDTO.getDistrict().get(i).getStateId());
-                                        divisionTable.setActive(mastersResponseDTO.getDistrict().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getDistrict().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getDistrict().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getDistrict().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getDistrict().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertDistrictIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    DistrictTable divisionTable = new DistrictTable();
+                                    divisionTable.setId(mastersResponseDTO.getDistrict().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getDistrict().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getDistrict().get(i).getName());
+                                    divisionTable.setStateId(mastersResponseDTO.getDistrict().get(i).getStateId());
+                                    divisionTable.setActive(mastersResponseDTO.getDistrict().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getDistrict().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getDistrict().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getDistrict().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getDistrict().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertDistrictIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getFertilizer().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getFertilizer().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        FertilizerTable divisionTable = new FertilizerTable();
-                                        divisionTable.setId(mastersResponseDTO.getFertilizer().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getFertilizer().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getFertilizer().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getFertilizer().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getFertilizer().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getFertilizer().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getFertilizer().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getFertilizer().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertFertilizerIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    FertilizerTable divisionTable = new FertilizerTable();
+                                    divisionTable.setId(mastersResponseDTO.getFertilizer().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getFertilizer().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getFertilizer().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getFertilizer().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getFertilizer().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getFertilizer().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getFertilizer().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getFertilizer().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertFertilizerIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getMandal().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getMandal().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        MandalTable divisionTable = new MandalTable();
-                                        divisionTable.setId(mastersResponseDTO.getMandal().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getMandal().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getMandal().get(i).getName());
-                                        divisionTable.setDistrictId(mastersResponseDTO.getMandal().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getMandal().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getMandal().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getMandal().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getMandal().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getMandal().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertMandalIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    MandalTable divisionTable = new MandalTable();
+                                    divisionTable.setId(mastersResponseDTO.getMandal().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getMandal().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getMandal().get(i).getName());
+                                    divisionTable.setDistrictId(mastersResponseDTO.getMandal().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getMandal().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getMandal().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getMandal().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getMandal().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getMandal().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertMandalIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getState().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getState().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        StateTable divisionTable = new StateTable();
-                                        divisionTable.setId(mastersResponseDTO.getState().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getState().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getState().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getState().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getState().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getState().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getState().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getState().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertStateIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    StateTable divisionTable = new StateTable();
+                                    divisionTable.setId(mastersResponseDTO.getState().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getState().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getState().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getState().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getState().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getState().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getState().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getState().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertStateIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getUsers().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getUsers().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        UsersTable divisionTable = new UsersTable();
-                                        divisionTable.setId(mastersResponseDTO.getUsers().get(i).getId());
-                                        divisionTable.setEmplId(mastersResponseDTO.getUsers().get(i).getEmplId());
-                                        divisionTable.setUserName(mastersResponseDTO.getUsers().get(i).getUserName());
-                                        divisionTable.setPassword(mastersResponseDTO.getUsers().get(i).getPassword());
-                                        divisionTable.setFirstName(mastersResponseDTO.getUsers().get(i).getFirstName());
-                                        divisionTable.setMiddleName(mastersResponseDTO.getUsers().get(i).getMiddleName());
-                                        divisionTable.setLastName(mastersResponseDTO.getUsers().get(i).getLastName());
-                                        divisionTable.setEmailId(mastersResponseDTO.getUsers().get(i).getEmailId());
-                                        divisionTable.setMobileNumber(mastersResponseDTO.getUsers().get(i).getMobileNumber());
-                                        divisionTable.setRoleld(mastersResponseDTO.getUsers().get(i).getRoleld());
-                                        divisionTable.setAdmin(mastersResponseDTO.getUsers().get(i).getAdmin());
-                                        divisionTable.setIPAddress(mastersResponseDTO.getUsers().get(i).getIPAddress());
-                                        divisionTable.setAdminGate(mastersResponseDTO.getUsers().get(i).getAdminGate());
-                                        divisionTable.setGross(mastersResponseDTO.getUsers().get(i).getGross());
-                                        divisionTable.setTare(mastersResponseDTO.getUsers().get(i).getTare());
-                                        divisionTable.setDumpYard(mastersResponseDTO.getUsers().get(i).getDumpYard());
-                                        divisionTable.setActive(mastersResponseDTO.getUsers().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getUsers().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getUsers().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getUsers().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getUsers().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertUsersIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    UsersTable divisionTable = new UsersTable();
+                                    divisionTable.setId(mastersResponseDTO.getUsers().get(i).getId());
+                                    divisionTable.setEmplId(mastersResponseDTO.getUsers().get(i).getEmplId());
+                                    divisionTable.setUserName(mastersResponseDTO.getUsers().get(i).getUserName());
+                                    divisionTable.setPassword(mastersResponseDTO.getUsers().get(i).getPassword());
+                                    divisionTable.setFirstName(mastersResponseDTO.getUsers().get(i).getFirstName());
+                                    divisionTable.setMiddleName(mastersResponseDTO.getUsers().get(i).getMiddleName());
+                                    divisionTable.setLastName(mastersResponseDTO.getUsers().get(i).getLastName());
+                                    divisionTable.setEmailId(mastersResponseDTO.getUsers().get(i).getEmailId());
+                                    divisionTable.setMobileNumber(mastersResponseDTO.getUsers().get(i).getMobileNumber());
+                                    divisionTable.setRoleld(mastersResponseDTO.getUsers().get(i).getRoleld());
+                                    divisionTable.setAdmin(mastersResponseDTO.getUsers().get(i).getAdmin());
+                                    divisionTable.setIPAddress(mastersResponseDTO.getUsers().get(i).getIPAddress());
+                                    divisionTable.setAdminGate(mastersResponseDTO.getUsers().get(i).getAdminGate());
+                                    divisionTable.setGross(mastersResponseDTO.getUsers().get(i).getGross());
+                                    divisionTable.setTare(mastersResponseDTO.getUsers().get(i).getTare());
+                                    divisionTable.setDumpYard(mastersResponseDTO.getUsers().get(i).getDumpYard());
+                                    divisionTable.setActive(mastersResponseDTO.getUsers().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getUsers().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getUsers().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getUsers().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getUsers().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertUsersIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getParameter().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getParameter().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        ParameterTable divisionTable = new ParameterTable();
-                                        divisionTable.setId(mastersResponseDTO.getParameter().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getParameter().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getParameter().get(i).getName());
-                                        divisionTable.setDataType(mastersResponseDTO.getParameter().get(i).getDataType());
-                                        divisionTable.setUIControl(mastersResponseDTO.getParameter().get(i).getUIControl());
-                                        divisionTable.setDefaultQuery(mastersResponseDTO.getParameter().get(i).getDefaultQuery());
-                                        divisionTable.setUIControlQuery(mastersResponseDTO.getParameter().get(i).getUIControlQuery());
-                                        divisionTable.setOrder(mastersResponseDTO.getParameter().get(i).getOrder());
-                                        divisionTable.setActive(mastersResponseDTO.getUsers().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getUsers().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getUsers().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getUsers().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getUsers().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertParameterIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    ParameterTable divisionTable = new ParameterTable();
+                                    divisionTable.setId(mastersResponseDTO.getParameter().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getParameter().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getParameter().get(i).getName());
+                                    divisionTable.setDataType(mastersResponseDTO.getParameter().get(i).getDataType());
+                                    divisionTable.setUIControl(mastersResponseDTO.getParameter().get(i).getUIControl());
+                                    divisionTable.setDefaultQuery(mastersResponseDTO.getParameter().get(i).getDefaultQuery());
+                                    divisionTable.setUIControlQuery(mastersResponseDTO.getParameter().get(i).getUIControlQuery());
+                                    divisionTable.setOrder(mastersResponseDTO.getParameter().get(i).getOrder());
+                                    divisionTable.setActive(mastersResponseDTO.getUsers().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getUsers().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getUsers().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getUsers().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getUsers().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertParameterIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getPest().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getPest().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        PestTable divisionTable = new PestTable();
-                                        divisionTable.setId(mastersResponseDTO.getPest().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getPest().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getPest().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getPest().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getPest().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getPest().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getPest().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getPest().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertPestIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    PestTable divisionTable = new PestTable();
+                                    divisionTable.setId(mastersResponseDTO.getPest().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getPest().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getPest().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getPest().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getPest().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getPest().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getPest().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getPest().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertPestIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getPlantType().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getPlantType().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        PlantTypeTable divisionTable = new PlantTypeTable();
-                                        divisionTable.setId(mastersResponseDTO.getPlantType().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getPlantType().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getPlantType().get(i).getName());
-                                        divisionTable.setEstimatedTon(mastersResponseDTO.getPlantType().get(i).getEstimatedTon());
-                                        divisionTable.setLoanEligible(mastersResponseDTO.getPlantType().get(i).getLoanEligible());
-                                        divisionTable.setActive(mastersResponseDTO.getPlantType().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getPlantType().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getPlantType().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getPlantType().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getPlantType().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertPlantTypeIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    PlantTypeTable divisionTable = new PlantTypeTable();
+                                    divisionTable.setId(mastersResponseDTO.getPlantType().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getPlantType().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getPlantType().get(i).getName());
+                                    divisionTable.setEstimatedTon(mastersResponseDTO.getPlantType().get(i).getEstimatedTon());
+                                    divisionTable.setLoanEligible(mastersResponseDTO.getPlantType().get(i).getLoanEligible());
+                                    divisionTable.setActive(mastersResponseDTO.getPlantType().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getPlantType().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getPlantType().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getPlantType().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getPlantType().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertPlantTypeIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getPlantSubType().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getPlantSubType().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        PlantSubTypeTable divisionTable = new PlantSubTypeTable();
-                                        divisionTable.setId(mastersResponseDTO.getPlantSubType().get(i).getId());
-                                        divisionTable.setPlantTypeId(mastersResponseDTO.getPlantSubType().get(i).getPlantTypeId());
-                                        divisionTable.setCode(mastersResponseDTO.getPlantSubType().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getPlantSubType().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getPlantSubType().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getPlantSubType().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getPlantSubType().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getPlantSubType().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getPlantSubType().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertPlantSubTypeIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    PlantSubTypeTable divisionTable = new PlantSubTypeTable();
+                                    divisionTable.setId(mastersResponseDTO.getPlantSubType().get(i).getId());
+                                    divisionTable.setPlantTypeId(mastersResponseDTO.getPlantSubType().get(i).getPlantTypeId());
+                                    divisionTable.setCode(mastersResponseDTO.getPlantSubType().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getPlantSubType().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getPlantSubType().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getPlantSubType().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getPlantSubType().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getPlantSubType().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getPlantSubType().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertPlantSubTypeIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getSampleSlab().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getSampleSlab().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        SampleSlabTable divisionTable = new SampleSlabTable();
-                                        divisionTable.setId(mastersResponseDTO.getSampleSlab().get(i).getId());
-                                        divisionTable.setFromArea(mastersResponseDTO.getSampleSlab().get(i).getFromArea());
-                                        divisionTable.setToArea(mastersResponseDTO.getSampleSlab().get(i).getToArea());
-                                        divisionTable.setNoOfSample(mastersResponseDTO.getSampleSlab().get(i).getNoOfSample());
-                                        divisionTable.setActive(mastersResponseDTO.getSampleSlab().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getSampleSlab().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getSampleSlab().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getSampleSlab().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getSampleSlab().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertSampleSlabIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    SampleSlabTable divisionTable = new SampleSlabTable();
+                                    divisionTable.setId(mastersResponseDTO.getSampleSlab().get(i).getId());
+                                    divisionTable.setFromArea(mastersResponseDTO.getSampleSlab().get(i).getFromArea());
+                                    divisionTable.setToArea(mastersResponseDTO.getSampleSlab().get(i).getToArea());
+                                    divisionTable.setNoOfSample(mastersResponseDTO.getSampleSlab().get(i).getNoOfSample());
+                                    divisionTable.setActive(mastersResponseDTO.getSampleSlab().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getSampleSlab().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getSampleSlab().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getSampleSlab().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getSampleSlab().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertSampleSlabIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getSeason().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getSeason().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        SeasonTable divisionTable = new SeasonTable();
-                                        divisionTable.setId(mastersResponseDTO.getSeason().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getSeason().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getSeason().get(i).getName());
-                                        divisionTable.setPlantFrom(mastersResponseDTO.getSeason().get(i).getPlantFrom());
-                                        divisionTable.setPlantTo(mastersResponseDTO.getSeason().get(i).getPlantTo());
-                                        divisionTable.setCrushFrom(mastersResponseDTO.getSeason().get(i).getCrushFrom());
-                                        divisionTable.setCrushTo(mastersResponseDTO.getSeason().get(i).getCrushTo());
-                                        divisionTable.setBurnCaneRate(mastersResponseDTO.getSeason().get(i).getBurnCaneRate());
-                                        divisionTable.setCaneRate(mastersResponseDTO.getSeason().get(i).getCaneRate());
-                                        divisionTable.setCapacity(mastersResponseDTO.getSeason().get(i).getCapacity());
-                                        divisionTable.setActive(mastersResponseDTO.getSeason().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getSeason().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getSeason().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getSeason().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getSeason().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertSeasonIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    SeasonTable divisionTable = new SeasonTable();
+                                    divisionTable.setId(mastersResponseDTO.getSeason().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getSeason().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getSeason().get(i).getName());
+                                    divisionTable.setPlantFrom(mastersResponseDTO.getSeason().get(i).getPlantFrom());
+                                    divisionTable.setPlantTo(mastersResponseDTO.getSeason().get(i).getPlantTo());
+                                    divisionTable.setCrushFrom(mastersResponseDTO.getSeason().get(i).getCrushFrom());
+                                    divisionTable.setCrushTo(mastersResponseDTO.getSeason().get(i).getCrushTo());
+                                    divisionTable.setBurnCaneRate(mastersResponseDTO.getSeason().get(i).getBurnCaneRate());
+                                    divisionTable.setCaneRate(mastersResponseDTO.getSeason().get(i).getCaneRate());
+                                    divisionTable.setCapacity(mastersResponseDTO.getSeason().get(i).getCapacity());
+                                    divisionTable.setActive(mastersResponseDTO.getSeason().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getSeason().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getSeason().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getSeason().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getSeason().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertSeasonIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getUom().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getUom().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        UOMTable divisionTable = new UOMTable();
-                                        divisionTable.setId(mastersResponseDTO.getUom().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getUom().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getUom().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getUom().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getUom().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getUom().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getUom().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getUom().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertUOMIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    UOMTable divisionTable = new UOMTable();
+                                    divisionTable.setId(mastersResponseDTO.getUom().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getUom().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getUom().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getUom().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getUom().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getUom().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getUom().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getUom().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertUOMIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getCast().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getCast().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        CastTable divisionTable = new CastTable();
-                                        divisionTable.setId(mastersResponseDTO.getCast().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getCast().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getCast().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getCast().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getCast().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getCast().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getCast().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getCast().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertCastIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    CastTable divisionTable = new CastTable();
+                                    divisionTable.setId(mastersResponseDTO.getCast().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getCast().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getCast().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getCast().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getCast().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getCast().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getCast().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getCast().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertCastIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getLookUpHDR().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getLookUpHDR().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        LookupHDRTable divisionTable = new LookupHDRTable();
-                                        divisionTable.setId(mastersResponseDTO.getLookUpHDR().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getLookUpHDR().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getLookUpHDR().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getLookUpHDR().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getLookUpHDR().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getLookUpHDR().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getLookUpHDR().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getLookUpHDR().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertLookupHdrIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    LookupHDRTable divisionTable = new LookupHDRTable();
+                                    divisionTable.setId(mastersResponseDTO.getLookUpHDR().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getLookUpHDR().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getLookUpHDR().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getLookUpHDR().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getLookUpHDR().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getLookUpHDR().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getLookUpHDR().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getLookUpHDR().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertLookupHdrIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getLookupDtl().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getLookupDtl().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        LookupDtlTable divisionTable = new LookupDtlTable();
-                                        divisionTable.setId(mastersResponseDTO.getLookupDtl().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getLookupDtl().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getLookupDtl().get(i).getName());
-                                        divisionTable.setRemarks(mastersResponseDTO.getLookupDtl().get(i).getRemarks());
-                                        divisionTable.setOrd(mastersResponseDTO.getLookupDtl().get(i).getOrd());
-                                        divisionTable.setActive(mastersResponseDTO.getLookupDtl().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getLookupDtl().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getLookupDtl().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getLookupDtl().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getLookupDtl().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertLookupDtlIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    LookupDtlTable divisionTable = new LookupDtlTable();
+                                    divisionTable.setId(mastersResponseDTO.getLookupDtl().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getLookupDtl().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getLookupDtl().get(i).getName());
+                                    divisionTable.setRemarks(mastersResponseDTO.getLookupDtl().get(i).getRemarks());
+                                    divisionTable.setOrd(mastersResponseDTO.getLookupDtl().get(i).getOrd());
+                                    divisionTable.setActive(mastersResponseDTO.getLookupDtl().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getLookupDtl().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getLookupDtl().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getLookupDtl().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getLookupDtl().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertLookupDtlIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getPlotExistOn().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getPlotExistOn().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        PlotExistOnTable divisionTable = new PlotExistOnTable();
-                                        divisionTable.setId(mastersResponseDTO.getPlotExistOn().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getPlotExistOn().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getPlotExistOn().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getPlotExistOn().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getPlotExistOn().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getPlotExistOn().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getPlotExistOn().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getPlotExistOn().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertPlotExistOnTableIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    PlotExistOnTable divisionTable = new PlotExistOnTable();
+                                    divisionTable.setId(mastersResponseDTO.getPlotExistOn().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getPlotExistOn().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getPlotExistOn().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getPlotExistOn().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getPlotExistOn().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getPlotExistOn().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getPlotExistOn().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getPlotExistOn().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertPlotExistOnTableIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getVariety().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getVariety().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        VarietyTable divisionTable = new VarietyTable();
-                                        divisionTable.setId(mastersResponseDTO.getVariety().get(i).getId());
-                                        divisionTable.setVarietyId(mastersResponseDTO.getVariety().get(i).getVarietyId());
-                                        divisionTable.setCode(mastersResponseDTO.getVariety().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getVariety().get(i).getName());
-                                        divisionTable.setPlantAge(mastersResponseDTO.getVariety().get(i).getPlantAge());
-                                        divisionTable.setRatoonAge(mastersResponseDTO.getVariety().get(i).getRatoonAge());
-                                        divisionTable.setSugarContent(mastersResponseDTO.getVariety().get(i).getSugarContent());
-                                        divisionTable.setPlantSuitability(mastersResponseDTO.getVariety().get(i).getPlantSuitability());
-                                        divisionTable.setActive(mastersResponseDTO.getVariety().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getVariety().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getVariety().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getVariety().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getVariety().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertVarietyIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    VarietyTable divisionTable = new VarietyTable();
+                                    divisionTable.setId(mastersResponseDTO.getVariety().get(i).getId());
+                                    divisionTable.setVarietyId(mastersResponseDTO.getVariety().get(i).getVarietyId());
+                                    divisionTable.setCode(mastersResponseDTO.getVariety().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getVariety().get(i).getName());
+                                    divisionTable.setPlantAge(mastersResponseDTO.getVariety().get(i).getPlantAge());
+                                    divisionTable.setRatoonAge(mastersResponseDTO.getVariety().get(i).getRatoonAge());
+                                    divisionTable.setSugarContent(mastersResponseDTO.getVariety().get(i).getSugarContent());
+                                    divisionTable.setPlantSuitability(mastersResponseDTO.getVariety().get(i).getPlantSuitability());
+                                    divisionTable.setActive(mastersResponseDTO.getVariety().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getVariety().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getVariety().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getVariety().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getVariety().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertVarietyIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getWarehouse().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getWarehouse().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        WarehouseTable divisionTable = new WarehouseTable();
-                                        divisionTable.setId(mastersResponseDTO.getWarehouse().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getWarehouse().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getWarehouse().get(i).getName());
-                                        divisionTable.setGLCode(mastersResponseDTO.getWarehouse().get(i).getGLCode());
-                                        divisionTable.setSubGLCode(mastersResponseDTO.getWarehouse().get(i).getSubGLCode());
-                                        divisionTable.setActive(mastersResponseDTO.getWarehouse().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getWarehouse().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getWarehouse().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getWarehouse().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getWarehouse().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertWarehouseIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    WarehouseTable divisionTable = new WarehouseTable();
+                                    divisionTable.setId(mastersResponseDTO.getWarehouse().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getWarehouse().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getWarehouse().get(i).getName());
+                                    divisionTable.setGLCode(mastersResponseDTO.getWarehouse().get(i).getGLCode());
+                                    divisionTable.setSubGLCode(mastersResponseDTO.getWarehouse().get(i).getSubGLCode());
+                                    divisionTable.setActive(mastersResponseDTO.getWarehouse().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getWarehouse().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getWarehouse().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getWarehouse().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getWarehouse().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertWarehouseIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getWeed().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getWeed().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        WeedTable divisionTable = new WeedTable();
-                                        divisionTable.setId(mastersResponseDTO.getWeed().get(i).getId());
-                                        divisionTable.setCode(mastersResponseDTO.getWeed().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getWeed().get(i).getName());
-                                        divisionTable.setActive(mastersResponseDTO.getWeed().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getWeed().get(i).getCreatedDate());
-                                        divisionTable.setCreatedByUserId(mastersResponseDTO.getWeed().get(i).getCreatedByUserId());
-                                        divisionTable.setUpdatedByUserId(mastersResponseDTO.getWeed().get(i).getUpdatedByUserId());
-                                        divisionTable.setUpdatedDate(mastersResponseDTO.getWeed().get(i).getUpdatedDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertWeedIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    WeedTable divisionTable = new WeedTable();
+                                    divisionTable.setId(mastersResponseDTO.getWeed().get(i).getId());
+                                    divisionTable.setCode(mastersResponseDTO.getWeed().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getWeed().get(i).getName());
+                                    divisionTable.setActive(mastersResponseDTO.getWeed().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getWeed().get(i).getCreatedDate());
+                                    divisionTable.setCreatedByUserId(mastersResponseDTO.getWeed().get(i).getCreatedByUserId());
+                                    divisionTable.setUpdatedByUserId(mastersResponseDTO.getWeed().get(i).getUpdatedByUserId());
+                                    divisionTable.setUpdatedDate(mastersResponseDTO.getWeed().get(i).getUpdatedDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertWeedIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
-                                    for (int i = 0; i < mastersResponseDTO.getVillage().size(); i++) {
+                                for (int i = 0; i < mastersResponseDTO.getVillage().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                                        VillageTable divisionTable = new VillageTable();
-                                        divisionTable.setId(mastersResponseDTO.getVillage().get(i).getId());
-                                        divisionTable.setSectionName(mastersResponseDTO.getVillage().get(i).getSectionName());
-                                        divisionTable.setMandalName(mastersResponseDTO.getVillage().get(i).getMandalName());
-                                        divisionTable.setMandalId(mastersResponseDTO.getVillage().get(i).getMandalId());
-                                        divisionTable.setDistrictId(mastersResponseDTO.getVillage().get(i).getDistrictId());
-                                        divisionTable.setDistrictName(mastersResponseDTO.getVillage().get(i).getDistrictName());
-                                        divisionTable.setDivisonId(mastersResponseDTO.getVillage().get(i).getDivisonId());
-                                        divisionTable.setDivisonName(mastersResponseDTO.getVillage().get(i).getDivisonName());
-                                        divisionTable.setCircleId(mastersResponseDTO.getVillage().get(i).getCircleId());
-                                        divisionTable.setCircleName(mastersResponseDTO.getVillage().get(i).getCircleName());
-                                        divisionTable.setSectionId(mastersResponseDTO.getVillage().get(i).getSectionId());
+                                    VillageTable divisionTable = new VillageTable();
+                                    divisionTable.setId(mastersResponseDTO.getVillage().get(i).getId());
+                                    divisionTable.setSectionName(mastersResponseDTO.getVillage().get(i).getSectionName());
+                                    divisionTable.setMandalName(mastersResponseDTO.getVillage().get(i).getMandalName());
+                                    divisionTable.setMandalId(mastersResponseDTO.getVillage().get(i).getMandalId());
+                                    divisionTable.setDistrictId(mastersResponseDTO.getVillage().get(i).getDistrictId());
+                                    divisionTable.setDistrictName(mastersResponseDTO.getVillage().get(i).getDistrictName());
+                                    divisionTable.setDivisonId(mastersResponseDTO.getVillage().get(i).getDivisonId());
+                                    divisionTable.setDivisonName(mastersResponseDTO.getVillage().get(i).getDivisonName());
+                                    divisionTable.setCircleId(mastersResponseDTO.getVillage().get(i).getCircleId());
+                                    divisionTable.setCircleName(mastersResponseDTO.getVillage().get(i).getCircleName());
+                                    divisionTable.setSectionId(mastersResponseDTO.getVillage().get(i).getSectionId());
 
-                                        divisionTable.setCode(mastersResponseDTO.getVillage().get(i).getCode());
-                                        divisionTable.setName(mastersResponseDTO.getVillage().get(i).getName());
+                                    divisionTable.setCode(mastersResponseDTO.getVillage().get(i).getCode());
+                                    divisionTable.setName(mastersResponseDTO.getVillage().get(i).getName());
 
-                                        divisionTable.setIncharge(mastersResponseDTO.getVillage().get(i).getIncharge());
-                                        divisionTable.setInchargePhone(mastersResponseDTO.getVillage().get(i).getInchargePhone());
-                                        divisionTable.setAddress(mastersResponseDTO.getVillage().get(i).getAddress());
-                                        divisionTable.setPincode(mastersResponseDTO.getVillage().get(i).getPincode());
-                                        divisionTable.setDistance(mastersResponseDTO.getVillage().get(i).getDistance());
-                                        divisionTable.setTPTRate(mastersResponseDTO.getVillage().get(i).getTPTRate());
-                                        divisionTable.setDivertedDistance(mastersResponseDTO.getVillage().get(i).getDivertedDistance());
-                                        divisionTable.setPotentialArea(mastersResponseDTO.getVillage().get(i).getPotentialArea());
-                                        divisionTable.setGeoArea(mastersResponseDTO.getVillage().get(i).getGeoArea());
-                                        divisionTable.setDryArea(mastersResponseDTO.getVillage().get(i).getDryArea());
-                                        divisionTable.setNotSuitableArea(mastersResponseDTO.getVillage().get(i).getNotSuitableArea());
-                                        divisionTable.setIrrigationArea(mastersResponseDTO.getVillage().get(i).getIrrigationArea());
-                                        divisionTable.setColtivableArea(mastersResponseDTO.getVillage().get(i).getColtivableArea());
-                                        divisionTable.setNoOfEBServices(mastersResponseDTO.getVillage().get(i).getNoOfEBServices());
-                                        divisionTable.setOrd(mastersResponseDTO.getVillage().get(i).getOrd());
+                                    divisionTable.setIncharge(mastersResponseDTO.getVillage().get(i).getIncharge());
+                                    divisionTable.setInchargePhone(mastersResponseDTO.getVillage().get(i).getInchargePhone());
+                                    divisionTable.setAddress(mastersResponseDTO.getVillage().get(i).getAddress());
+                                    divisionTable.setPincode(mastersResponseDTO.getVillage().get(i).getPincode());
+                                    divisionTable.setDistance(mastersResponseDTO.getVillage().get(i).getDistance());
+                                    divisionTable.setTPTRate(mastersResponseDTO.getVillage().get(i).getTPTRate());
+                                    divisionTable.setDivertedDistance(mastersResponseDTO.getVillage().get(i).getDivertedDistance());
+                                    divisionTable.setPotentialArea(mastersResponseDTO.getVillage().get(i).getPotentialArea());
+                                    divisionTable.setGeoArea(mastersResponseDTO.getVillage().get(i).getGeoArea());
+                                    divisionTable.setDryArea(mastersResponseDTO.getVillage().get(i).getDryArea());
+                                    divisionTable.setNotSuitableArea(mastersResponseDTO.getVillage().get(i).getNotSuitableArea());
+                                    divisionTable.setIrrigationArea(mastersResponseDTO.getVillage().get(i).getIrrigationArea());
+                                    divisionTable.setColtivableArea(mastersResponseDTO.getVillage().get(i).getColtivableArea());
+                                    divisionTable.setNoOfEBServices(mastersResponseDTO.getVillage().get(i).getNoOfEBServices());
+                                    divisionTable.setOrd(mastersResponseDTO.getVillage().get(i).getOrd());
 
-                                        divisionTable.setActive(mastersResponseDTO.getVillage().get(i).getActive());
-                                        divisionTable.setCreatedDate(mastersResponseDTO.getVillage().get(i).getCreatedDate());
-                                        divisionTable.setCreateByUserId(mastersResponseDTO.getVillage().get(i).getCreateByUserId());
-                                        divisionTable.setUpdatedUserId(mastersResponseDTO.getVillage().get(i).getUpdatedUserId());
-                                        divisionTable.setUpdateDate(mastersResponseDTO.getVillage().get(i).getUpdateDate());
-                                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                                        viewModel.insertVillageIntoLocalDBQuery(divisionTable);
-                                        //getClusterHDRList.add(clusterHDr_value);
-                                    }
+                                    divisionTable.setActive(mastersResponseDTO.getVillage().get(i).getActive());
+                                    divisionTable.setCreatedDate(mastersResponseDTO.getVillage().get(i).getCreatedDate());
+                                    divisionTable.setCreateByUserId(mastersResponseDTO.getVillage().get(i).getCreateByUserId());
+                                    divisionTable.setUpdatedUserId(mastersResponseDTO.getVillage().get(i).getUpdatedUserId());
+                                    divisionTable.setUpdateDate(mastersResponseDTO.getVillage().get(i).getUpdateDate());
+                                    //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                                    viewModel.insertVillageIntoLocalDBQuery(divisionTable);
+                                    //getClusterHDRList.add(clusterHDr_value);
+                                }
 
 
 //                                    for (int clusterDTL = 0; clusterDTL < jsonClusterDTLArray.length(); clusterDTL++) {
@@ -1042,14 +1042,14 @@ public class DashBoardActivity extends BaseActivity  implements HasSupportFragme
 //                                        cropVarietyListTable.setUpdatedByUserId(jsonObjectCropVarietyData.getString("UpdatedByUserId"));
 //                                        viewModel.insertCropVarietyListDetailIntoLocalDBQuery(cropVarietyListTable);
 //                                    }
-                                    progressDialog.dismiss();
-                                    Toast.makeText(DashBoardActivity.this, "Master Sync Successfully", Toast.LENGTH_LONG).show();
-                                } catch (Exception ex) {
-                                    ex.printStackTrace();
-                                    Log.d("Error", ">>>>" + ex.toString());
-                                }
+                                progressDialog.dismiss();
+                                Toast.makeText(DashBoardActivity.this, "Master Sync Successfully", Toast.LENGTH_LONG).show();
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                Log.d("Error", ">>>>" + ex.toString());
                             }
-                        }, 20000);
+                        }
+                    }, 20000);
 //                    }
 
 
