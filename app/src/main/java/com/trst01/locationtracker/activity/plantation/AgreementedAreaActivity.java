@@ -385,7 +385,9 @@ public class AgreementedAreaActivity extends BaseActivity implements HasSupportF
                     }
 
                     if (!isSame) {
-                        viewModel.insertD30IntoLocalDBQuery(addD10Table);
+                     //   viewModel.insertD30IntoLocalDBQuery(addD10Table)
+                              viewModel.updateD30values(stringInspectionDate,edtAgreementedArea.getText().toString().trim(),edtNominee.getText().toString(),g1,g2,g3,relationTypeId,
+                                                false,dateTime,(appHelper.getSharedPrefObj().getString(DeviceUserID, "")),addPlotTable.getPlotNo(),"0");
                         viewModel.updatePLotNoAgreemented(String.valueOf(edtAgreementedArea.getText().toString().trim()), appHelper.getSharedPrefObj().getString(DeviceUserID, ""), dateTime, addPlotTable.getPlotNo());
                         finish();
                     } else {

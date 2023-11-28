@@ -412,9 +412,10 @@ else{
     public void openScreenCallback(int position, AddD20Table farmerTable, List<AddD20Table> farmer, String applicationType) {
         int maxLockPeriod = viewModel.getlockedkeyvalue("MAX_LOCK_PERIOD");
         System.out.println("maxLockPeriod: " + maxLockPeriod);
-        String inputDate = farmer.get(position).getInspectionDate();
+        String inputDate = farmer.get(position).getCreatedDate();
 
-
+        System.out.println("getInspectionDate: " + inputDate);
+        System.out.println("getCreatedDate: " + farmer.get(position).getCreatedDate());
 // Get the current date
         Date currentDate = new Date();
 

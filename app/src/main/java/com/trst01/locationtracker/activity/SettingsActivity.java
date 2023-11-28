@@ -113,6 +113,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
@@ -241,7 +242,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                     showAddressListData();
                 } catch (Exception ex){
                     viewModel.deleteAlltablesFromTransactionSync();
-                    getSyncFarmerAllDataFromServer("2022-23");
+                    getSyncFarmerAllDataFromServer("2023-24");
                 }
 
 //                viewModel.deleteAlltablesFromTransactionSync();
@@ -527,6 +528,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                 @Override
                 public void onChanged(@Nullable Integer integer) {
                     int notSyncComplainCount = integer;
+                    Log.e("notSyncComplainCount====>",notSyncComplainCount+"");
                     txtD30.setText( "" + String.valueOf(notSyncComplainCount));
                 }
             });
@@ -1923,9 +1925,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 //                                        viewModel.insertCropVarietyListDetailIntoLocalDBQuery(cropVarietyListTable);
 //                                    }
                                 progressDialog.dismiss();
-                                Toast.makeText(SettingsActivity
-
-                                        .this, "Master Sync Successfully", Toast.LENGTH_LONG).show();
+                                Toast.makeText(SettingsActivity.this, "Master Sync Successfully", Toast.LENGTH_LONG).show();
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                                 Log.d("Error", ">>>>" + ex.toString());
@@ -1941,14 +1941,30 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                 }
             }
 
+
             @Override
             public void onFailure(Call<MastersResponseDTO> call, Throwable t) {
-//                progressBar.setVisibility(View.GONE);
                 progressDialog.dismiss();
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
+                if (t instanceof SocketTimeoutException) {
+                    // Handle SocketTimeoutException
+                    // You can display an error message to the user or retry the request
+                    Log.e("Error", "SocketTimeoutException: " + t.getMessage());
 
+                    // You may choose to retry the request here, or show an error message to the user.
+                    // Example: Retry the request after a delay
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getLoginDetailsByImeiNumber("",false);
+                            //getLoginDetailsByImeiNumber(token,); // Retry the request
+                        }
+                    }, 5000); // Retry after 5 seconds
+                } else {
+                    // Handle other types of exceptions
+                    Log.e("Error", "Other error: " + t.getMessage());
+                }
             }
+
         });
     }
 
@@ -2695,15 +2711,31 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     progressDialog.dismiss();
+                    Toast.makeText(SettingsActivity.this, " Sync Successfully", Toast.LENGTH_LONG).show();
+
                     Log.d("Error", ">>>>" + ex.toString());
                 }
             }
 
-            @Override
             public void onFailure(Call<TransactionSyncResponseDTO> call, Throwable t) {
                 progressDialog.dismiss();
-                Log.d("Error Call", ">>>>" + call.toString());
-                Log.d("Error", ">>>>" + t.toString());
+                if (t instanceof SocketTimeoutException) {
+                    // Handle SocketTimeoutException
+                    // You can display an error message to the user or retry the request
+                    Log.e("Error", "SocketTimeoutException: " + t.getMessage());
+
+                    // You may choose to retry the request here, or show an error message to the user.
+                    // Example: Retry the request after a delay
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            getSyncFarmerAllDataFromServer(seasonCode); // Retry the request
+                        }
+                    }, 5000); // Retry after 5 seconds
+                } else {
+                    // Handle other types of exceptions
+                    Log.e("Error", "Other error: " + t.getMessage());
+                }
             }
         });
     }

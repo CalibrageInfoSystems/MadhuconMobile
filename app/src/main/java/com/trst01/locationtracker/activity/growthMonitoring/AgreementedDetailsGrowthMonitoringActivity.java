@@ -181,151 +181,163 @@ public class AgreementedDetailsGrowthMonitoringActivity extends BaseActivity imp
         edtTrashShedderArea = findViewById(R.id.edtTrashShedderArea);
         edtLoadShedderArea = findViewById(R.id.edtLoadShedderArea);
 
+
+
         txtSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!strImageOnePath.isEmpty()&&!strImageTwoPath.isEmpty()){
-                    String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+                Log.e("============>strImageOnePath187",strImageOnePath);
+                Log.e("============>strImageTwoPath",strImageTwoPath);
 
-                    String strComplainImage1 =  ImageUtility.convertBitmapToString(bitmapOne);
-//                        String strComplainImage1 = "data:image/png;base64," + ImageUtility.convertBitmapToString(bitmapLand1);
-                    String strBankLocalImagePath = strImageOnePath;
-
-                    AddGrowthMonitoringTable savingComplainImagesTable = new AddGrowthMonitoringTable();
-                    savingComplainImagesTable.setId(null);
-                    savingComplainImagesTable.setRemarks("30");
-                    savingComplainImagesTable.setStage("30");
-                    savingComplainImagesTable.setFarmerCode(strFarmerCode);
-//                    String seasonCode= appHelper.getSharedPrefObj().getString(SeasonCode,"");
-                    if(seasonCode.isEmpty()){
-                        savingComplainImagesTable.setSeasonCode("2022-23");
-                    } else {
-                        savingComplainImagesTable.setSeasonCode(seasonCode);
-                    }
-
-                    savingComplainImagesTable.setFileUrl(strComplainImage1);
-                    savingComplainImagesTable.setLocalDocUrl(strBankLocalImagePath);
-                    savingComplainImagesTable.setSync(false);
-                    savingComplainImagesTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
-                    savingComplainImagesTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
-                    savingComplainImagesTable.setCreatedDate(dateTime);
-                    savingComplainImagesTable.setUpdatedDate(dateTime);
-                    savingComplainImagesTable.setActive(true);
-                    savingComplainImagesTable.setServerStatus("0");
-                    savingComplainImagesTable.setPlotNo(strPlotNumber);
-//                        savingComplainImagesTable.setLogBookNo(logbookno);
-
-
-                    viewModel.insertGrowthMonitoringIntoLocalDBQuery(savingComplainImagesTable);
-
-                    String strComplainImage2 =  ImageUtility.convertBitmapToString(bitmapTwo);
-//                        String strComplainImage1 = "data:image/png;base64," + ImageUtility.convertBitmapToString(bitmapLand1);
-                    String strBankLocalImagePath2 = strImageTwoPath;
-
-                    AddGrowthMonitoringTable addGrowthMonitoringTable = new AddGrowthMonitoringTable();
-                    addGrowthMonitoringTable.setId(null);
-                    addGrowthMonitoringTable.setRemarks("30");
-                    addGrowthMonitoringTable.setStage("30");
-
-                    addGrowthMonitoringTable.setFarmerCode(strFarmerCode);
-                    if(seasonCode.isEmpty()){
-                        addGrowthMonitoringTable.setSeasonCode("2022-23");
-                    } else {
-                        addGrowthMonitoringTable.setSeasonCode(seasonCode);
-                    }
-
-                    addGrowthMonitoringTable.setFileUrl(strComplainImage2);
-                    addGrowthMonitoringTable.setLocalDocUrl(strBankLocalImagePath2);
-                    addGrowthMonitoringTable.setSync(false);
-                    addGrowthMonitoringTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
-                    addGrowthMonitoringTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
-                    addGrowthMonitoringTable.setCreatedDate(dateTime);
-                    addGrowthMonitoringTable.setUpdatedDate(dateTime);
-                    addGrowthMonitoringTable.setActive(true);
-                    addGrowthMonitoringTable.setServerStatus("0");
-                    addGrowthMonitoringTable.setPlotNo(strPlotNumber);
-//                        savingComplainImagesTable.setLogBookNo(logbookno);
-
-
-                    viewModel.insertGrowthMonitoringIntoLocalDBQuery(addGrowthMonitoringTable);
-
-                }
-                else if(!strImageOnePath.isEmpty()||!strImageTwoPath.isEmpty()){
-                    if(!strImageOnePath.isEmpty()){
-
-                        String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
-
-                        String strComplainImage1 =  ImageUtility.convertBitmapToString(bitmapOne);
-//                        String strComplainImage1 = "data:image/png;base64," + ImageUtility.convertBitmapToString(bitmapLand1);
-                        String strBankLocalImagePath = strImageOnePath;
-
-                        AddGrowthMonitoringTable savingComplainImagesTable = new AddGrowthMonitoringTable();
-                        savingComplainImagesTable.setId(null);
-                        savingComplainImagesTable.setRemarks("30");
-                        savingComplainImagesTable.setStage("30");
-
-                        savingComplainImagesTable.setFarmerCode(strFarmerCode);
-//                        String seasonCode= appHelper.getSharedPrefObj().getString(SeasonCode,"");
-                        if(seasonCode.isEmpty()){
-                            savingComplainImagesTable.setSeasonCode("2022-23");
-                        } else {
-                            savingComplainImagesTable.setSeasonCode(seasonCode);
-                        }
-
+//                if(!strImageOnePath.isEmpty()&&!strImageTwoPath.isEmpty()){
+//                    String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+//
+//                    String strComplainImage1 =  ImageUtility.convertBitmapToString(bitmapOne);
+////                        String strComplainImage1 = "data:image/png;base64," + ImageUtility.convertBitmapToString(bitmapLand1);
+//                    String strBankLocalImagePath = strImageOnePath;
+//
+//                    AddGrowthMonitoringTable savingComplainImagesTable = new AddGrowthMonitoringTable();
+//                    savingComplainImagesTable.setId(null);
+//                    savingComplainImagesTable.setRemarks("30");
+//                    savingComplainImagesTable.setStage("30");
+//                    savingComplainImagesTable.setFarmerCode(strFarmerCode);
+////                    String seasonCode= appHelper.getSharedPrefObj().getString(SeasonCode,"");
+//                    if(seasonCode.isEmpty()){
 //                        savingComplainImagesTable.setSeasonCode("2022-23");
-                        savingComplainImagesTable.setFileUrl(strComplainImage1);
-                        savingComplainImagesTable.setLocalDocUrl(strBankLocalImagePath);
-                        savingComplainImagesTable.setSync(false);
-                        savingComplainImagesTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
-                        savingComplainImagesTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
-                        savingComplainImagesTable.setCreatedDate(dateTime);
-                        savingComplainImagesTable.setUpdatedDate(dateTime);
-                        savingComplainImagesTable.setActive(true);
-                        savingComplainImagesTable.setServerStatus("0");
-                        savingComplainImagesTable.setPlotNo(strPlotNumber);
-//                        savingComplainImagesTable.setLogBookNo(logbookno);
-
-
-                        viewModel.insertGrowthMonitoringIntoLocalDBQuery(savingComplainImagesTable);
-
-                    }
-                    else {
-                        String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
-
-                        String strComplainImage2 =  ImageUtility.convertBitmapToString(bitmapTwo);
-//                        String strComplainImage1 = "data:image/png;base64," + ImageUtility.convertBitmapToString(bitmapLand1);
-                        String strBankLocalImagePath2 = strImageTwoPath;
-
-                        AddGrowthMonitoringTable addGrowthMonitoringTable = new AddGrowthMonitoringTable();
-                        addGrowthMonitoringTable.setId(null);
-                        addGrowthMonitoringTable.setRemarks("30");
-                        addGrowthMonitoringTable.setStage("30");
-
-                        addGrowthMonitoringTable.setFarmerCode(strFarmerCode);
-                        if(seasonCode.isEmpty()){
-                            addGrowthMonitoringTable.setSeasonCode("2022-23");
-                        } else {
-                            addGrowthMonitoringTable.setSeasonCode(seasonCode);
-                        }
+//                    } else {
+//                        savingComplainImagesTable.setSeasonCode(seasonCode);
+//                    }
+//
+//                    savingComplainImagesTable.setFileUrl(strComplainImage1);
+//                    savingComplainImagesTable.setLocalDocUrl(strBankLocalImagePath);
+//                    savingComplainImagesTable.setSync(false);
+//                    savingComplainImagesTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+//                    savingComplainImagesTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+//                    savingComplainImagesTable.setCreatedDate(dateTime);
+//                    savingComplainImagesTable.setUpdatedDate(dateTime);
+//                    savingComplainImagesTable.setActive(true);
+//                    savingComplainImagesTable.setServerStatus("0");
+//                    savingComplainImagesTable.setPlotNo(strPlotNumber);
+////                        savingComplainImagesTable.setLogBookNo(logbookno);
+//
+//                    viewModel.insertGrowthMonitoringIntoLocalDBQuery(savingComplainImagesTable);
+//
+//                    String strComplainImage2 =  ImageUtility.convertBitmapToString(bitmapTwo);
+////                        String strComplainImage1 = "data:image/png;base64," + ImageUtility.convertBitmapToString(bitmapLand1);
+//                    String strBankLocalImagePath2 = strImageTwoPath;
+//                    AddGrowthMonitoringTable addGrowthMonitoringTable = new AddGrowthMonitoringTable();
+//                    addGrowthMonitoringTable.setId(null);
+//                    addGrowthMonitoringTable.setRemarks("30");
+//                    addGrowthMonitoringTable.setStage("30");
+//                    addGrowthMonitoringTable.setFarmerCode(strFarmerCode);
+//                    if(seasonCode.isEmpty()){
 //                        addGrowthMonitoringTable.setSeasonCode("2022-23");
-                        addGrowthMonitoringTable.setFileUrl(strComplainImage2);
-                        addGrowthMonitoringTable.setLocalDocUrl(strBankLocalImagePath2);
-                        addGrowthMonitoringTable.setSync(false);
-                        addGrowthMonitoringTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
-                        addGrowthMonitoringTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
-                        addGrowthMonitoringTable.setCreatedDate(dateTime);
-                        addGrowthMonitoringTable.setUpdatedDate(dateTime);
-                        addGrowthMonitoringTable.setActive(true);
-                        addGrowthMonitoringTable.setServerStatus("0");
-                        addGrowthMonitoringTable.setPlotNo(strPlotNumber);
-//                        savingComplainImagesTable.setLogBookNo(logbookno);
+//                    } else {
+//                        addGrowthMonitoringTable.setSeasonCode(seasonCode);
+//                    }
+//
+//                    addGrowthMonitoringTable.setFileUrl(strComplainImage2);
+//                    addGrowthMonitoringTable.setLocalDocUrl(strBankLocalImagePath2);
+//                    addGrowthMonitoringTable.setSync(false);
+//                    addGrowthMonitoringTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+//                    addGrowthMonitoringTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+//                    addGrowthMonitoringTable.setCreatedDate(dateTime);
+//                    addGrowthMonitoringTable.setUpdatedDate(dateTime);
+//                    addGrowthMonitoringTable.setActive(true);
+//                    addGrowthMonitoringTable.setServerStatus("0");
+//                    addGrowthMonitoringTable.setPlotNo(strPlotNumber);
+////                        savingComplainImagesTable.setLogBookNo(logbookno);
+//
+//
+//                    viewModel.insertGrowthMonitoringIntoLocalDBQuery(addGrowthMonitoringTable);
+//
+//                }
+//                else if(!strImageOnePath.isEmpty()||!strImageTwoPath.isEmpty()){
+//                    if(!strImageOnePath.isEmpty()){
+//
+//                        String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+//
+//                        String strComplainImage1 =  ImageUtility.convertBitmapToString(bitmapOne);
+////                        String strComplainImage1 = "data:image/png;base64," + ImageUtility.convertBitmapToString(bitmapLand1);
+//                        String strBankLocalImagePath = strImageOnePath;
+//
+//                        AddGrowthMonitoringTable savingComplainImagesTable = new AddGrowthMonitoringTable();
+//                        savingComplainImagesTable.setId(null);
+//                        savingComplainImagesTable.setRemarks("30");
+//                        savingComplainImagesTable.setStage("30");
+//
+//                        savingComplainImagesTable.setFarmerCode(strFarmerCode);
+////                        String seasonCode= appHelper.getSharedPrefObj().getString(SeasonCode,"");
+//                        if(seasonCode.isEmpty()){
+//                            savingComplainImagesTable.setSeasonCode("2022-23");
+//                        } else {
+//                            savingComplainImagesTable.setSeasonCode(seasonCode);
+//                        }
+//
+////                        savingComplainImagesTable.setSeasonCode("2022-23");
+//                        savingComplainImagesTable.setFileUrl(strComplainImage1);
+//                        savingComplainImagesTable.setLocalDocUrl(strBankLocalImagePath);
+//                        savingComplainImagesTable.setSync(false);
+//                        savingComplainImagesTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+//                        savingComplainImagesTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+//                        savingComplainImagesTable.setCreatedDate(dateTime);
+//                        savingComplainImagesTable.setUpdatedDate(dateTime);
+//                        savingComplainImagesTable.setActive(true);
+//                        savingComplainImagesTable.setServerStatus("0");
+//                        savingComplainImagesTable.setPlotNo(strPlotNumber);
+////                        savingComplainImagesTable.setLogBookNo(logbookno);
+//
+//
+//                        viewModel.insertGrowthMonitoringIntoLocalDBQuery(savingComplainImagesTable);
+//
+//                    }
+//                    else {
+//                        String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+//
+//                        String strComplainImage2 =  ImageUtility.convertBitmapToString(bitmapTwo);
+////                        String strComplainImage1 = "data:image/png;base64," + ImageUtility.convertBitmapToString(bitmapLand1);
+//                        String strBankLocalImagePath2 = strImageTwoPath;
+//
+//                        AddGrowthMonitoringTable addGrowthMonitoringTable = new AddGrowthMonitoringTable();
+//                        addGrowthMonitoringTable.setId(null);
+//                        addGrowthMonitoringTable.setRemarks("30");
+//                        addGrowthMonitoringTable.setStage("30");
+//
+//                        addGrowthMonitoringTable.setFarmerCode(strFarmerCode);
+//                        if(seasonCode.isEmpty()){
+//                            addGrowthMonitoringTable.setSeasonCode("2022-23");
+//                        } else {
+//                            addGrowthMonitoringTable.setSeasonCode(seasonCode);
+//                        }
+////                        addGrowthMonitoringTable.setSeasonCode("2022-23");
+//                        addGrowthMonitoringTable.setFileUrl(strComplainImage2);
+//                        addGrowthMonitoringTable.setLocalDocUrl(strBankLocalImagePath2);
+//                        addGrowthMonitoringTable.setSync(false);
+//                        addGrowthMonitoringTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+//                        addGrowthMonitoringTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+//                        addGrowthMonitoringTable.setCreatedDate(dateTime);
+//                        addGrowthMonitoringTable.setUpdatedDate(dateTime);
+//                        addGrowthMonitoringTable.setActive(true);
+//                        addGrowthMonitoringTable.setServerStatus("0");
+//                        addGrowthMonitoringTable.setPlotNo(strPlotNumber);
+////                        savingComplainImagesTable.setLogBookNo(logbookno);
+//
+//                        viewModel.insertGrowthMonitoringIntoLocalDBQuery(addGrowthMonitoringTable);
+//
+//                    }
+//
+////                }
+//                if (!strImageOnePath.isEmpty() && !strImageTwoPath.isEmpty()) {
+//                    saveGrowthMonitoringRecord(bitmapOne, strImageOnePath);
+//                    saveGrowthMonitoringRecord(bitmapTwo, strImageTwoPath);
+//                } else
 
-                        viewModel.insertGrowthMonitoringIntoLocalDBQuery(addGrowthMonitoringTable);
 
-                    }
-
+                if (strImageOnePath != null && !strImageOnePath.isEmpty()) {
+                    saveGrowthMonitoringRecord(bitmapOne, strImageOnePath);
+                } else if (strImageTwoPath != null && !strImageTwoPath.isEmpty()) {
+                    saveGrowthMonitoringRecord(bitmapTwo, strImageTwoPath);
                 }
-
                 String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
                 String micro="";
                 String trash="";
@@ -388,16 +400,14 @@ public class AgreementedDetailsGrowthMonitoringActivity extends BaseActivity imp
                     load=edtLoadShedderArea.getText().toString();
                 }
                 Log.e("agreemented save",cropId+" - "+ weedStatusId);
-//                viewModel.updateD10Agreemented(cropId,micro,trash,gaps,weedStatusId,bio,deep,deTrash,earth,ratoon,trashShedder,load,false,dateTime,strPlotNumber,"0");
-                viewModel.updateD30Agreemented(cropId,micro,trash,gaps,weedStatusId,bio,deep,deTrash,earth,ratoon,trashShedder,load,false,dateTime,strPlotNumber,"0");
-
-
-
+//              viewModel.updateD30Agreemented(cropId,micro,trash,gaps,weedStatusId,bio,deep,deTrash,earth,ratoon,trashShedder,load,
+//                      false,dateTime,strPlotNumber,"0");
+                viewModel.updateD30Agreemented(cropId,micro,trash,gaps,weedStatusId,bio,deep,deTrash,earth,ratoon,trashShedder,load,
+                        false,dateTime,strPlotNumber,"0");
+                Log.e("agreemented save",cropId+" - "+ weedStatusId);
                 finish();
             }
         });
-
-
         spInterCrop.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -442,6 +452,37 @@ public class AgreementedDetailsGrowthMonitoringActivity extends BaseActivity imp
 
         configureDagger();
         configureViewModel();
+    }
+
+    private void saveGrowthMonitoringRecord(Bitmap bitmap, String imagePath) {
+        String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+
+        String strComplainImage = ImageUtility.convertBitmapToString(bitmap);
+
+        AddGrowthMonitoringTable growthMonitoringTable = new AddGrowthMonitoringTable();
+        growthMonitoringTable.setId(null);
+        growthMonitoringTable.setRemarks("30");
+        growthMonitoringTable.setStage("30");
+        growthMonitoringTable.setFarmerCode(strFarmerCode);
+
+        if (seasonCode.isEmpty()) {
+            growthMonitoringTable.setSeasonCode("2023-24");
+        } else {
+            growthMonitoringTable.setSeasonCode(seasonCode);
+        }
+
+        growthMonitoringTable.setFileUrl(strComplainImage);
+        growthMonitoringTable.setLocalDocUrl(imagePath);
+        growthMonitoringTable.setSync(false);
+        growthMonitoringTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+        growthMonitoringTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID, ""));
+        growthMonitoringTable.setCreatedDate(dateTime);
+        growthMonitoringTable.setUpdatedDate(dateTime);
+        growthMonitoringTable.setActive(true);
+        growthMonitoringTable.setServerStatus("0");
+        growthMonitoringTable.setPlotNo(strPlotNumber);
+
+        viewModel.insertGrowthMonitoringIntoLocalDBQuery(growthMonitoringTable);
     }
 
     private void openCameraPermission(Boolean land) {

@@ -113,6 +113,7 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
 
     List<String> seedMaterials = new ArrayList<>();
     List<LookupDtlTable> seedMaterialIdList = new ArrayList<>();
+
     String seedMaterialId;
 
     List<String> spacings = new ArrayList<>();
@@ -549,8 +550,12 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     if(position>0){
-                    seedMaterialId= String.valueOf(seedMaterialIdList.get(position-1).getId());
+                        seedMaterialId= String.valueOf(seedMaterialIdList.get(position-1).getId());
+                        Log.e("====>seedMaterialId",seedMaterialId);
                     }
+
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -770,6 +775,7 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
             @Override
             public void onClick(View v) {
                 if (validateUI()) {
+                    Log.e(":seedMaterialId==>775", seedMaterialId+"");
                     AddD10Table addD10Table = new AddD10Table();
                     addD10Table.setVarietyId(varietyId);
                     addD10Table.setSeasonCode(strSelectSeason);
@@ -788,7 +794,7 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
 
 //                addD10Table.setCropTypeId(Integer.parseInt(strCropType));
 //                addD10Table.setCropTypeId(Integer.parseInt(cropId));
-                    addD10Table.setIrrigationTypeId(methodOfIrrigationId);
+                    addD10Table.setIrrigationTypeId("");
 //                addD10Table.setIrrigationTypeId(addPlotTable.getIrrigationTypeId());
                     addD10Table.setGuarantor1("");
                     addD10Table.setGuarantor2("");
@@ -807,7 +813,7 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
                     addD10Table.setDistanceFromPlot(edtDistanceFromPlot.getText().toString());
                     addD10Table.setSpacingId(spacingId);
                     addD10Table.setPreviousCropId(cropId);
-                    addD10Table.setPlotExistOnId(plotExistsOnId);
+                    addD10Table.setPlotExistOnId(methodOfIrrigationId);
                     addD10Table.setProfile(edtProfiles.getText().toString());
                     addD10Table.setCultivatedArea(edtCultivatedArea.getText().toString());
 //                addD10Table.setOfferedNo(Integer.parseInt(cropId));//offered
@@ -1405,9 +1411,9 @@ public class ReportedAreaActivity extends BaseActivity implements HasSupportFrag
                         viewModel.getLookupDetailsListLiveData().removeObserver(this);
                         //appHelper.getDialogHelper().getLoadingDialog().closeDialog();
                         //clusterList.add("Select Cluster");
-                        soilTypes.clear();
-                        soilTypeList.clear();
-                        soilTypeList = seasonTableList;
+                        seedMaterials.clear();
+                        seedMaterialIdList.clear();
+                        seedMaterialIdList = seasonTableList;
 
                         if (seasonTableList != null && seasonTableList.size() > 0) {
                                                         seedMaterials.add("Select SeedMaterialUsed *");

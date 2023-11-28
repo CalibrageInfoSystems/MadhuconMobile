@@ -1452,6 +1452,15 @@ public class AppViewModel extends ViewModel {
         }
     }
 
+    public void updateD30values(String inspectiondate, String agreementarea, String nomini, String g1, String g2, String g3, String relationTypeId, Boolean sync, String updatedDate,String updateByUserId, String plotNO, String serverStatus)
+    {
+        try {
+            appRepository.updateD30updatevalues(inspectiondate,agreementarea,nomini,g1,g2,g3,relationTypeId,false,updatedDate,updateByUserId,plotNO,"0");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void updateD10(String soilType,String spacing,String previous,String IrrigationTypeId, String IsSettsHotWaterTreatment, String IsDustApplied, String IsTrashMulching, String IsPreviousRedPlot, String IsBasalFertilization,String IsCompositeFormYard,String IsFilterPressMud,String IsGreenManures, Boolean sync, String updatedDate,String plotNO,String serverStatus)
     {
         try {
@@ -3426,7 +3435,7 @@ public class AppViewModel extends ViewModel {
     public void insertD20IntoLocalDBQuery(AddD20Table divisionTable) {
         try {
             insertD20ListIntoLocalDBQueryLiveData = appRepository.insertD20IntoLocalDB(divisionTable);
-            Log.e("========>date",divisionTable.getInspectionDate());
+       //     Log.e("========>date",divisionTable.getInspectionDate());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -422,6 +422,7 @@ String seasonCode="";
                 }
                 Toast.makeText(ReportedDetailsGrowthMonitoringActivity.this, soilTypeId+" ", Toast.LENGTH_SHORT).show();
                 viewModel.updateD10(soilTypeId,spacingId,cropId,irrigationId,setts,dust,trash,redPlot,basel,composite,mud,manure,false,dateTime,plotNo,"0");
+                viewModel.updateD10(soilTypeId,spacingId,cropId,irrigationId,setts,dust,trash,redPlot,basel,composite,mud,manure,false,dateTime,plotNo,"0");
                 finish();
             }
         });

@@ -453,6 +453,7 @@ public class FieldCalculatorActivity extends BaseActivity {
                         viewModel.updatePLotNoStage(String.valueOf(measuredArea),appHelper.getSharedPrefObj().getString(DeviceUserID, ""),dateTime,plot);
 //                        viewModel.updatePLotNo(String.valueOf(measuredArea),"1",dateTime,plot);
 //                        viewModel.updatePLotNoStage(String.valueOf(measuredArea),"1",dateTime,plot);
+
                         viewModel.insertD20IntoLocalDBQuery(addD20Table);
 
                         finish();

@@ -58,7 +58,6 @@ import com.trst01.locationtracker.database.entity.VillageTable;
 import com.trst01.locationtracker.database.entity.WarehouseTable;
 import com.trst01.locationtracker.database.entity.WeedTable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -648,6 +647,9 @@ public abstract List<AddD20Table> getPlotListByStatusSeasonCode(String seasonCod
 
     @Query("UPDATE AddD30Table set InterCropId = :crop,IsMicronutrientDeficiency= :micro,IsTrashMulching= :trash,IsGapsFilled=:gaps,WeedStatusId=:weedStatus,BioFertilizerAppliedArea=:bioArea,DeepPloughedArea=:deepArea,DeTrashingArea=:trashArea,EarthingUpArea=:earthArea,RatoonManagedUsedArea=:ratoonArea,TrashShedderArea=:trashShedderArea,LoadShedderArea=:LoadShedderArea, UpdatedDate = :updatedDate,CreatedDate = :updatedDate,Sync =:sync,ServerStatus= :serverStatus  WHERE  PlotNo = :plotNO")
     public abstract void updateD30Agreemented(String crop,String micro,String trash,String gaps, String weedStatus, String bioArea, String deepArea, String trashArea, String earthArea,String ratoonArea,String trashShedderArea,String LoadShedderArea, Boolean sync, String updatedDate,String plotNO,String serverStatus);
+    @Query("UPDATE AddD30Table set InspectionDate = :inspectiondate,AggrementedArea = :agreementarea,Nominee= :Nominee,Guarantor1=:g1,Guarantor2=:g2,Guarantor3=:g3," +
+            "RelationShipTypeId=:relationTypeId, UpdatedDate = :updatedDate,CreatedDate = :updatedDate,Sync =:sync,ServerStatus= :serverStatus  WHERE  PlotNo = :plotNO")
+    public abstract void updateD30values(String inspectiondate, String agreementarea, String Nominee, String g1, String g2, String g3, String relationTypeId, Boolean sync, String updatedDate,String plotNO, String serverStatus);
 
     @Query("UPDATE AddD10Table set SoilTypeId = :soilType,SpacingId= :spacing,PreviousCropId= :previous,IrrigationTypeId=:IrrigationTypeId,IsSettsHotWaterTreatment=:IsSettsHotWaterTreatment,IsDustApplied=:IsDustApplied,IsTrashMulching=:IsTrashMulching,IsPreviousRedPlot=:IsPreviousRedPlot,IsBasalFertilization=:IsBasalFertilization,IsCompositeFormYard=:IsCompositeFormYard,IsFilterPressMud=:IsFilterPressMud,IsGreenManures=:IsGreenManures, UpdatedDate = :updatedDate,CreatedDate = :updatedDate,Sync =:sync,ServerStatus= :serverStatus  WHERE  PlotNo = :plotNO")
     public abstract void updateD10(String soilType,String spacing,String previous,String IrrigationTypeId, String IsSettsHotWaterTreatment, String IsDustApplied, String IsTrashMulching, String IsPreviousRedPlot, String IsBasalFertilization,String IsCompositeFormYard,String IsFilterPressMud,String IsGreenManures, Boolean sync, String updatedDate,String plotNO,String serverStatus);

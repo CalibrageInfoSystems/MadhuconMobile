@@ -13,6 +13,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.room.Query;
 
 import com.trst01.locationtracker.constant.AppConstant;
 import com.trst01.locationtracker.constant.AppHelper;
@@ -3544,7 +3545,15 @@ public class AppRepository {
 
     public void updateD30Agreemented(String crop,String micro,String trash,String gaps, String weedStatus, String bioArea, String deepArea, String trashArea, String earthArea,String ratoonArea,String trashShedderArea,String LoadShedderArea, Boolean sync, String updatedDate,String plotNO,String serverStatus) {
         executor.execute(() -> {
-            appDAO.updateD30Agreemented(crop,micro,trash,gaps,weedStatus,bioArea,deepArea,trashArea,earthArea,ratoonArea,trashShedderArea,LoadShedderArea,false,updatedDate,plotNO,"0");
+            appDAO.updateD30Agreemented(crop,micro,trash,gaps,weedStatus,bioArea,deepArea,trashArea,earthArea,ratoonArea,trashShedderArea,
+                    LoadShedderArea,false,updatedDate,plotNO,"0");
+        });
+    }
+
+
+    public void updateD30updatevalues(String inspectiondate, String agreementarea, String nomini, String g1, String g2, String g3, String relationTypeId, boolean b, String updatedDate, String updateByUserId,String plotNO, String s) {
+        executor.execute(() -> {
+            appDAO.updateD30values(inspectiondate,agreementarea,nomini,g1,g2,g3,relationTypeId,false,updatedDate,plotNO,"0");
         });
     }
 
@@ -9622,6 +9631,7 @@ public class AppRepository {
             return -1;
         }
     }
+
 
 //
 //    // TODO: 2/21/2022 organic
