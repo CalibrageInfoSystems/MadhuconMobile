@@ -24,13 +24,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.gson.Gson;
 import com.trst01.locationtracker.constant.AppConstant;
@@ -50,9 +47,7 @@ import java.util.concurrent.Executor;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.support.HasSupportFragmentInjector;
 
 //import com.matrixoilpalm.mainapp.areacalculator.LocationProvider;
 //import com.matrixoilpalm.mainapp.cloudhelper.ApplicationThread;
@@ -107,18 +102,25 @@ public class FalogService extends Service implements LocationListener {
     public static final String ACTION_START = "com.matrixoilpalm.mainapp.falogService.start";
     public static final String TRACKING_LONGITUDE = "geo_longitude";
     public static final String TRACKING_LATITUDE = "geo_latitude";
-//    private DataAccessHandler dataAccessHandler = null;
-//    public AppViewModel viewModel;
-//    public AppRepository appRepository;
-//    private final AppDAO appDAO;
-//    private final Executor executor;
-//    private final AppHelper appHelper;
+ //   private DataAccessHandler dataAccessHandler = null;
+    public AppViewModel viewModel;
+    public AppRepository appRepository;
+    private final AppDAO appDAO;
+    private final Executor executor;
+
 
     int delay = 10000;
     Handler handler = new Handler();
     Runnable runnable;
     //    public AppHelper appHelper;
     public AppHelper appHelper;
+
+    public FalogService(AppDAO appDAO, Executor executor, AppHelper appHelper) {
+        this.appDAO = appDAO;
+        this.executor = executor;
+        this.appHelper = appHelper;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -230,7 +232,7 @@ public class FalogService extends Service implements LocationListener {
         context = getApplicationContext();
 //        viewModel = ViewModelProviders.of((FragmentActivity) context, viewModelFactory).get(AppViewModel.class);
 
-//        appRepository = new AppRepository();
+//        appRepository = new AppRepository(appDAO, executor, appHelper);
 //        viewModel = new AppViewModel(appRepository);
         d(LOG_TAG, "start location service & location listener");
         ApplicationThread.nuiPost(LOG_TAG, "start lococation service", new Runnable() {

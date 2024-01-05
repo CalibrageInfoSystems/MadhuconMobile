@@ -3,6 +3,7 @@ package com.trst01.locationtracker.view_models;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.trst01.locationtracker.database.entity.AddComplaintsDetailsTable;
@@ -70,23 +71,6 @@ public class AppViewModel extends ViewModel {
         this.appRepository = appRepository;
     }
 
-//    private LiveData<List<String>> stringListLiveData;
-//    private LiveData<String> successStr;
-//    private LiveData<FarmerTable> farmerDetailListTableLiveData;
-//
-//    private LiveData<FarmerTable> farmerDetailListTableLiveDataInsert;
-//    private LiveData<DocIdentiFicationDeatilsTable> documentSavingDataLocalDB;
-//    private LiveData<BankDetailsSubmitTable> bankDetailsSubmitTableLiveData;
-//    private LiveData<DocIdentiFicationDeatilsTable> docIdentiFicationDeatilsTableLiveData;
-//    private LiveData<CurrentVisitFarmerTables> currentVisitFarmerTablesLiveData;
-//    private LiveData<PlotDetailsListTable> plotDetailListTableLiveData;
-//    private LiveData<List<PinCodeDetailsDataTable>> bypincodestatevillagelistitemLiveData;
-//
-//    private LiveData<List<PinCodeDetailsResponseDTO>> pincodeDetailsResponseFromServerLiveData;
-//    private LiveData<List<CropDetailsResponseFromServerDTO>> cropDetailsResponseFromServerLiveData;
-//
-//    private LiveData<List<PlotNumberDataResponseDTO>> syncDataResponseDTOLiveData;
-//
     private LiveData<List<AddGeoBoundriesTable>> plotGeoBoundsFromLocalDBLiveDataNotSync;
     private LiveData<List<LookupHDRTable>> lookupHdrListFromLocalDBLiveData;
     private LiveData<List<LookupDtlTable>> lookupDtlListFromLocalDBLiveData;
@@ -106,90 +90,7 @@ public class AppViewModel extends ViewModel {
     private LiveData<List<D20PestTable>> d20pestListDbLiveData;
     private LiveData<List<LookUpDropDownDataTable>> getLookUpDataListFromLocalDBLiveData;
     private LiveData<LookUpDropDownDataTable> getLookUpSelectionNameLookUpId;
-//    private LiveData<List<FarmerTable>> farmerListFromLocalDBLiveDataNotSync;
-//    private LiveData<List<PlotDetailsListTable>> landdetailsListFromLocalDBLiveData;
-//
-//    private LiveData<List<VillageDetailsResponseDTO>> villageDetailsResponseFromServerLiveData;
-//
-//
-//    private LiveData<List<PlotDetailsListTable>> landDetailsLocalDbDataLiveData;
-//    private LiveData<List<DocIdentiFicationDeatilsTable>> docIdentificationDetailsSubmitTableLiveData;
-//    private LiveData<List<BankDetailsSubmitTable>> bankDetailsSubmitTableFromLocalDbLiveData;
-//
-//    private LiveData<List<BankDetailsSubmitTable>> bankDetailsFromLocalDBByfarmerCode;
-//    private LiveData<List<DocIdentiFicationDeatilsTable>> docIdentificationDetailsByFarmerCode;
-//
-//    private LiveData<List<SavingComplainImagesTable>> savingComplainImagesTableLiveData;
-//    // TODO: Adding Response live data for cluster process
-//    private LiveData<List<StateListResponseDTO>> stateDetailsResponseFromServerLiveData;
-//    private LiveData<List<DistricDetailsResponseDTO>> districDetailsResponseFromServerLiveData;
-//    private LiveData<List<VillageByMandalIdDetailsResponseDTO>> villageDetailsByMandalResponseFromServerLiveData;
-//    private LiveData<List<MandalDetailsResponseDTO>> mandalDetailsResponseFromServerLiveData;
-//    private LiveData<List<ClusterDetailsResponseDTO>> clusterDetailsResponseFromServerLiveData;
-//    private LiveData<List<SyncResponseDTO>> syncResponseDTOFromServerLiveData;
-//    private LiveData<GeoBoundariesTable> geoBoundariesTableLocalDbInsertLiveData;
-//    private LiveData<List<GeoBoundariesTable>> geoBoundariesTableFromLocalDbLiveData;
-//
-//
-//    private LiveData<AddLandPreparationTable> getLandPreparationFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddGeoBoundriesTable> getGeoBoundriesFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddFertilizerDetailsTable> getFertilizerFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddTransplantingTable> getTransplantingFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddWaterManagementTable> getWaterManagementFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddWeedManagementTable> getWeedManagementFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddYieldTable> getYieldFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddMoistureContentTable> getMoistureContentFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddNurseryPreparationTable> getNurseryPreparationFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddSeedRateTable> getSeedRateFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddHarvestingTable> getHarvestingFeildDetailsTableLiveDataByDate;
-//    private LiveData<AddPestDiseaseControlTable> getPestDiseasecontrolFeildDetailsTableLiveDataByDate;
-//
-//
-//    private LiveData<List<GeoBoundariesTable>>  listentryValuesGeoBoundaries;
-//    // TODO: 1/21/2022 Local Save
-//
-//
-//    // TODO: Adding Response live data for cluster process
-//    private LiveData<List<StatesTable>> stateListSavedIntoLocalDBFromServer;
-//    private LiveData<List<DistrictTable>> districListSavedIntoLocalDBFromServer;
-//    private LiveData<List<MandalTable>> mandalListSavedIntoLocalDBFromServer;
-//    private LiveData<List<CropListTable>> cropListSavedIntoLocalDBFromServer;
-//    private LiveData<List<VillageTable>> villageListSavedIntoLocalDBFromServer;
-//    private LiveData<List<ClusterHDRTable>> clusterHDRlistSavedIntoLocalDBFromServer;
-//
-//    private LiveData<List<ClusterDTLTable>> clusterdtlListSavedIntoLocalDBFromServer;
-//    private LiveData<List<PinCodeDetailsListTable>> pinCodeDetailsListSavedIntoLocalDBFromServer;
-//    private LiveData<List<VillageDetailsByPinCodListTable>> pincodevillageDetailsListSavedIntoLocalDBFromServer;
-//
-//
-//    // TODO: Adding server details into local db
-//
-//    private LiveData<StatesTable> insertStatesListDataIntoLocalDBQueryLiveData;
-//    //  private LiveData<DistrictTable> insertDistrictListDataIntoLocalDBQueryLiveData;
-//    private LiveData<DistrictTable> insertDistrictListDataIntoLocalLiveData;
-//    private LiveData<MandalTable> insertMandalListDataIntoLocalDBQueryLiveData;
-//    private LiveData<CropListTable> insertCropListDataIntoLocalDBQueryLiveData;
-//    private LiveData<CropVarietyListTable> insertCropVarietyListDataIntoLocalDBQueryLiveData;
-//    private LiveData<VillageTable> insertVillageListDataIntoLocalDBQueryLiveData;
-    //    private LiveData<ClusterDTLTable> insertClusterDTLListDataIntoLocalDBQueryLiveData;
-//
-//    // TODO: getting values from local DB
-//    private LiveData<List<StatesTable>> getStateListFromLocalDBLiveData;
-//    private LiveData<List<DistrictTable>> getDistricListFromLocalDBLiveData;
-//    private LiveData<List<MandalTable>> getMandalListFromLocalDBLiveData;
-//    private LiveData<List<CropListTable>> getCropListFromLocalDBLiveData;
-//    private LiveData<List<CropVarietyListTable>> getCropVarietyListFromLocalDBLiveData;
-//    private LiveData<List<VillageTable>> getVillageListFromLocalDBLiveData;
-//    private LiveData<List<ClusterHDRTable>> getClusterListFromLocalDBLiveData;
-//    private LiveData<ClusterDTLTable> getClusterDTlFromLocalDBLiveData;
-//
-//
-//    private LiveData<List<GetMasterPersonalLandAllDetailsRequestDTO>> getMasterSyncDataFromServerLiveData;
-//
-//
-//    // TODO: 1/26/2022 For handling auto generated pincode and address details
-//    private LiveData<List<VillageTable>> villageDetailsByPincode;
-//
+
     private LiveData<List<SeasonTable>> getSeasonlistFromlocalDBLiveData;
     private LiveData<LoginResponseDTO> loginResponseDTOFromServerLiveData;
     private LiveData<VillageTable> getVillageDetailsFromLocalDBByVillageID;
@@ -208,31 +109,8 @@ public class AppViewModel extends ViewModel {
     private LiveData<DistrictTable> getDistrictDetailsFromLocalDBByCircleID;
     private LiveData<BankTable> getBankDetailsFromLocalDBByCircleID;
     private LiveData<BranchTable> getBranchDetailsFromLocalDBByID;
-//    private LiveData<MandalTable> getDeatailsFromMandalTableLocalDbLiveData;
-//    private LiveData<DistrictTable> getDistrictDetailsFromLocalDB;
-//    private LiveData<StatesTable> getStateDetailsFromLocalDB;
+
     private LiveData<CropTable> getCropDetailsFromLocalDBByCropID;
-//    private LiveData<CropVarietyListTable> getCropVarietyDetailsFromLocalDBByCropID;
-//
-//    private LiveData<PlotDetailsListTable> singleplotDetailsFromLocalDBLiveData;
-//
-//
-//    private LiveData<SavingFarmerProfieImagesTable> savingFarmerProfieImagesTableLiveData;
-//    private LiveData<List<SavingFarmerProfieImagesTable>> savingFarmerProfileImagesNotSyncLiveData;
-//
-//
-//
-//    private LiveData<SavingPlotProfieImagesTable> savingPlotImagesTableLiveData;
-//    private LiveData<List<SavingPlotProfieImagesTable>> savingPlotProfileImagesNotSyncLiveData;
-//
-//
-//
-//    private LiveData<SavingBankImagesTable> savingBankImagesTableLiveData;
-//    private LiveData<List<SavingBankImagesTable>> savingBankProfileImagesNotSyncLiveData;
-//
-//    private LiveData<GeoBoundariesTable> geoBoundariesTableLiveDataInsert;
-//    private LiveData<List<GeoBoundariesTable>> savingGeoBoundariesTableListData;
-//    // TODO: 2/15/2022 log book data
 //
 
     private LiveData<DivisionTable> insertDivisionListIntoLocalDBQueryLiveData;
@@ -314,92 +192,6 @@ public class AppViewModel extends ViewModel {
         return loginResponseDTOFromServerLiveData;
     }
 
-
-    //    private LiveData<LogBookDropDownHDRTable> insertLogBookHDRIntoLocalDBQueryLiveData;
-//    private LiveData<LookUpDropDownDataTable> insertLookUpDropDownDataIntoLocalDBQueryLiveData;
-//    private LiveData<List<SeasonTable>> getSeasonlistFromlocalDBLiveData;
-//    private LiveData<List<LookUpDropDownDataTable>> getLookUpDataListFromLocalDBLiveData;
-//
-//    // TODO: 2/15/2022 db saving part for log book
-//    private LiveData<AddLogBookDetailsTable> addLogBookDetailsTableLiveData;
-//    private LiveData<List<AddLogBookDetailsTable>> logbookListLocalDbDataLiveData;
-//    private LiveData<AddLogBookDetailsTable> upDateaddLogBookDetailsTableLiveData;
-//    private LiveData<AddLogBookDetailsTable> getAddLogBookDetailsTableLiveDataByDate;
-//
-//    private LiveData<AddFertilizerDetailsTable> addFertilizerDetailsTableLiveData;
-//    private LiveData<List<AddFertilizerDetailsTable>> fertilizerlistFromLocalDBLiveData;
-//    private LiveData<AddFertilizerDetailsTable> getFertilizerDetailsTableLiveDataByDate;
-//
-//    private LiveData<LogBookModulesStatusDetailsTable> getLogBookModulesStatusDetailsFromLocalDBByLogBookID;
-//    private LiveData<LogBookModulesStatusDetailsTable> savingLogBookModulesStatusDetailsTable;
-//
-//
-//
-////    private LiveData<AddOrganicDetailsTable> addOrganicDetailsTableLiveData;
-////    private LiveData<List<AddOrganicDetailsTable>> orgaincAmendsDatalistFromLocalDBLiveData;
-//
-//
-////    private LiveData<AddWaterSeasonFeildTable> addWaterSeasonFeildTableLiveData;
-////    private LiveData<AddWaterSeasonFeildTable> getWaterSeasonFieldDetailsFromLocalDBLiveData;
-//
-//
-//    private LiveData<AddLandPreparationTable> addLandPreparationTableLiveData;
-//    private LiveData<List<AddLandPreparationTable>> getLandPreparationDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddPestDiseaseControlTable> addPestDiseaseTableLiveData;
-//    private LiveData<List<AddPestDiseaseControlTable>> getPestDiseasecontrolDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddHarvestingTable> addharvestingTableLiveData;
-//    private LiveData<List<AddHarvestingTable>> getharvestingDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddSeedRateTable> addSeedRateTableLiveData;
-//    private LiveData<List<AddSeedRateTable>> getSeedrateDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddNurseryPreparationTable> addNurseryPreparationTableLiveData;
-//    private LiveData<List<AddNurseryPreparationTable>> getNurseryPreparationDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddMoistureContentTable> addMoistureContentTableLiveData;
-//    private LiveData<List<AddMoistureContentTable>> getMoistureContentDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddYieldTable> addYieldTableLiveData;
-//    private LiveData<List<AddYieldTable>> getYieldDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddWeedManagementTable> addWeedManagementTableLiveData;
-//    private LiveData<List<AddWeedManagementTable>> getWeedmanagementDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddWaterManagementTable> addWaterManagementTableLiveData;
-//    private LiveData<List<AddWaterManagementTable>> getWatermanagementDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddTransplantingTable> addTransplantingTableLiveData;
-//    private LiveData<List<AddTransplantingTable>> getTransplantingDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddFertilizerDetailsTable> addFertilizationTableLiveData;
-//    private LiveData<List<AddFertilizerDetailsTable>> getFertilizerDetailsFromLocalDBLiveData;
-//
-//
-//    private LiveData<AddGeoBoundriesTable> addGeoBoundriesTableLiveData;
-//    private LiveData<List<AddGeoBoundriesTable>> getGeoBoundriesDetailsFromLocalDBLiveData;
-//
-//    private LiveData<AddHarvestDetailsTable> addHarvestDetailsTableLiveData;
-//    private LiveData<AddHarvestDetailsTable> getAddHarvestDetailsFromLocalDBLiveData;
-//
-//
-////    private LiveData<AddBoreWellSeasonTable> addBoreWellPumpSeasonTableLiveData;
-////    private LiveData<AddBoreWellSeasonTable> getAddBoreWellPumpSeasonDetailsFromLocalDBLiveData;
-//
-//
-////    private LiveData<AddWaterReasonPreSeasonTable> addWaterReasonPreSeasonTableLiveData;
-////    private LiveData<AddWaterReasonPreSeasonTable> getWaterReasonPreSeasonDetailsFromLocalDBLiveData;
-//
-//
-////    private LiveData<AddWaterRegimeSeasonDetailsTable> addWaterRegimeSeasonDetailsTableLiveData;
-////    private LiveData<AddWaterRegimeSeasonDetailsTable> getWaterRegimeSeasonDetailsFromLocalDBLiveData;
-//
-//
-//
-//    private LiveData<List<AddLogBookDetailsTable>> logBookListFromLocalDBLiveDataNotSync;
-//
-//
     private LiveData<List<AddD10Table>> d10ListFromLocalDBLiveDataNotSync;
     private LiveData<List<AddD20Table>> d20ListFromLocalDBLiveDataNotSync;
     private LiveData<List<AddD30Table>> d30ListFromLocalDBLiveDataNotSync;
@@ -407,348 +199,6 @@ public class AppViewModel extends ViewModel {
     private LiveData<List<AddPlantationTable>> plantationListFromLocalDBLiveDataNotSync;
 
     private LiveData<List<AddGeoBoundariesTrackingTable>> trackingListFromLocalDBLiveDataNotSync;
-//
-////    private LiveData<List<AddOrganicDetailsTable>> organicListFromLocalDBLiveDataNotSync;
-//
-////    private LiveData<List<AddWaterRegimeSeasonDetailsTable>> waterRegimeSeasonListFromLocalDBLiveDataNotSync;
-//
-////    private LiveData<List<AddWaterReasonPreSeasonTable>> waterpreSeasonFromLocalDBLiveDataNotSync;
-////
-////    private LiveData<List<AddBoreWellSeasonTable>> boreWellPumpListFromLocalDBLiveDataNotSync;
-////
-////
-////    private LiveData<List<AddWaterSeasonFeildTable>> waterSeasonFieldListFromLocalDBLiveDataNotSync;
-//
-//    private LiveData<List<AddHarvestDetailsTable>> harvestListFromLocalDBLiveDataNotSync;
-//
-//    private LiveData<LogBookDropDownHDRTable> getLogBookDropDownHDRTableDetailsFromLocalDBLiveData;
-//
-//
-//    private LiveData<LookUpDropDownDataTable> getLookUpSelectionNameLookUpId;
-//    private LiveData<SeasonTable> getSeasonNameBySeasonID;
-//
-//
-//    private LiveData<DocIdentiFicationDeatilsTable> getDocIdentiFicationDetailsFromLocalDBByFarmerCode;
-//
-//    private LiveData<RefreshTableDateCheck> addRefreshTableDateCheckLiveData;
-//    private LiveData<RefreshTableDateCheck> getAddRefreshTableDateCheck;
-//
-//
-//    @Inject
-//    public AppViewModel(AppRepository appRepository) {
-//        this.appRepository = appRepository;
-//    }
-//
-//
-//    public void logInServiceList(String userId) {
-//        try {
-//            loginResponseDTOFromServerLiveData = appRepository.getlogInServiceResponse(userId);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    public void getPincodeResponseDeatilsFromServer(String userId) {
-//        try {
-//            pincodeDetailsResponseFromServerLiveData = appRepository.getPincodeDetailsFromServer(userId);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    // TODO: state details from server
-//    public void getStateDetailsFromServer() {
-//        try {
-//            stateDetailsResponseFromServerLiveData = appRepository.getStateDetailsResponseDTOServer();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    // TODO: distric details from server
-//    public void getDistricDetailsFromServer(String stateID) {
-//        try {
-//            districDetailsResponseFromServerLiveData = appRepository.getDistricDetailsResponseDTOServer(stateID);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    // TODO: distric details from server
-//    public void getMandalDetailsFromServer(String districID) {
-//        try {
-//            mandalDetailsResponseFromServerLiveData = appRepository.getMandalDetailsResponseDTOServer(districID);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    // TODO: distric details from server
-//    public void getVillageIdFromServerByMandalId(String mandalID) {
-//        try {
-//            villageDetailsByMandalResponseFromServerLiveData = appRepository.getVillageDeatilsByMandalIdFromServer(mandalID);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    // TODO: distric details from server
-//    public void getClusertDetailsFromserver(String mandalID) {
-//        try {
-//            clusterDetailsResponseFromServerLiveData = appRepository.getCluserDetailsFromServer(mandalID);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//
-//
-//
-//    public void getvillageDetailsResponseFromServer(String userId) {
-//        try {
-//            villageDetailsResponseFromServerLiveData = appRepository.getVillageDetailsFromServer(userId);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    // TODO: 1/7/2022 saving formar details local db
-//    public void insertOrUpdateFarmerDetailListTable(FarmerTable farmerTable) {
-//        try {
-//            farmerDetailListTableLiveData = appRepository.insertOrUpdateFarmerDetailListTableTable(farmerTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-////    public void insertFarmerDetailListTable(FarmerDetailListTable farmerDetailListTable) {
-////        try {
-////            farmerDetailListTableLiveDataInsert = appRepository.insertOrUpdateFarmerDetailListTableTable(farmerDetailListTable);
-////        } catch (Exception ex) {
-////            ex.printStackTrace();
-////        }
-////    }
-//
-//    public void insertFarmerDetailListTableLocal(FarmerTable farmerTable) {
-//        try {
-//            farmerDetailListTableLiveDataInsert = appRepository.insertFarmerDetailListTableTable(farmerTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//
-//    // TODO: 1/7/2022 saving formar details local db
-//    public void insertDoctable(DocIdentiFicationDeatilsTable docIdentiFicationDeatilsTable) {
-//        try {
-//            documentSavingDataLocalDB = appRepository.insertDocIntoLocalDB(docIdentiFicationDeatilsTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    // TODO: 1/7/2022 saving formar details local db
-//    public void insertOrUpdateBankDetailsSubmitTableLocalDb(BankDetailsSubmitTable bankDetailsSubmitTable) {
-//        try {
-//            bankDetailsSubmitTableLiveData = appRepository.insertOrUpdateBankDetailsSubmitTable(bankDetailsSubmitTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    public void insertFarmerProfileImages(SavingFarmerProfieImagesTable savingFarmerProfieImagesTable) {
-//        try {
-//            savingFarmerProfieImagesTableLiveData = appRepository.insertSavingOfFarmerMultipleImages(savingFarmerProfieImagesTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    public void insertPlotPictureImagesToServer(SavingPlotProfieImagesTable savingPlotProfieImagesTable) {
-//        try {
-//            savingPlotImagesTableLiveData = appRepository.insertSavingOfPlotMultipleImages(savingPlotProfieImagesTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    public void insertBankPictureImagesToServer(SavingBankImagesTable savingBankImagesTable) {
-//        try {
-//            savingBankImagesTableLiveData = appRepository.insertSavingOfBankMultipleImages(savingBankImagesTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    public void insertGeoBoundariesvaluesIntolocalDB(GeoBoundariesTable geoBoundariesTable) {
-//        try {
-//            geoBoundariesTableLiveDataInsert = appRepository.insertGoeDataIntolocaDB(geoBoundariesTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    public void insertGeoBoundariesListvaluesIntolocalDB(List<GeoBoundariesTable> geoBoundariesTableList) {
-//        try {
-//            savingGeoBoundariesTableListData = appRepository.insertGoeBoundariesListDataIntolocaDB(geoBoundariesTableList);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//
-//    public void insertLogBookModulesStatusDetailsTable(LogBookModulesStatusDetailsTable logBookModulesStatusDetailsTable) {
-//        try {
-//            savingLogBookModulesStatusDetailsTable = appRepository.insertSavingOfLogBookModulesStatusDetailsTable(logBookModulesStatusDetailsTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    // TODO: 1/7/2022 saving documnets files local db
-//    public void insertOrUpdateDocUploadTable(DocIdentiFicationDeatilsTable docIdentiFicationDeatilsTable) {
-//        try {
-//            docIdentiFicationDeatilsTableLiveData = appRepository.insertOrUpdateDocIdentificationDetailListTable(docIdentiFicationDeatilsTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    // TODO: 1/7/2022 saving formar details local db
-//    public void insertOrUpdateCurrentVisitFarmerTables(CurrentVisitFarmerTables currentVisitFarmerTables) {
-//        try {
-//            currentVisitFarmerTablesLiveData = appRepository.insertOrUpdateCurrentVisitFarmerTablesTable(currentVisitFarmerTables);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    // TODO: sync to server methods
-//    public void syncFormerDetailsDataToServer(FarmerTable farmerTable) {
-//        try {
-//            stringLiveData = appRepository.syncFormerDetailsDataToServer(farmerTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//
-//    // TODO: sync to server methods
-//    public void syncFormerProfileDetailsToserver(SavingFarmerProfieImagesTable savingFarmerProfieImagesTable) {
-//        try {
-//            stringLiveData = appRepository.syncFarmerProfileImagesDetaisToServer(savingFarmerProfieImagesTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    public void syncPlotProfileDetailsToserver(SavingPlotProfieImagesTable savingPlotProfieImagesTable) {
-//        try {
-//            stringLiveData = appRepository.syncPlotProfileImagesDetaisToServer(savingPlotProfieImagesTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//
-//    public void syncBankProfileDetailsToserver(SavingBankImagesTable savingBankImagesTable) {
-//        try {
-//            stringLiveData = appRepository.syncBankProfileImagesDetaisToServer(savingBankImagesTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//
-//
-//    public void syncLandDetailsDataToServer(PlotDetailsListTable plotDetailsListTable) {
-//        try {
-//            stringLiveData = appRepository.syncLandDetailsDataToServer(plotDetailsListTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    public void syncDocIdentifcationDetailsDataToServer(DocIdentiFicationDeatilsTable docIdentiFicationDeatilsTable) {
-//        try {
-//            stringLiveData = appRepository.syncDocIdentificationDetailsDataToServer(docIdentiFicationDeatilsTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    public void syncBankDetailsSubmitTableDataToServer(BankDetailsSubmitTable bankDetailsSubmitTable) {
-//        try {
-//            stringLiveData = appRepository.syncBankDetailsDataToServer(bankDetailsSubmitTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    public void syncDocIdentificationDetailsDataToServer(String codeUser, String strPicUrl, String strFileExtension, String typeOfReq, String identityCode,String createdDate,String upDatedDate) {
-//        try {
-//            stringLiveData = appRepository.syncDocIdentificationDetailsToServer(codeUser, strPicUrl, strFileExtension, typeOfReq, identityCode,createdDate,upDatedDate);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    public void syncGeoBoundariesDetailsSubmitTableDataToServer(GeoBoundariesTable geoBoundariesTable) {
-//        try {
-//            stringLiveData = appRepository.syncGeoBoundariesDetailsDataToServer(geoBoundariesTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
-//    // TODO: 1/7/2022 saving plot details into local db
-//    public void insertOrUpdatPlotDetailListTable(PlotDetailsListTable plotDetailsListTable) {
-//        try {
-//            plotDetailListTableLiveData = appRepository.insertOrUpdateinsertOrUpdatePlotDetails(plotDetailsListTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    // TODO: 1/7/2022 saving plot details into local db
-//    public void insertGeoBoundariesTable(GeoBoundariesTable geoBoundariesTable) {
-//        try {
-//            geoBoundariesTableLocalDbInsertLiveData = appRepository.insertGeoBoundariesValuesIntoLocalDb(geoBoundariesTable);
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//    public void getFarmerListFromLocalDB() {
-//        try {
-//            farmerListFromLocalDBLiveDataNotSync = appRepository.getFarmerDetailslistFromLocalDB();
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
-//
-//
 
     private LiveData<SavingComplainImagesTable> savingComplainImagesTableLiveData;
     private LiveData<List<SavingComplainImagesTable>> savingComplainImagesNotSyncLiveData;
@@ -1039,10 +489,7 @@ public class AppViewModel extends ViewModel {
 
     }
 
-//    public LiveData<Integer> getPlotOfferCount() {
-//        return appRepository.getPlotOfferCount();
-//
-//    }
+
 
     public LiveData<Integer> getGeoBoundariesCount() {
         return appRepository.getGeoBoundariesCount();
@@ -1630,6 +1077,37 @@ public class AppViewModel extends ViewModel {
             ex.printStackTrace();
         }
     }
+
+
+
+    private LiveData<AddGeoBoundariesTrackingTable> insertedTrackingLiveData;
+
+    public void insertTracking(AddGeoBoundariesTrackingTable clusterHDRTable) {
+        insertedTrackingLiveData = appRepository.insertTrackingIntoLocalDB(clusterHDRTable);
+        Log.e("========>insertedTrackingLiveData",insertedTrackingLiveData+"");
+    }
+
+    public LiveData<AddGeoBoundariesTrackingTable> getInsertedTrackingLiveData() {
+        return insertedTrackingLiveData;
+    }
+
+    private MutableLiveData<Boolean> insertionSuccessLiveData = new MutableLiveData<>();
+
+    public void insertTrackingg(AddGeoBoundariesTrackingTable clusterHDRTable) {
+        appRepository.insertTrackingIntoLocalDB(clusterHDRTable, new OnInsertionCompleteListener() {
+            @Override
+            public void onInsertionComplete(boolean isSuccess) {
+                insertionSuccessLiveData.postValue(isSuccess);
+                Log.e("InsertionStatus", "Insertion success: " + isSuccess);
+            }
+        });
+    }
+
+    public LiveData<Boolean> getInsertionSuccessLiveData() {
+        return insertionSuccessLiveData;
+    }
+
+
 
 //
 //    public void getDeleteGetDataTablesFromLocal()
@@ -3584,6 +3062,7 @@ public class AppViewModel extends ViewModel {
     public void insertTrackingIntoLocalDBQuery(AddGeoBoundariesTrackingTable divisionTable) {
         try {
             insertGeoBoundariesTrackingListIntoLocalDBQueryLiveData = appRepository.insertTrackingIntoLocalDB(divisionTable);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -4016,7 +3495,7 @@ public class AppViewModel extends ViewModel {
 
     public void insertLog(String methodName, String message, String staffId, String screenNo, String screenName, String clientId, String loanType, String moduleType) {
         try {
-//            appRepository.insertLog(methodName,message,staffId,screenNo,screenName,clientId,loanType,moduleType);
+     //  appRepository.insertLog(methodName,message,staffId,screenNo,screenName,clientId,loanType,moduleType);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -4335,7 +3814,11 @@ public class AppViewModel extends ViewModel {
 
     public void getTrackingListFromLocalDBNotSync() {
         try {
+            Log.e("==========>trackingListFromLocalDBLiveDataNotSync3787",trackingListFromLocalDBLiveDataNotSync+"");
+
             trackingListFromLocalDBLiveDataNotSync = appRepository.getTrackingDetailslistFromLocalDBNotSync();
+
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -4417,7 +3900,13 @@ public class AppViewModel extends ViewModel {
             ex.printStackTrace();
         }
     }
-
+    public void syncTrackingDetailsonline(AddGeoBoundariesTrackingTable addFertilizerDetailsTable) {
+        try {
+            stringLiveData = appRepository.syncTrackingDetailsToServer(addFertilizerDetailsTable);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
     public void syncGeoBoundariesDetailsDataToServer(AddGeoBoundriesTable addFertilizerDetailsTable) {
         try {
             stringLiveData = appRepository.syncGeoBoundariesDetailsToServer(addFertilizerDetailsTable);

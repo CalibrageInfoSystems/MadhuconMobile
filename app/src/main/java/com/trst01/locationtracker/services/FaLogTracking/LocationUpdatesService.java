@@ -16,10 +16,11 @@
 
 package com.trst01.locationtracker.services.FaLogTracking;
 
+import static com.trst01.locationtracker.constant.AppConstant.DeviceUserID;
+import static com.trst01.locationtracker.constant.AppConstant.SUCCESS_RESPONSE_MESSAGE;
 import static com.trst01.locationtracker.constant.AppConstant.TestLoc;
 import static com.trst01.locationtracker.dagger.App.context;
 
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -30,6 +31,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -40,8 +43,17 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LifecycleRegistry;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelStoreOwner;
+import androidx.room.Room;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -53,20 +65,39 @@ import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.trst01.locationtracker.R;
 import com.trst01.locationtracker.activity.LoginActivity;
+import com.trst01.locationtracker.activity.SettingsActivity;
 import com.trst01.locationtracker.constant.AppConstant;
+
+import com.trst01.locationtracker.constant.AppHelper;
 import com.trst01.locationtracker.constant.CommonConstants;
 import com.trst01.locationtracker.constant.CommonUtils;
+import com.trst01.locationtracker.database.AppDatabase;
+import com.trst01.locationtracker.database.dao.AppDAO;
+import com.trst01.locationtracker.database.entity.AddGeoBoundariesTrackingTable;
 import com.trst01.locationtracker.models.Doc;
 import com.trst01.locationtracker.models.LocationDTO;
-import com.trst01.locationtracker.uiLibrary.helpers.AppHelper;
+import com.trst01.locationtracker.repositories.AppRepository;
+import com.trst01.locationtracker.services.api.AppAPI;
+import com.trst01.locationtracker.uiLibrary.dialogs.ConfirmationDialog;
 
+//import com.trst01.locationtracker.uiLibrary.helpers.AppHelper;
+import com.trst01.locationtracker.view_models.AppViewModel;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import javax.inject.Inject;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 //import androidx.annotation.NonNull;
 //import androidx.core.app.NotificationCompat;
@@ -86,7 +117,7 @@ import java.util.Collections;
  * continue. When the activity comes back to the foreground, the foreground service stops, and the
  * notification assocaited with that service is removed.
  */
-public class LocationUpdatesService extends Service {
+public class LocationUpdatesService extends Service implements LifecycleOwner {
 
     private static final String PACKAGE_NAME =
             "com.google.android.gms.location.sample.locationupdatesforegroundservice";
@@ -98,7 +129,7 @@ public class LocationUpdatesService extends Service {
      */
     private static final String CHANNEL_ID = "channel_01";
 
-    public  static  String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
+    public static String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
 
     public static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
     private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME +
@@ -155,22 +186,47 @@ public class LocationUpdatesService extends Service {
      */
     private Location mLocation;
 
+    public AppViewModel viewModel;
+    //  private AppDAO appDAO;
+    // private AppDAO appDAO ;
+    private Executor executor = Executors.newSingleThreadExecutor();
+    ;
 
+    public com.trst01.locationtracker.uiLibrary.helpers.AppHelper appHelper;
+    public AppHelper app_Helper;
+    @Inject
+    public ViewModelProvider.Factory viewModelFactory;
 
-
-    public AppHelper appHelper;
+    AppDatabase appDatabase = Room.databaseBuilder(context, AppDatabase.class, "Location.db").build();
+    AppDAO appDAO = appDatabase.bootStrapDAO();
+    public AppRepository appRepository;
+    private final LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
 
     @SuppressWarnings("deprecation")
+
     public LocationUpdatesService() {
+
+
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void onCreate() {
 
-        appHelper = new AppHelper(getApplicationContext());
+        appHelper = new com.trst01.locationtracker.uiLibrary.helpers.AppHelper(getApplicationContext());
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+//        viewModel = new ViewModelProvider((FragmentActivity) context, viewModelFactory).get(AppViewModel.class);
+
+        //     viewModel = ViewModelProviders.of((FragmentActivity) context, viewModelFactory).get(AppViewModel.class);
+        appRepository = new AppRepository(appDAO, executor, app_Helper, context);
+        viewModel = new AppViewModel(appRepository);
+        //  viewModel = ViewModelProviders.of(this, viewModelFactory).get(AppViewModel.class);
+        //  viewModel = new ViewModelProvider((ViewModelStoreOwner) this, viewModelFactory).get(AppViewModel.class);
+        //viewModel = new ViewModelProvider(this, viewModelFactory).get(AppViewModel.class);
+
+        // Set the lifecycle state to CREATED when the service is created
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
@@ -201,6 +257,278 @@ public class LocationUpdatesService extends Service {
 
     }
 
+    //    @Override
+    public void onNewLocation(Location location) {
+        if (location != null) {
+            SharedPreferences sharedPreferences = getSharedPreferences("appprefs", MODE_PRIVATE);
+            boolean isFreshInstall = sharedPreferences.getBoolean(CommonConstants.IS_FRESH_INSTALL, true);
+
+            if (isFreshInstall) {
+                // Store the first location when the app is freshly installed
+                LocationDTO locationDTO = new LocationDTO();
+                Doc doc = new Doc();
+                doc.setLat(location.getLatitude());
+                doc.setLon(location.getLongitude());
+                String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+                doc.setCreatedDate(dateTime);
+                ArrayList<Doc> docs = new ArrayList<>();
+                docs.add(doc);
+                locationDTO.setDoc(docs);
+                Gson gson = new Gson();
+                String jsonArray = gson.toJson(locationDTO, LocationDTO.class);
+                appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+                Toast.makeText(context, "isFirst", Toast.LENGTH_SHORT).show();
+                sharedPreferences.edit().putBoolean(CommonConstants.IS_FRESH_INSTALL, false).apply();
+            } else {
+                // Handle subsequent location updates
+                String testLocationData = appHelper.getSharedPrefObj().getString(TestLoc, "");
+                LocationDTO locationDTO = new LocationDTO();
+                if (!testLocationData.isEmpty()) {
+                    // Parse the stored data from shared preferences
+                    locationDTO = new Gson().fromJson(testLocationData, LocationDTO.class);
+                }
+
+                // Check the distance from the last stored location
+                double selectedLat = 0.0;
+                double selectedLon = 0.0;
+
+                if (locationDTO.getDoc() != null && !locationDTO.getDoc().isEmpty()) {
+                    Doc lastDoc = locationDTO.getDoc().get(locationDTO.getDoc().size() - 1);
+                    selectedLat = lastDoc.getLat();
+                    selectedLon = lastDoc.getLon();
+                }
+
+                double actualDistance = CommonUtils.distance(
+                        location.getLatitude(), location.getLongitude(), selectedLat, selectedLon, 'm');
+
+                if (actualDistance >= 20) {
+                    // If the distance is greater than 10 meters, store the new location
+                    Doc newDoc = new Doc();
+                    newDoc.setLat(location.getLatitude());
+                    newDoc.setLon(location.getLongitude());
+                    String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+                    newDoc.setCreatedDate(dateTime);
+                    locationDTO.getDoc().add(newDoc);
+
+                    // Sort the Doc list based on the CreatedDate property
+                    Collections.sort(locationDTO.getDoc(), (doc1, doc2) -> {
+                        String createdDate1 = doc1.getCreatedDate();
+                        String createdDate2 = doc2.getCreatedDate();
+                        return createdDate1.compareTo(createdDate2);
+                    });
+
+                    // Store the updated location data
+                    String updatedLocationData = new Gson().toJson(locationDTO, LocationDTO.class);
+                    appHelper.getSharedPrefObj().edit().putString(TestLoc, updatedLocationData).apply();
+                    Toast.makeText(context, "Added new location", Toast.LENGTH_SHORT).show();
+                    Log.e("LocationTest", "Changed and added");
+                    Log.e("New size", String.valueOf(locationDTO.getDoc().size()));
+
+//
+
+                } else {
+                    Log.e("LocationTest", "Location not added");
+                }
+            }
+        }
+    }
+
+
+//    public void onNewLocation(Location location) {
+//        if (location != null) {
+//            SharedPreferences sharedPreferences = context.getSharedPreferences("appprefs", Context.MODE_PRIVATE);
+//            boolean isFreshInstall = sharedPreferences.getBoolean(CommonConstants.IS_FRESH_INSTALL, true);
+//
+//            if (isFreshInstall) {
+//                // Store the first location when the app is freshly installed
+//                LocationDTO locationDTO = new LocationDTO();
+//                Doc doc = new Doc();
+//                doc.setLat(location.getLatitude());
+//                doc.setLon(location.getLongitude());
+//                String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+//                doc.setCreatedDate(dateTime);
+//                ArrayList<Doc> docs = new ArrayList<>();
+//                docs.add(doc);
+//                locationDTO.setDoc(docs);
+//                Gson gson = new Gson();
+//                String jsonArray = gson.toJson(locationDTO, LocationDTO.class);
+//                appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+//
+//                // Start automatic sync if network is available
+//                if (isNetworkAvailable()) {
+//                    syncDataWithServer(locationDTO);
+//                   // Toast.makeText(context, "isFirst (Data synced with server)", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    // Save the location data locally
+//                    Toast.makeText(context, "isFirst (No internet, Data saved locally)", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                sharedPreferences.edit().putBoolean(CommonConstants.IS_FRESH_INSTALL, false).apply();
+//            } else {
+//                // Handle subsequent location updates
+//                String testLocationData = appHelper.getSharedPrefObj().getString(TestLoc, "");
+//                LocationDTO locationDTO = new LocationDTO();
+//                if (!testLocationData.isEmpty()) {
+//                    // Parse the stored data from shared preferences
+//                    locationDTO = new Gson().fromJson(testLocationData, LocationDTO.class);
+//                }
+//
+//                // Check the distance from the last stored location
+//                double selectedLat = 0.0;
+//                double selectedLon = 0.0;
+//
+//                if (locationDTO.getDoc() != null && !locationDTO.getDoc().isEmpty()) {
+//                    Doc lastDoc = locationDTO.getDoc().get(locationDTO.getDoc().size() - 1);
+//                    selectedLat = lastDoc.getLat();
+//                    selectedLon = lastDoc.getLon();
+//                }
+//
+//                double actualDistance = CommonUtils.distance(
+//                        location.getLatitude(), location.getLongitude(), selectedLat, selectedLon, 'm');
+//
+//                if (actualDistance >= 20) {
+//                    // If the distance is greater than 20 meters, store the new location
+//                    Doc newDoc = new Doc();
+//                    newDoc.setLat(location.getLatitude());
+//                    newDoc.setLon(location.getLongitude());
+//                    String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+//                    newDoc.setCreatedDate(dateTime);
+//                    locationDTO.getDoc().add(newDoc);
+//
+//                    // Sort the Doc list based on the CreatedDate property
+//                    Collections.sort(locationDTO.getDoc(), (doc1, doc2) -> {
+//                        String createdDate1 = doc1.getCreatedDate();
+//                        String createdDate2 = doc2.getCreatedDate();
+//                        return createdDate1.compareTo(createdDate2);
+//                    });
+//
+//                    // Store the updated location data
+//                    String updatedLocationData = new Gson().toJson(locationDTO, LocationDTO.class);
+//                    appHelper.getSharedPrefObj().edit().putString(TestLoc, updatedLocationData).apply();
+//
+//                    // Start automatic sync if network is available
+//                    if (isNetworkAvailable()) {
+//                        syncDataWithServer(locationDTO);
+//                      //  Toast.makeText(context, "Data synced with server", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        // Save the updated location data locally
+//                        Toast.makeText(context, "Data saved locally (No internet)", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    Log.e("LocationTest", "Changed and added");
+//                    Log.e("New size", String.valueOf(locationDTO.getDoc().size()));
+//                } else {
+//                    Log.e("LocationTest", "Location not added");
+//                }
+//            }
+//        }
+//    }
+
+    // Check if network is available
+
+    private void syncDataWithServer(LocationDTO locationDTO) {
+        if(locationDTO!=null){
+            if(locationDTO.getDoc().size()>0){
+                Log.e("trackData",locationDTO.getDoc().get(0).getLat()+"-"+locationDTO.getDoc().get(0).getLon());
+                for(int i=0;i<locationDTO.getDoc().size();i++){
+                    if((locationDTO.getDoc().get(i).getLon()!=0.0)&&(locationDTO.getDoc().get(i).getLat()!=0.0)){
+                        AddGeoBoundariesTrackingTable addGeoBoundariesTrackingTable = new AddGeoBoundariesTrackingTable();
+                        addGeoBoundariesTrackingTable.setLatitude(String.valueOf(locationDTO.getDoc().get(i).getLat()));
+                        addGeoBoundariesTrackingTable.setLongitude(String.valueOf(locationDTO.getDoc().get(i).getLon()));
+                        addGeoBoundariesTrackingTable.setId(null);
+                        addGeoBoundariesTrackingTable.setUserId(Integer.parseInt(appHelper.getSharedPrefObj().getString(DeviceUserID,"")));
+                        addGeoBoundariesTrackingTable.setSeqNo(i);
+                        addGeoBoundariesTrackingTable.setIsActive(true);
+                        //  addGeoBoundariesTrackingTable.setIsActive(true);
+                        String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+                        Log.d("TAG", "onClick: date" + dateTime);
+                        addGeoBoundariesTrackingTable.setServerStatus(false);
+                        addGeoBoundariesTrackingTable.setCreatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+                        addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+                        addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+                        addGeoBoundariesTrackingTable.setUpdatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+//                        addGeoBoundariesTrackingTable.setCreatedDate(dateTime);
+//                        addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+//                        addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+//                        addGeoBoundariesTrackingTable.setUpdatedDate(dateTime);
+
+                        viewModel.insertTracking(addGeoBoundariesTrackingTable);
+                    }
+
+
+                    if(locationDTO.getDoc().size()==i+1){
+                        LocationDTO locationDTOChange = new LocationDTO();
+                        ArrayList<Doc> doc= new ArrayList<Doc>();
+                        locationDTOChange.setDoc(doc);
+                        Gson gsonChange = new Gson();
+                        String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
+                        appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+                        getTrackingListFromLocalDbCheckDBNotSync();
+                    }
+                }
+            }
+            else {
+                getTrackingListFromLocalDbCheckDBNotSync();
+            }
+
+        }
+        else {
+            LocationDTO locationDTOChange = new LocationDTO();
+            ArrayList<Doc> doc= new ArrayList<Doc>();
+            locationDTOChange.setDoc(doc);
+            Gson gsonChange = new Gson();
+            String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
+            appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+            getTrackingListFromLocalDbCheckDBNotSync();
+        }
+    }
+
+    public void getTrackingListFromLocalDbCheckDBNotSync() {
+        try {
+            viewModel.getTrackingListFromLocalDBNotSync();
+            viewModel.getInsertedTrackingLiveData();
+            viewModel.getInsertedTrackingLiveData().observe(this, trackingTable -> {
+                if (trackingTable != null) {
+                    Log.e("==============1053 ", trackingTable.getLatitude());
+                    Log.e("==============1053 ", trackingTable.getCreatedByUserId());
+                }
+            });
+
+            if (viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData() != null) {
+                Observer getLeadRawDataObserver = new Observer<List<AddGeoBoundariesTrackingTable>>() {
+                    @Override
+                    public void onChanged(List<AddGeoBoundariesTrackingTable> addFertilizerDetailsTables) {
+                        viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().removeObserver(this);
+
+                        if (addFertilizerDetailsTables != null && addFertilizerDetailsTables.size() > 0) {
+                            for (AddGeoBoundariesTrackingTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
+                                if (!addFertilizerDetailsTable.getServerStatus()) {
+                                    Log.e("==============1063 ","addFertilizerDetailsTable" );
+                                    syncTrackingDetailsToServer(addFertilizerDetailsTable);
+                                }
+                            }
+                        } else {
+                            // Handle case when the list is empty
+                        }
+                    }
+                };
+
+                viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().observe(this, getLeadRawDataObserver);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
 
     @SuppressWarnings("deprecation")
@@ -394,80 +722,173 @@ public class LocationUpdatesService extends Service {
         }
     }
 //
-//    @Override
-    public void onNewLocation(Location location) {
-        if (location != null) {
-            SharedPreferences sharedPreferences = getSharedPreferences("appprefs", MODE_PRIVATE);
-            boolean isFreshInstall = sharedPreferences.getBoolean(CommonConstants.IS_FRESH_INSTALL, true);
+//   @Override
+//    public void onNewLocation(Location location) {
+//        if (location != null) {
+//            SharedPreferences sharedPreferences = getSharedPreferences("appprefs", MODE_PRIVATE);
+//            boolean isFreshInstall = sharedPreferences.getBoolean(CommonConstants.IS_FRESH_INSTALL, true);
+//
+//            if (isFreshInstall) {
+//                // Store the first location when the app is freshly installed
+//                LocationDTO locationDTO = new LocationDTO();
+//                Doc doc = new Doc();
+//                doc.setLat(location.getLatitude());
+//                doc.setLon(location.getLongitude());
+//                String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+//                doc.setCreatedDate(dateTime);
+//                ArrayList<Doc> docs = new ArrayList<>();
+//                docs.add(doc);
+//                locationDTO.setDoc(docs);
+//                Gson gson = new Gson();
+//                String jsonArray = gson.toJson(locationDTO, LocationDTO.class);
+//                appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+//                Toast.makeText(context, "isFirst", Toast.LENGTH_SHORT).show();
+//                sharedPreferences.edit().putBoolean(CommonConstants.IS_FRESH_INSTALL, false).apply();
+//            } else {
+//                // Handle subsequent location updates
+//                String testLocationData = appHelper.getSharedPrefObj().getString(TestLoc, "");
+//                LocationDTO locationDTO = new LocationDTO();
+//                if (!testLocationData.isEmpty()) {
+//                    // Parse the stored data from shared preferences
+//                    locationDTO = new Gson().fromJson(testLocationData, LocationDTO.class);
+//                }
+//
+//                // Check the distance from the last stored location
+//                double selectedLat = 0.0;
+//                double selectedLon = 0.0;
+//
+//                if (locationDTO.getDoc() != null && !locationDTO.getDoc().isEmpty()) {
+//                    Doc lastDoc = locationDTO.getDoc().get(locationDTO.getDoc().size() - 1);
+//                    selectedLat = lastDoc.getLat();
+//                    selectedLon = lastDoc.getLon();
+//                }
+//
+//                double actualDistance = CommonUtils.distance(
+//                        location.getLatitude(), location.getLongitude(), selectedLat, selectedLon, 'm');
+//
+//                if (actualDistance >= 20) {
+//                    // If the distance is greater than 10 meters, store the new location
+//                    Doc newDoc = new Doc();
+//                    newDoc.setLat(location.getLatitude());
+//                    newDoc.setLon(location.getLongitude());
+//                    String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+//                    newDoc.setCreatedDate(dateTime);
+//                    locationDTO.getDoc().add(newDoc);
+//
+//                    // Sort the Doc list based on the CreatedDate property
+//                    Collections.sort(locationDTO.getDoc(), (doc1, doc2) -> {
+//                        String createdDate1 = doc1.getCreatedDate();
+//                        String createdDate2 = doc2.getCreatedDate();
+//                        return createdDate1.compareTo(createdDate2);
+//                    });
+//
+//                    // Store the updated location data
+//                    String updatedLocationData = new Gson().toJson(locationDTO, LocationDTO.class);
+//                    appHelper.getSharedPrefObj().edit().putString(TestLoc, updatedLocationData).apply();
+//                    Toast.makeText(context, "Added new location", Toast.LENGTH_SHORT).show();
+//                    Log.e("LocationTest", "Changed and added");
+//                    Log.e("New size", String.valueOf(locationDTO.getDoc().size()));
+//
+//
+//
+//                } else {
+//                    Log.e("LocationTest", "Location not added");
+//                }
+//
+//
+//
+//
+//
+//
+//
+//            }
+//        }
+//    }
 
-            if (isFreshInstall) {
-                // Store the first location when the app is freshly installed
-                LocationDTO locationDTO = new LocationDTO();
-                Doc doc = new Doc();
-                doc.setLat(location.getLatitude());
-                doc.setLon(location.getLongitude());
-                String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
-                doc.setCreatedDate(dateTime);
-                ArrayList<Doc> docs = new ArrayList<>();
-                docs.add(doc);
-                locationDTO.setDoc(docs);
-                Gson gson = new Gson();
-                String jsonArray = gson.toJson(locationDTO, LocationDTO.class);
-                appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
-                Toast.makeText(context, "isFirst", Toast.LENGTH_SHORT).show();
-                sharedPreferences.edit().putBoolean(CommonConstants.IS_FRESH_INSTALL, false).apply();
-            } else {
-                // Handle subsequent location updates
-                String testLocationData = appHelper.getSharedPrefObj().getString(TestLoc, "");
-                LocationDTO locationDTO = new LocationDTO();
-                if (!testLocationData.isEmpty()) {
-                    // Parse the stored data from shared preferences
-                    locationDTO = new Gson().fromJson(testLocationData, LocationDTO.class);
-                }
 
-                // Check the distance from the last stored location
-                double selectedLat = 0.0;
-                double selectedLon = 0.0;
+    public void TrackingListFromLocalDbCheckDBNotSync() {
+        Log.e("==============587 ","TrackingListFromLocalDbCheckDBNotSync" );
+        try {
+            viewModel.getTrackingListFromLocalDBNotSync();
+            Log.e("==============587 ","TrackingListFromLocalDbCheckDBNotSync" );
 
-                if (locationDTO.getDoc() != null && !locationDTO.getDoc().isEmpty()) {
-                    Doc lastDoc = locationDTO.getDoc().get(locationDTO.getDoc().size() - 1);
-                    selectedLat = lastDoc.getLat();
-                    selectedLon = lastDoc.getLon();
-                }
+            if (viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData() != null) {
+                Observer getLeadRawDataObserver = new Observer() {
+                    @Override
+                    public void onChanged(@Nullable Object o) {
+                        List<AddGeoBoundariesTrackingTable> addFertilizerDetailsTables = (List<AddGeoBoundariesTrackingTable>) o;
+                        viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().removeObserver(this);
 
-                double actualDistance = CommonUtils.distance(
-                        location.getLatitude(), location.getLongitude(), selectedLat, selectedLon, 'm');
+                        if (addFertilizerDetailsTables != null && addFertilizerDetailsTables.size() > 0) {
+                            for (AddGeoBoundariesTrackingTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
+                                if (!addFertilizerDetailsTable.getServerStatus()) {
+                                    Log.e("==============600 ","addFertilizerDetailsTable" );
 
-                if (actualDistance >= 20) {
-                    // If the distance is greater than 10 meters, store the new location
-                    Doc newDoc = new Doc();
-                    newDoc.setLat(location.getLatitude());
-                    newDoc.setLon(location.getLongitude());
-                    String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
-                    newDoc.setCreatedDate(dateTime);
-                    locationDTO.getDoc().add(newDoc);
+                                    syncTrackingDetailsToServer(addFertilizerDetailsTable);
+                                }
+                            }
 
-                    // Sort the Doc list based on the CreatedDate property
-                    Collections.sort(locationDTO.getDoc(), (doc1, doc2) -> {
-                        String createdDate1 = doc1.getCreatedDate();
-                        String createdDate2 = doc2.getCreatedDate();
-                        return createdDate1.compareTo(createdDate2);
-                    });
 
-                    // Store the updated location data
-                    String updatedLocationData = new Gson().toJson(locationDTO, LocationDTO.class);
-                    appHelper.getSharedPrefObj().edit().putString(TestLoc, updatedLocationData).apply();
-                    Toast.makeText(context, "Added new location", Toast.LENGTH_SHORT).show();
-                    Log.e("LocationTest", "Changed and added");
-                    Log.e("New size", String.valueOf(locationDTO.getDoc().size()));
-                } else {
-                    Log.e("LocationTest", "Location not added");
-                }
+                        } else {
+
+//                            fertlizerCountZero = true;
+                            //getOrganicListFromLocalDbCheckDBNotSync();
+                        }
+
+
+                    }
+
+                };
+                viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().observe( this, getLeadRawDataObserver);
             }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
         }
     }
+    public void syncTrackingDetailsToServer(AddGeoBoundariesTrackingTable addFertilizerDetailsTable) {
+        try {
+            Log.e("==============626 ","syncTrackingDetailsToServer" );
+            Log.e("==============627",addFertilizerDetailsTable.getCreatedByUserId() );
+            viewModel.syncTrackingDetailsonline(addFertilizerDetailsTable);
+            if (viewModel.getStringLiveData() != null) {
+                Observer getLeadRawDataObserver = new Observer() {
+                    @Override
+                    public void onChanged(@Nullable Object o) {
+                        viewModel.getStringLiveData().removeObserver(this);
+                        String dataResponse = (String) o;
+                        if (dataResponse.equals(SUCCESS_RESPONSE_MESSAGE)) {
+                            Toast.makeText(LocationUpdatesService.this, "Tracking Details are Submitted", Toast.LENGTH_SHORT).show();
 
 
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    try {
+//                                        getOrganicListFromLocalDbCheckDBNotSync();
+//                                    } catch (Exception e) {
+//
+//                                    }
+//                                }
+//                            }, 40);
+                            // getTrackingListFromLocalDbCheckDBNotSyncCount();
+
+//                            getPlotOfferListFromLocalDbCheckDBNotSync(false);
+                            Log.e("testProgress","Tracking Details are Submitted");
+                        } else {
+
+                            appHelper.getDialogHelper().getConfirmationDialog().show(ConfirmationDialog.ERROR, dataResponse);
+                        }
+
+
+                    }
+                };
+                viewModel.getStringLiveData().observe((LifecycleOwner) this, getLeadRawDataObserver);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
 
     /**
@@ -478,6 +899,12 @@ public class LocationUpdatesService extends Service {
         mLocationRequest.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    @NonNull
+    @Override
+    public Lifecycle getLifecycle() {
+        return lifecycleRegistry;
     }
 
 

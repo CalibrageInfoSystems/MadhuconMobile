@@ -139,7 +139,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 
     @Inject
     public ViewModelProvider.Factory viewModelFactory;
-    public AppViewModel viewModel;
+    public static AppViewModel viewModel;
 
     TextView txt_master_sync,txt_get_data_from_server,txt_send_data_to_server,txtGeoboundariesNotSync,
             txt_upload_database,txtFiledTracking,txtPlotOffer,txtPlantation,txtD10,txtD20,txtD30,
@@ -204,6 +204,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         txtFertilizers = findViewById(R.id.txtFertilizers);
         txtWeedicides = findViewById(R.id.txtWeedicides);
 
+
         configureDagger();
         configureViewModel();
         ui();
@@ -214,7 +215,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         txtLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                   appHelper.getSharedPrefObj().edit().putBoolean(isTouched,false).apply();
+                appHelper.getSharedPrefObj().edit().putBoolean(isTouched,false).apply();
                 appHelper.getSharedPrefObj().edit().putString(DeviceUserID,"").apply();
                 mService.removeLocationUpdates();
                 Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
@@ -350,7 +351,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
             }
         });
 
-            refresh();
+        refresh();
 
 
         txtLogOut.setText("LogOut -"+appHelper.getSharedPrefObj().getString(DeviceUserID,""));
@@ -453,10 +454,10 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         Log.e("======>locationArraymadhucon", sharedPreferencess.getString("locationArray", ""));
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("appprefs", MODE_PRIVATE);
-      //  String TestLo = sharedPreferences.getString(TestLoc, "");
-     String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
+        //  String TestLo = sharedPreferences.getString(TestLoc, "");
+        String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
 
-     Log.e("token",appHelper.getSharedPrefObj().getString(TestLoc,""));
+        Log.e("token",appHelper.getSharedPrefObj().getString(TestLoc,""));
         LocationDTO locationDTO = new LocationDTO();
         Gson gson = new Gson();
         gson.fromJson(TestLo, LocationDTO.class);
@@ -636,93 +637,95 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
     }
 
     private void sendDataToServer() {
-        if (appHelper.isNetworkAvailable()) { // TODO: Checking internet connection
+        if (appHelper.isNetworkAvailable())
+        { // TODO: Checking internet connection
 
-        syncProgressDialog = new ProgressDialog(SettingsActivity.this, R.style.AppCompatAlertDialogStyle);
-        syncProgressDialog.setCancelable(false);
-        syncProgressDialog.setMessage("checking  data sync to server please wait..");
-        syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        syncProgressDialog.show();
+            syncProgressDialog = new ProgressDialog(SettingsActivity.this, R.style.AppCompatAlertDialogStyle);
+            syncProgressDialog.setCancelable(false);
+            syncProgressDialog.setMessage("checking  data sync to server please wait..");
+            syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            syncProgressDialog.show();
 
 //        getPlotOfferListFromLocalDbCheckDBNotSync(true);
 
 
-        //userTracking
-        if(Integer.parseInt(txtFiledTracking.getText().toString())>0){
-            String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
-            Log.e("token",appHelper.getSharedPrefObj().getString(TestLoc,""));
-            LocationDTO locationDTO = new LocationDTO();
-            Gson gson = new Gson();
-            gson.fromJson(TestLo, LocationDTO.class);
-            locationDTO = gson.fromJson(TestLo, LocationDTO.class);
-            if(locationDTO!=null){
-                if(locationDTO.getDoc().size()>0){
-                    Log.e("trackData",locationDTO.getDoc().get(0).getLat()+"-"+locationDTO.getDoc().get(0).getLon());
-                    for(int i=0;i<locationDTO.getDoc().size();i++){
-                        if((locationDTO.getDoc().get(i).getLon()!=0.0)&&(locationDTO.getDoc().get(i).getLat()!=0.0)){
-                        AddGeoBoundariesTrackingTable addGeoBoundariesTrackingTable = new AddGeoBoundariesTrackingTable();
-                        addGeoBoundariesTrackingTable.setLatitude(String.valueOf(locationDTO.getDoc().get(i).getLat()));
-                        addGeoBoundariesTrackingTable.setLongitude(String.valueOf(locationDTO.getDoc().get(i).getLon()));
-                        addGeoBoundariesTrackingTable.setId(null);
-                        addGeoBoundariesTrackingTable.setUserId(Integer.parseInt(appHelper.getSharedPrefObj().getString(DeviceUserID,"")));
-                        addGeoBoundariesTrackingTable.setSeqNo(i);
-                        addGeoBoundariesTrackingTable.setIsActive(true);
-                      //  addGeoBoundariesTrackingTable.setIsActive(true);
-                        String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
-                        Log.d("TAG", "onClick: date" + dateTime);
-                        addGeoBoundariesTrackingTable.setServerStatus(false);
-                            addGeoBoundariesTrackingTable.setCreatedDate(locationDTO.getDoc().get(i).getCreatedDate());
-                            addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
-                            addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
-                            addGeoBoundariesTrackingTable.setUpdatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+            //userTracking
+            if(Integer.parseInt(txtFiledTracking.getText().toString())>0){
+                String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
+                Log.e("token",appHelper.getSharedPrefObj().getString(TestLoc,""));
+                LocationDTO locationDTO = new LocationDTO();
+                Gson gson = new Gson();
+                gson.fromJson(TestLo, LocationDTO.class);
+                locationDTO = gson.fromJson(TestLo, LocationDTO.class);
+                if(locationDTO!=null){
+                    if(locationDTO.getDoc().size()>0){
+                        Log.e("trackData",locationDTO.getDoc().get(0).getLat()+"-"+locationDTO.getDoc().get(0).getLon());
+                        for(int i=0;i<locationDTO.getDoc().size();i++){
+                            if((locationDTO.getDoc().get(i).getLon()!=0.0)&&(locationDTO.getDoc().get(i).getLat()!=0.0)){
+                                AddGeoBoundariesTrackingTable addGeoBoundariesTrackingTable = new AddGeoBoundariesTrackingTable();
+                                addGeoBoundariesTrackingTable.setLatitude(String.valueOf(locationDTO.getDoc().get(i).getLat()));
+                                addGeoBoundariesTrackingTable.setLongitude(String.valueOf(locationDTO.getDoc().get(i).getLon()));
+                                addGeoBoundariesTrackingTable.setId(null);
+                                addGeoBoundariesTrackingTable.setUserId(Integer.parseInt(appHelper.getSharedPrefObj().getString(DeviceUserID,"")));
+                                addGeoBoundariesTrackingTable.setSeqNo(i);
+                                addGeoBoundariesTrackingTable.setIsActive(true);
+                                //  addGeoBoundariesTrackingTable.setIsActive(true);
+                                String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+                                Log.d("TAG", "onClick: date" + dateTime);
+                                addGeoBoundariesTrackingTable.setServerStatus(false);
+                                addGeoBoundariesTrackingTable.setCreatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+                                addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+                                addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+                                addGeoBoundariesTrackingTable.setUpdatedDate(locationDTO.getDoc().get(i).getCreatedDate());
 //                        addGeoBoundariesTrackingTable.setCreatedDate(dateTime);
 //                        addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
 //                        addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
 //                        addGeoBoundariesTrackingTable.setUpdatedDate(dateTime);
 
-                            viewModel.insertTrackingIntoLocalDBQuery(addGeoBoundariesTrackingTable);
-                        }
+                                viewModel.insertTracking(addGeoBoundariesTrackingTable);
+                            }
 
 
-                        if(locationDTO.getDoc().size()==i+1){
-                            LocationDTO locationDTOChange = new LocationDTO();
-                            ArrayList<Doc> doc= new ArrayList<Doc>();
-                            locationDTOChange.setDoc(doc);
-                            Gson gsonChange = new Gson();
-                            String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
-                            appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
-                            getTrackingListFromLocalDbCheckDBNotSync();
+                            if(locationDTO.getDoc().size()==i+1){
+                                LocationDTO locationDTOChange = new LocationDTO();
+                                ArrayList<Doc> doc= new ArrayList<Doc>();
+                                locationDTOChange.setDoc(doc);
+                                Gson gsonChange = new Gson();
+                                String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
+                                appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+                                getTrackingListFromLocalDbCheckDBNotSync();
+                            }
                         }
                     }
+                    else {
+                        getTrackingListFromLocalDbCheckDBNotSync();
+                    }
+
                 }
                 else {
+                    LocationDTO locationDTOChange = new LocationDTO();
+                    ArrayList<Doc> doc= new ArrayList<Doc>();
+                    locationDTOChange.setDoc(doc);
+                    Gson gsonChange = new Gson();
+                    String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
+                    appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
                     getTrackingListFromLocalDbCheckDBNotSync();
                 }
 
-            } else {
-                LocationDTO locationDTOChange = new LocationDTO();
-                ArrayList<Doc> doc= new ArrayList<Doc>();
-                locationDTOChange.setDoc(doc);
-                Gson gsonChange = new Gson();
-                String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
-                appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
-                getTrackingListFromLocalDbCheckDBNotSync();
+                if(locationDTO!=null){
+                    txtFiledTracking.setText(locationDTO.getDoc().size()+"");
+                }
+
             }
 
-            if(locationDTO!=null){
-                txtFiledTracking.setText(locationDTO.getDoc().size()+"");
+            if(Integer.parseInt(txtPlotOffer.getText().toString())>0){
+                getPlotOfferListFromLocalDbCheckDBNotSync(true);
             }
 
-        }
-
-        if(Integer.parseInt(txtPlotOffer.getText().toString())>0){
-            getPlotOfferListFromLocalDbCheckDBNotSync(true);
-        }
-
-        if(Integer.parseInt(txtComplaints.getText().toString())>0){
-            getComplainDataFromLocalDbCheckDBNotSync();
-            getComplainImageFromLocalDB();
-        }
+            if(Integer.parseInt(txtComplaints.getText().toString())>0){
+                getComplainDataFromLocalDbCheckDBNotSync();
+                getComplainImageFromLocalDB();
+            }
 
             if(Integer.parseInt(txtGM.getText().toString())>0){
                 getGMFromLocalDB();
@@ -845,11 +848,11 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                         if (addFertilizerDetailsTables != null && addFertilizerDetailsTables.size() > 0) {
                             if(sync){
 
-                                    for (AddGeoBoundriesTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
-                                        if (!addFertilizerDetailsTable.isSync()) {
-                                            syncGeoBoundariesDetailsToServer(addFertilizerDetailsTable);
-                                        }
+                                for (AddGeoBoundriesTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
+                                    if (!addFertilizerDetailsTable.isSync()) {
+                                        syncGeoBoundariesDetailsToServer(addFertilizerDetailsTable);
                                     }
+                                }
                                 refresh();
                             } else {
                                 txtGeoboundariesNotSync.setText(addFertilizerDetailsTables.size()+"");
@@ -935,12 +938,12 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                         viewModel.getFertilizerDetailsTableDetailsListNotSyncLiveData().removeObserver(this);
 
 
-                            if (addFertilizerDetailsTables != null && addFertilizerDetailsTables.size() > 0) {
-                                if(sync){
+                        if (addFertilizerDetailsTables != null && addFertilizerDetailsTables.size() > 0) {
+                            if(sync){
 
 //                                    for (AddPlotOfferTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
 //                                        if (addFertilizerDetailsTable.getServerStatus().equals("0")) {
-                                            syncPlotOfferDetailsToServer(addFertilizerDetailsTables.get(0));
+                                syncPlotOfferDetailsToServer(addFertilizerDetailsTables.get(0));
 //                                        }
 //                                    }
 
@@ -960,12 +963,12 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 //                                    getGeoBoundariesListFromLocalDbCheckDBNotSync(true);
 
 
-                                } else {
-                                    txtPlotOffer.setText(addFertilizerDetailsTables.size()+"");
-                                }
-
                             } else {
-                                if(sync){
+                                txtPlotOffer.setText(addFertilizerDetailsTables.size()+"");
+                            }
+
+                        } else {
+                            if(sync){
 
 //                                    getD10ListFromLocalDbCheckDBNotSync(true);
 //                                    getD20ListFromLocalDbCheckDBNotSync(true);
@@ -983,13 +986,13 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 //                                    getD20PestListFromLocalDbCheckDBNotSync(true);
 //                                    getGeoBoundariesListFromLocalDbCheckDBNotSync(true);
 //
-                                } else {
-                                    txtPlotOffer.setText(addFertilizerDetailsTables.size()+"");
-                                }
-                                txtPlotOffer.setText("0");
-//                            fertlizerCountZero = true;
-                                //getOrganicListFromLocalDbCheckDBNotSync();
+                            } else {
+                                txtPlotOffer.setText(addFertilizerDetailsTables.size()+"");
                             }
+                            txtPlotOffer.setText("0");
+//                            fertlizerCountZero = true;
+                            //getOrganicListFromLocalDbCheckDBNotSync();
+                        }
 
 
                     }
@@ -1013,7 +1016,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                         viewModel.getStringLiveData().removeObserver(this);
                         String dataResponse = (String) o;
                         if (dataResponse.equals(SUCCESS_RESPONSE_MESSAGE)) {
-                                   Toast.makeText(SettingsActivity.this, "Plot Offer details are Submitted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingsActivity.this, "Plot Offer details are Submitted", Toast.LENGTH_SHORT).show();
                             getPlotOfferListFromLocalDbCheckDBNotSync(true);
 
 //                            new Handler().postDelayed(new Runnable() {
@@ -1044,36 +1047,39 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         }
     }
 
-    public void getTrackingListFromLocalDbCheckDBNotSync() {
+    public  void getTrackingListFromLocalDbCheckDBNotSync() {
         try {
             viewModel.getTrackingListFromLocalDBNotSync();
+            viewModel.getInsertedTrackingLiveData();
+            viewModel.getInsertedTrackingLiveData().observe(this, trackingTable -> {
+                if (trackingTable != null) {
+                    Log.e("==============1053 ", trackingTable.getLatitude());
+                    Log.e("==============1053 ", trackingTable.getCreatedByUserId());
+                }
+            });
+
             if (viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData() != null) {
-                Observer getLeadRawDataObserver = new Observer() {
+                Observer getLeadRawDataObserver = new Observer<List<AddGeoBoundariesTrackingTable>>() {
                     @Override
-                    public void onChanged(@Nullable Object o) {
-                        List<AddGeoBoundariesTrackingTable> addFertilizerDetailsTables = (List<AddGeoBoundariesTrackingTable>) o;
+                    public void onChanged(List<AddGeoBoundariesTrackingTable> addFertilizerDetailsTables) {
                         viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().removeObserver(this);
 
-                            if (addFertilizerDetailsTables != null && addFertilizerDetailsTables.size() > 0) {
-                                    for (AddGeoBoundariesTrackingTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
-                                        if (!addFertilizerDetailsTable.getServerStatus()) {
-                                            syncTrackingDetailsToServer(addFertilizerDetailsTable);
-                                        }
-                                    }
-
-
-                            } else {
-
-//                            fertlizerCountZero = true;
-                                //getOrganicListFromLocalDbCheckDBNotSync();
+                        if (addFertilizerDetailsTables != null && addFertilizerDetailsTables.size() > 0) {
+                            for (AddGeoBoundariesTrackingTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
+                                if (!addFertilizerDetailsTable.getServerStatus()) {
+                                    Log.e("==============1063 ","addFertilizerDetailsTable" );
+                                    syncTrackingDetailsToServer(addFertilizerDetailsTable);
+                                }
                             }
-
-
+                        } else {
+                            // Handle case when the list is empty
+                        }
                     }
-
                 };
+
                 viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().observe(this, getLeadRawDataObserver);
             }
+
         } catch (Exception ex) {
             ex.printStackTrace();
 
@@ -1090,7 +1096,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
                         viewModel.getStringLiveData().removeObserver(this);
                         String dataResponse = (String) o;
                         if (dataResponse.equals(SUCCESS_RESPONSE_MESSAGE)) {
-                                   Toast.makeText(SettingsActivity.this, "Tracking Details are Submitted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingsActivity.this, "Tracking Details are Submitted", Toast.LENGTH_SHORT).show();
 
 
 //                            new Handler().postDelayed(new Runnable() {
@@ -1968,257 +1974,261 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         });
     }
 
-    // TODO: 2/25/2022 get data from server
+
     public void getSyncFarmerAllDataFromServer(String seasonCode) {
-//        viewModel.deleteAlltablesFromTransactionSync();
         final AppAPI service = Retrofit_funtion_class.getClient().create(AppAPI.class);
-        Call<TransactionSyncResponseDTO> callRetrofit = null;
-//        String seasonCode= appHelper.getSharedPrefObj().getString(SeasonCode,"");
-        if(seasonCode.isEmpty()){
-            callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),"2022-23");
+        Call<TransactionSyncResponseDTO> callRetrofit;
+
+        if (seasonCode.isEmpty()) {
+            callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID, ""), "2022-23");
         } else {
-            callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),seasonCode);
+            callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID, ""), seasonCode);
         }
-//        callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),"2022-23");
-//        callRetrofit = service.getTransactionDetails("101");
-//        callRetrofit = service.getTransactionDetails("28");
-//        callRetrofit = service.getTransactionDetails("1");
-//        callRetrofit = service.getTransactionDetails(CommonUtils.getIMEInumber(DashBoardActivity.this), appHelper.getSharedPrefObj().getString(accessToken, ""));
+
         final ProgressDialog progressDialog = new ProgressDialog(SettingsActivity.this, R.style.AppCompatAlertDialogStyle);
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Fetching All Data From Server please wait..."+seasonCode);
+        progressDialog.setMessage("Fetching All Data From Server. Please wait..." + seasonCode);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
+
         callRetrofit.enqueue(new Callback<TransactionSyncResponseDTO>() {
             @Override
             public void onResponse(Call<TransactionSyncResponseDTO> call, Response<TransactionSyncResponseDTO> response) {
+                progressDialog.dismiss();
                 try {
-                    String strResponse = String.valueOf(response.body());
-                    TransactionSyncResponseDTO transactionSyncResponseDTO = response.body();
+                    Log.e("=========Responsecode",response.code()+"");
+                    Log.e("=========Responsemessage",response.message()+"");
+                    if (response.isSuccessful()) {
+                        TransactionSyncResponseDTO transactionSyncResponseDTO = response.body();
+                        Log.e("=========Responsecode",response.code()+"");
+                        Log.e("=========Responsemessage",response.message()+"");
+                        // Process the response DTO as needed
+                        Log.d("TAG", "onResponse: >>>" + transactionSyncResponseDTO.toString());
 
-                    for (int i = 0; i < transactionSyncResponseDTO.getFarmer().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        AddFarmerTable divisionTable = new AddFarmerTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getFarmer().get(i).getId());
-                        divisionTable.setCode(transactionSyncResponseDTO.getFarmer().get(i).getCode());
-                        divisionTable.setAliasName(transactionSyncResponseDTO.getFarmer().get(i).getAliasName());
-                        divisionTable.setName(transactionSyncResponseDTO.getFarmer().get(i).getName());
-                        divisionTable.setGender(transactionSyncResponseDTO.getFarmer().get(i).getGender());
-                        divisionTable.setFatherName(transactionSyncResponseDTO.getFarmer().get(i).getFatherName());
-                        divisionTable.setCastId(transactionSyncResponseDTO.getFarmer().get(i).getCastId());
-                        divisionTable.setAddress(transactionSyncResponseDTO.getFarmer().get(i).getAddress());
-                        divisionTable.setVillageId(transactionSyncResponseDTO.getFarmer().get(i).getVillageId());
-                        divisionTable.setMobile(transactionSyncResponseDTO.getFarmer().get(i).getMobile());
-                        divisionTable.setEmail(transactionSyncResponseDTO.getFarmer().get(i).getEmail());
-                        divisionTable.setPanNo(transactionSyncResponseDTO.getFarmer().get(i).getPanNo());
-                        divisionTable.setAadharNo(transactionSyncResponseDTO.getFarmer().get(i).getAadharNo());
-                        divisionTable.setOldCode(transactionSyncResponseDTO.getFarmer().get(i).getOldCode());
-                        divisionTable.setJFNo(transactionSyncResponseDTO.getFarmer().get(i).getJFNo());
-                        divisionTable.setBranchId(transactionSyncResponseDTO.getFarmer().get(i).getBranchId());
-                        divisionTable.setACNo(transactionSyncResponseDTO.getFarmer().get(i).getACNo());
-                        divisionTable.setTotalArea(transactionSyncResponseDTO.getFarmer().get(i).getTotalArea());
-                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getFarmer().get(i).getCultivatedArea());
-                        divisionTable.setGLCode(transactionSyncResponseDTO.getFarmer().get(i).getGLCode());
-                        divisionTable.setSubGLCode(transactionSyncResponseDTO.getFarmer().get(i).getSubGLCode());
-                        divisionTable.setOtherCode(transactionSyncResponseDTO.getFarmer().get(i).getOtherCode());
-                        divisionTable.setImageUrl(transactionSyncResponseDTO.getFarmer().get(i).getImageUrl());
-                        divisionTable.setRegistered(transactionSyncResponseDTO.getFarmer().get(i).getRegistered());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getFarmer().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getFarmer().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getFarmer().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getFarmer().get(i).getUpdatedDate());
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertFarmerIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
 
-                    for (int i = 0; i < transactionSyncResponseDTO.getPlot().size(); i++) {
+                        for (int i = 0; i < transactionSyncResponseDTO.getFarmer().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        AddPlotTable divisionTable = new AddPlotTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getPlot().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getPlot().get(i).getSeasonCode());
-                        divisionTable.setCropTypeId(transactionSyncResponseDTO.getPlot().get(i).getCropTypeId());
-                        divisionTable.setOfferedNo(transactionSyncResponseDTO.getPlot().get(i).getOfferedNo());
-                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getPlot().get(i).getFarmerCode());
-                        divisionTable.setFatherName(transactionSyncResponseDTO.getPlot().get(i).getFatherName());
-                        divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getPlot().get(i).getRelationShipTypeId());
-                        divisionTable.setNominee(transactionSyncResponseDTO.getPlot().get(i).getNominee());
-                        divisionTable.setGuarantor1(transactionSyncResponseDTO.getPlot().get(i).getGuarantor1());
-                        divisionTable.setGuarantor2(transactionSyncResponseDTO.getPlot().get(i).getGuarantor2());
-                        divisionTable.setGuarantor3(transactionSyncResponseDTO.getPlot().get(i).getGuarantor3());
-                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getPlot().get(i).getFarmerVillageId());
-                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getPlot().get(i).getPlotVillageId());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getPlot().get(i).getPlotNo());
-                        divisionTable.setPlantingDate(transactionSyncResponseDTO.getPlot().get(i).getPlantingDate());
-                        divisionTable.setPlotTypeId(transactionSyncResponseDTO.getPlot().get(i).getPlotTypeId());
-                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getPlot().get(i).getPlantTypeId());
-                        divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getPlot().get(i).getPlantSubTypeId());
-                        divisionTable.setVarietyId(transactionSyncResponseDTO.getPlot().get(i).getVarietyId());
-                        divisionTable.setSurveyNo(transactionSyncResponseDTO.getPlot().get(i).getSurveyNo());
-                        divisionTable.setFieldName(transactionSyncResponseDTO.getPlot().get(i).getFieldName());
-                        divisionTable.setBIRNo(transactionSyncResponseDTO.getPlot().get(i).getBIRNo());
-                        divisionTable.setBIRDate(transactionSyncResponseDTO.getPlot().get(i).getBIRDate());
-                        divisionTable.setTotalArea(transactionSyncResponseDTO.getPlot().get(i).getTotalArea());
-                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getPlot().get(i).getCultivatedArea());
-                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getPlot().get(i).getDemoPlotArea());
-                        divisionTable.setReportedArea(transactionSyncResponseDTO.getPlot().get(i).getReportedArea());
-                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getPlot().get(i).getMeasureArea());
-                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getPlot().get(i).getDemoPlotArea());
-                        divisionTable.setReportedArea(transactionSyncResponseDTO.getPlot().get(i).getReportedArea());
-                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getPlot().get(i).getMeasureArea());
-                        divisionTable.setAggrementedArea(transactionSyncResponseDTO.getPlot().get(i).getAggrementedArea());
-                        divisionTable.setNetArea(transactionSyncResponseDTO.getPlot().get(i).getNetArea());
-                        divisionTable.setAgreedTon(transactionSyncResponseDTO.getPlot().get(i).getAgreedTon());
-                        divisionTable.setEstimatedTon(transactionSyncResponseDTO.getPlot().get(i).getEstimatedTon());
-                        divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getPlot().get(i).getIrrigationTypeId());
-                        divisionTable.setSoilTypeId(transactionSyncResponseDTO.getPlot().get(i).getSoilTypeId());
-                        divisionTable.setSpacingId(transactionSyncResponseDTO.getPlot().get(i).getSpacingId());
-                        divisionTable.setSettsTypeId(transactionSyncResponseDTO.getPlot().get(i).getSettsTypeId());
-                        divisionTable.setPreviousCropId(transactionSyncResponseDTO.getPlot().get(i).getPreviousCropId());
-                        divisionTable.setInterCropId(transactionSyncResponseDTO.getPlot().get(i).getInterCropId());
-                        divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getPlot().get(i).getSeedMaterialUsedId());
-                        divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getPlot().get(i).getPlotExistOnId());
-                        divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getPlot().get(i).getDistanceFromPlot());
-                        divisionTable.setProfile(transactionSyncResponseDTO.getPlot().get(i).getProfile());
-                        divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getPlot().get(i).getIsSettsHotWaterTreatment());
-                        divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getPlot().get(i).getIsPreviousRedPlot());
-                        divisionTable.setIsDustApplied(transactionSyncResponseDTO.getPlot().get(i).getIsDustApplied());
-                        divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getPlot().get(i).getIsBasalFertilization());
-                        divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getPlot().get(i).getIsTrashMulching());
-                        divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getPlot().get(i).getIsCompositeFormYard());
-                        divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getPlot().get(i).getIsFilterPressMud());
-                        divisionTable.setIsGreenManures(transactionSyncResponseDTO.getPlot().get(i).getIsGreenManures());
-                        divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getPlot().get(i).getIsMicronutrientDeficiency());
-                        divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getPlot().get(i).getIsGapsFilled());
-                        divisionTable.setInspectionDate(transactionSyncResponseDTO.getPlot().get(i).getInspectionDate());
-                        divisionTable.setWeedStatusId(transactionSyncResponseDTO.getPlot().get(i).getWeedStatusId());
-                        divisionTable.setActionPlanId(transactionSyncResponseDTO.getPlot().get(i).getActionPlanId());
-                        divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getPlot().get(i).getPerishableReasonId());
-                        divisionTable.setPerishedArea(transactionSyncResponseDTO.getPlot().get(i).getPerishedArea());
-                        divisionTable.setNotGrownArea(transactionSyncResponseDTO.getPlot().get(i).getNotGrownArea());
-                        divisionTable.setHarvestingArea(transactionSyncResponseDTO.getPlot().get(i).getHarvestingArea());
-                        divisionTable.setPoorCropArea(transactionSyncResponseDTO.getPlot().get(i).getPoorCropArea());
-                        divisionTable.setRemovedArea(transactionSyncResponseDTO.getPlot().get(i).getRemovedArea());
-                        divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getPlot().get(i).getBioFertilizerAppliedArea());
-                        divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getPlot().get(i).getDeTrashingArea());
-                        divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getPlot().get(i).getDeepPloughedArea());
-                        divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getPlot().get(i).getEarthingUpArea());
-                        divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getPlot().get(i).getRatoonManagedUsedArea());
-                        divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getPlot().get(i).getTrashShedderArea());
-                        divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getPlot().get(i).getLoadShedderArea());
-                        divisionTable.setIsSeedArea(transactionSyncResponseDTO.getPlot().get(i).getIsSeedArea());
-                        divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getPlot().get(i).getDivertToSelfSeed());
-                        divisionTable.setDivertToOthers(transactionSyncResponseDTO.getPlot().get(i).getDivertToOthers());
-                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
-                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
-                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
-                        divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
-                        divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
-                        divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
-                        divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
-                        divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
-                        divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
-                        divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
-                        divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
-                        divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
-                        divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
-                        divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
-                        divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
-                        divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
-                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getPlot().get(i).getPlantingMethodId());
-                        divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
-                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
-                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
-                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertPlotIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
+                            AddFarmerTable divisionTable = new AddFarmerTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getFarmer().get(i).getId());
+                            divisionTable.setCode(transactionSyncResponseDTO.getFarmer().get(i).getCode());
+                            divisionTable.setAliasName(transactionSyncResponseDTO.getFarmer().get(i).getAliasName());
+                            divisionTable.setName(transactionSyncResponseDTO.getFarmer().get(i).getName());
+                            divisionTable.setGender(transactionSyncResponseDTO.getFarmer().get(i).getGender());
+                            divisionTable.setFatherName(transactionSyncResponseDTO.getFarmer().get(i).getFatherName());
+                            divisionTable.setCastId(transactionSyncResponseDTO.getFarmer().get(i).getCastId());
+                            divisionTable.setAddress(transactionSyncResponseDTO.getFarmer().get(i).getAddress());
+                            divisionTable.setVillageId(transactionSyncResponseDTO.getFarmer().get(i).getVillageId());
+                            divisionTable.setMobile(transactionSyncResponseDTO.getFarmer().get(i).getMobile());
+                            divisionTable.setEmail(transactionSyncResponseDTO.getFarmer().get(i).getEmail());
+                            divisionTable.setPanNo(transactionSyncResponseDTO.getFarmer().get(i).getPanNo());
+                            divisionTable.setAadharNo(transactionSyncResponseDTO.getFarmer().get(i).getAadharNo());
+                            divisionTable.setOldCode(transactionSyncResponseDTO.getFarmer().get(i).getOldCode());
+                            divisionTable.setJFNo(transactionSyncResponseDTO.getFarmer().get(i).getJFNo());
+                            divisionTable.setBranchId(transactionSyncResponseDTO.getFarmer().get(i).getBranchId());
+                            divisionTable.setACNo(transactionSyncResponseDTO.getFarmer().get(i).getACNo());
+                            divisionTable.setTotalArea(transactionSyncResponseDTO.getFarmer().get(i).getTotalArea());
+                            divisionTable.setCultivatedArea(transactionSyncResponseDTO.getFarmer().get(i).getCultivatedArea());
+                            divisionTable.setGLCode(transactionSyncResponseDTO.getFarmer().get(i).getGLCode());
+                            divisionTable.setSubGLCode(transactionSyncResponseDTO.getFarmer().get(i).getSubGLCode());
+                            divisionTable.setOtherCode(transactionSyncResponseDTO.getFarmer().get(i).getOtherCode());
+                            divisionTable.setImageUrl(transactionSyncResponseDTO.getFarmer().get(i).getImageUrl());
+                            divisionTable.setRegistered(transactionSyncResponseDTO.getFarmer().get(i).getRegistered());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getFarmer().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getFarmer().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getFarmer().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getFarmer().get(i).getUpdatedDate());
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertFarmerIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
 
-                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20().size(); i++) {
+                        for (int i = 0; i < transactionSyncResponseDTO.getPlot().size(); i++) {
 //                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        AddD20Table divisionTable = new AddD20Table();
-                        divisionTable.setServerStatus("1");
-                        divisionTable.setId(transactionSyncResponseDTO.getDoc20().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20().get(i).getSeasonCode());
-                        divisionTable.setCropTypeId(transactionSyncResponseDTO.getDoc20().get(i).getCropTypeId());
-                        divisionTable.setOfferedNo(transactionSyncResponseDTO.getDoc20().get(i).getOfferedNo());
-                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getDoc20().get(i).getFarmerCode());
-                        divisionTable.setFatherName(transactionSyncResponseDTO.getDoc20().get(i).getFatherName());
-                        divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getDoc20().get(i).getRelationShipTypeId());
-                        divisionTable.setNominee(transactionSyncResponseDTO.getDoc20().get(i).getNominee());
-                        divisionTable.setGuarantor1(transactionSyncResponseDTO.getDoc20().get(i).getGuarantor1());
-                        divisionTable.setGuarantor2(transactionSyncResponseDTO.getDoc20().get(i).getGuarantor2());
-                        divisionTable.setGuarantor3(transactionSyncResponseDTO.getDoc20().get(i).getGuarantor3());
-                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getDoc20().get(i).getFarmerVillageId());
-                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getDoc20().get(i).getPlotVillageId());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20().get(i).getPlotNo());
-                        divisionTable.setPlantingDate(transactionSyncResponseDTO.getDoc20().get(i).getPlantingDate());
-                        divisionTable.setPlotTypeId(transactionSyncResponseDTO.getDoc20().get(i).getPlotTypeId());
-                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getDoc20().get(i).getPlantTypeId());
-                        divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getDoc20().get(i).getPlantSubTypeId());
-                        divisionTable.setVarietyId(transactionSyncResponseDTO.getDoc20().get(i).getVarietyId());
-                        divisionTable.setSurveyNo(transactionSyncResponseDTO.getDoc20().get(i).getSurveyNo());
-                        divisionTable.setFieldName(transactionSyncResponseDTO.getDoc20().get(i).getFieldName());
-                        divisionTable.setBIRNo(transactionSyncResponseDTO.getDoc20().get(i).getBIRNo());
-                        divisionTable.setBIRDate(transactionSyncResponseDTO.getDoc20().get(i).getBIRDate());
-                        divisionTable.setTotalArea(transactionSyncResponseDTO.getDoc20().get(i).getTotalArea());
-                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getDoc20().get(i).getCultivatedArea());
-                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc20().get(i).getDemoPlotArea());
-                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc20().get(i).getReportedArea());
-                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc20().get(i).getMeasureArea());
-                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc20().get(i).getDemoPlotArea());
-                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc20().get(i).getReportedArea());
-                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc20().get(i).getMeasureArea());
-                        divisionTable.setAggrementedArea(transactionSyncResponseDTO.getDoc20().get(i).getAggrementedArea());
-                        divisionTable.setNetArea(transactionSyncResponseDTO.getDoc20().get(i).getNetArea());
-                        divisionTable.setAgreedTon(transactionSyncResponseDTO.getDoc20().get(i).getAgreedTon());
-                        divisionTable.setEstimatedTon(transactionSyncResponseDTO.getDoc20().get(i).getEstimatedTon());
-                        divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getDoc20().get(i).getIrrigationTypeId());
-                        divisionTable.setSoilTypeId(transactionSyncResponseDTO.getDoc20().get(i).getSoilTypeId());
-                        divisionTable.setSpacingId(transactionSyncResponseDTO.getDoc20().get(i).getSpacingId());
-                        divisionTable.setSettsTypeId(transactionSyncResponseDTO.getDoc20().get(i).getSettsTypeId());
-                        divisionTable.setPreviousCropId(transactionSyncResponseDTO.getDoc20().get(i).getPreviousCropId());
-                        divisionTable.setInterCropId(transactionSyncResponseDTO.getDoc20().get(i).getInterCropId());
-                        divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getDoc20().get(i).getSeedMaterialUsedId());
-                        divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getDoc20().get(i).getPlotExistOnId());
-                        divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getDoc20().get(i).getDistanceFromPlot());
-                        divisionTable.setProfile(transactionSyncResponseDTO.getDoc20().get(i).getProfile());
-                        divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getDoc20().get(i).getIsSettsHotWaterTreatment());
-                        divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getDoc20().get(i).getIsPreviousRedPlot());
-                        divisionTable.setIsDustApplied(transactionSyncResponseDTO.getDoc20().get(i).getIsDustApplied());
-                        divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getDoc20().get(i).getIsBasalFertilization());
-                        divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getDoc20().get(i).getIsTrashMulching());
-                        divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getDoc20().get(i).getIsCompositeFormYard());
-                        divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getDoc20().get(i).getIsFilterPressMud());
-                        divisionTable.setIsGreenManures(transactionSyncResponseDTO.getDoc20().get(i).getIsGreenManures());
-                        divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getDoc20().get(i).getIsMicronutrientDeficiency());
-                        divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getDoc20().get(i).getIsGapsFilled());
-                        divisionTable.setInspectionDate(transactionSyncResponseDTO.getDoc20().get(i).getInspectionDate());
-                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc20().get(i).getPlantingMethodId());
-                        divisionTable.setWeedStatusId(transactionSyncResponseDTO.getDoc20().get(i).getWeedStatusId());
-                        divisionTable.setActionPlanId(transactionSyncResponseDTO.getDoc20().get(i).getActionPlanId());
-                        divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getDoc20().get(i).getPerishableReasonId());
-                        divisionTable.setPerishedArea(transactionSyncResponseDTO.getDoc20().get(i).getPerishedArea());
-                        divisionTable.setNotGrownArea(transactionSyncResponseDTO.getDoc20().get(i).getNotGrownArea());
-                        divisionTable.setHarvestingArea(transactionSyncResponseDTO.getDoc20().get(i).getHarvestingArea());
-                        divisionTable.setPoorCropArea(transactionSyncResponseDTO.getDoc20().get(i).getPoorCropArea());
-                        divisionTable.setRemovedArea(transactionSyncResponseDTO.getDoc20().get(i).getRemovedArea());
-                        divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getDoc20().get(i).getBioFertilizerAppliedArea());
-                        divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getDoc20().get(i).getDeTrashingArea());
-                        divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getDoc20().get(i).getDeepPloughedArea());
-                        divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getDoc20().get(i).getEarthingUpArea());
-                        divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getDoc20().get(i).getRatoonManagedUsedArea());
-                        divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getDoc20().get(i).getTrashShedderArea());
-                        divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getDoc20().get(i).getLoadShedderArea());
-                        divisionTable.setIsSeedArea(transactionSyncResponseDTO.getDoc20().get(i).getIsSeedArea());
-                        divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getDoc20().get(i).getDivertToSelfSeed());
-                        divisionTable.setDivertToOthers(transactionSyncResponseDTO.getDoc20().get(i).getDivertToOthers());
-                        divisionTable.setSync(true);
+                            AddPlotTable divisionTable = new AddPlotTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getPlot().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getPlot().get(i).getSeasonCode());
+                            divisionTable.setCropTypeId(transactionSyncResponseDTO.getPlot().get(i).getCropTypeId());
+                            divisionTable.setOfferedNo(transactionSyncResponseDTO.getPlot().get(i).getOfferedNo());
+                            divisionTable.setFarmerCode(transactionSyncResponseDTO.getPlot().get(i).getFarmerCode());
+                            divisionTable.setFatherName(transactionSyncResponseDTO.getPlot().get(i).getFatherName());
+                            divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getPlot().get(i).getRelationShipTypeId());
+                            divisionTable.setNominee(transactionSyncResponseDTO.getPlot().get(i).getNominee());
+                            divisionTable.setGuarantor1(transactionSyncResponseDTO.getPlot().get(i).getGuarantor1());
+                            divisionTable.setGuarantor2(transactionSyncResponseDTO.getPlot().get(i).getGuarantor2());
+                            divisionTable.setGuarantor3(transactionSyncResponseDTO.getPlot().get(i).getGuarantor3());
+                            divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getPlot().get(i).getFarmerVillageId());
+                            divisionTable.setPlotVillageId(transactionSyncResponseDTO.getPlot().get(i).getPlotVillageId());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getPlot().get(i).getPlotNo());
+                            divisionTable.setPlantingDate(transactionSyncResponseDTO.getPlot().get(i).getPlantingDate());
+                            divisionTable.setPlotTypeId(transactionSyncResponseDTO.getPlot().get(i).getPlotTypeId());
+                            divisionTable.setPlantTypeId(transactionSyncResponseDTO.getPlot().get(i).getPlantTypeId());
+                            divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getPlot().get(i).getPlantSubTypeId());
+                            divisionTable.setVarietyId(transactionSyncResponseDTO.getPlot().get(i).getVarietyId());
+                            divisionTable.setSurveyNo(transactionSyncResponseDTO.getPlot().get(i).getSurveyNo());
+                            divisionTable.setFieldName(transactionSyncResponseDTO.getPlot().get(i).getFieldName());
+                            divisionTable.setBIRNo(transactionSyncResponseDTO.getPlot().get(i).getBIRNo());
+                            divisionTable.setBIRDate(transactionSyncResponseDTO.getPlot().get(i).getBIRDate());
+                            divisionTable.setTotalArea(transactionSyncResponseDTO.getPlot().get(i).getTotalArea());
+                            divisionTable.setCultivatedArea(transactionSyncResponseDTO.getPlot().get(i).getCultivatedArea());
+                            divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getPlot().get(i).getDemoPlotArea());
+                            divisionTable.setReportedArea(transactionSyncResponseDTO.getPlot().get(i).getReportedArea());
+                            divisionTable.setMeasureArea(transactionSyncResponseDTO.getPlot().get(i).getMeasureArea());
+                            divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getPlot().get(i).getDemoPlotArea());
+                            divisionTable.setReportedArea(transactionSyncResponseDTO.getPlot().get(i).getReportedArea());
+                            divisionTable.setMeasureArea(transactionSyncResponseDTO.getPlot().get(i).getMeasureArea());
+                            divisionTable.setAggrementedArea(transactionSyncResponseDTO.getPlot().get(i).getAggrementedArea());
+                            divisionTable.setNetArea(transactionSyncResponseDTO.getPlot().get(i).getNetArea());
+                            divisionTable.setAgreedTon(transactionSyncResponseDTO.getPlot().get(i).getAgreedTon());
+                            divisionTable.setEstimatedTon(transactionSyncResponseDTO.getPlot().get(i).getEstimatedTon());
+                            divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getPlot().get(i).getIrrigationTypeId());
+                            divisionTable.setSoilTypeId(transactionSyncResponseDTO.getPlot().get(i).getSoilTypeId());
+                            divisionTable.setSpacingId(transactionSyncResponseDTO.getPlot().get(i).getSpacingId());
+                            divisionTable.setSettsTypeId(transactionSyncResponseDTO.getPlot().get(i).getSettsTypeId());
+                            divisionTable.setPreviousCropId(transactionSyncResponseDTO.getPlot().get(i).getPreviousCropId());
+                            divisionTable.setInterCropId(transactionSyncResponseDTO.getPlot().get(i).getInterCropId());
+                            divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getPlot().get(i).getSeedMaterialUsedId());
+                            divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getPlot().get(i).getPlotExistOnId());
+                            divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getPlot().get(i).getDistanceFromPlot());
+                            divisionTable.setProfile(transactionSyncResponseDTO.getPlot().get(i).getProfile());
+                            divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getPlot().get(i).getIsSettsHotWaterTreatment());
+                            divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getPlot().get(i).getIsPreviousRedPlot());
+                            divisionTable.setIsDustApplied(transactionSyncResponseDTO.getPlot().get(i).getIsDustApplied());
+                            divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getPlot().get(i).getIsBasalFertilization());
+                            divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getPlot().get(i).getIsTrashMulching());
+                            divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getPlot().get(i).getIsCompositeFormYard());
+                            divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getPlot().get(i).getIsFilterPressMud());
+                            divisionTable.setIsGreenManures(transactionSyncResponseDTO.getPlot().get(i).getIsGreenManures());
+                            divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getPlot().get(i).getIsMicronutrientDeficiency());
+                            divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getPlot().get(i).getIsGapsFilled());
+                            divisionTable.setInspectionDate(transactionSyncResponseDTO.getPlot().get(i).getInspectionDate());
+                            divisionTable.setWeedStatusId(transactionSyncResponseDTO.getPlot().get(i).getWeedStatusId());
+                            divisionTable.setActionPlanId(transactionSyncResponseDTO.getPlot().get(i).getActionPlanId());
+                            divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getPlot().get(i).getPerishableReasonId());
+                            divisionTable.setPerishedArea(transactionSyncResponseDTO.getPlot().get(i).getPerishedArea());
+                            divisionTable.setNotGrownArea(transactionSyncResponseDTO.getPlot().get(i).getNotGrownArea());
+                            divisionTable.setHarvestingArea(transactionSyncResponseDTO.getPlot().get(i).getHarvestingArea());
+                            divisionTable.setPoorCropArea(transactionSyncResponseDTO.getPlot().get(i).getPoorCropArea());
+                            divisionTable.setRemovedArea(transactionSyncResponseDTO.getPlot().get(i).getRemovedArea());
+                            divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getPlot().get(i).getBioFertilizerAppliedArea());
+                            divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getPlot().get(i).getDeTrashingArea());
+                            divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getPlot().get(i).getDeepPloughedArea());
+                            divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getPlot().get(i).getEarthingUpArea());
+                            divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getPlot().get(i).getRatoonManagedUsedArea());
+                            divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getPlot().get(i).getTrashShedderArea());
+                            divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getPlot().get(i).getLoadShedderArea());
+                            divisionTable.setIsSeedArea(transactionSyncResponseDTO.getPlot().get(i).getIsSeedArea());
+                            divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getPlot().get(i).getDivertToSelfSeed());
+                            divisionTable.setDivertToOthers(transactionSyncResponseDTO.getPlot().get(i).getDivertToOthers());
+                            divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
+                            divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
+                            divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
+                            divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
+                            divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
+                            divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
+                            divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
+                            divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
+                            divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
+                            divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
+                            divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
+                            divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
+                            divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
+                            divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
+                            divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
+                            divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
+                            divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getPlot().get(i).getPlantingMethodId());
+                            divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
+                            divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
+                            divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
+                            divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertPlotIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getDoc20().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            AddD20Table divisionTable = new AddD20Table();
+                            divisionTable.setServerStatus("1");
+                            divisionTable.setId(transactionSyncResponseDTO.getDoc20().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20().get(i).getSeasonCode());
+                            divisionTable.setCropTypeId(transactionSyncResponseDTO.getDoc20().get(i).getCropTypeId());
+                            divisionTable.setOfferedNo(transactionSyncResponseDTO.getDoc20().get(i).getOfferedNo());
+                            divisionTable.setFarmerCode(transactionSyncResponseDTO.getDoc20().get(i).getFarmerCode());
+                            divisionTable.setFatherName(transactionSyncResponseDTO.getDoc20().get(i).getFatherName());
+                            divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getDoc20().get(i).getRelationShipTypeId());
+                            divisionTable.setNominee(transactionSyncResponseDTO.getDoc20().get(i).getNominee());
+                            divisionTable.setGuarantor1(transactionSyncResponseDTO.getDoc20().get(i).getGuarantor1());
+                            divisionTable.setGuarantor2(transactionSyncResponseDTO.getDoc20().get(i).getGuarantor2());
+                            divisionTable.setGuarantor3(transactionSyncResponseDTO.getDoc20().get(i).getGuarantor3());
+                            divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getDoc20().get(i).getFarmerVillageId());
+                            divisionTable.setPlotVillageId(transactionSyncResponseDTO.getDoc20().get(i).getPlotVillageId());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20().get(i).getPlotNo());
+                            divisionTable.setPlantingDate(transactionSyncResponseDTO.getDoc20().get(i).getPlantingDate());
+                            divisionTable.setPlotTypeId(transactionSyncResponseDTO.getDoc20().get(i).getPlotTypeId());
+                            divisionTable.setPlantTypeId(transactionSyncResponseDTO.getDoc20().get(i).getPlantTypeId());
+                            divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getDoc20().get(i).getPlantSubTypeId());
+                            divisionTable.setVarietyId(transactionSyncResponseDTO.getDoc20().get(i).getVarietyId());
+                            divisionTable.setSurveyNo(transactionSyncResponseDTO.getDoc20().get(i).getSurveyNo());
+                            divisionTable.setFieldName(transactionSyncResponseDTO.getDoc20().get(i).getFieldName());
+                            divisionTable.setBIRNo(transactionSyncResponseDTO.getDoc20().get(i).getBIRNo());
+                            divisionTable.setBIRDate(transactionSyncResponseDTO.getDoc20().get(i).getBIRDate());
+                            divisionTable.setTotalArea(transactionSyncResponseDTO.getDoc20().get(i).getTotalArea());
+                            divisionTable.setCultivatedArea(transactionSyncResponseDTO.getDoc20().get(i).getCultivatedArea());
+                            divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc20().get(i).getDemoPlotArea());
+                            divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc20().get(i).getReportedArea());
+                            divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc20().get(i).getMeasureArea());
+                            divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc20().get(i).getDemoPlotArea());
+                            divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc20().get(i).getReportedArea());
+                            divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc20().get(i).getMeasureArea());
+                            divisionTable.setAggrementedArea(transactionSyncResponseDTO.getDoc20().get(i).getAggrementedArea());
+                            divisionTable.setNetArea(transactionSyncResponseDTO.getDoc20().get(i).getNetArea());
+                            divisionTable.setAgreedTon(transactionSyncResponseDTO.getDoc20().get(i).getAgreedTon());
+                            divisionTable.setEstimatedTon(transactionSyncResponseDTO.getDoc20().get(i).getEstimatedTon());
+                            divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getDoc20().get(i).getIrrigationTypeId());
+                            divisionTable.setSoilTypeId(transactionSyncResponseDTO.getDoc20().get(i).getSoilTypeId());
+                            divisionTable.setSpacingId(transactionSyncResponseDTO.getDoc20().get(i).getSpacingId());
+                            divisionTable.setSettsTypeId(transactionSyncResponseDTO.getDoc20().get(i).getSettsTypeId());
+                            divisionTable.setPreviousCropId(transactionSyncResponseDTO.getDoc20().get(i).getPreviousCropId());
+                            divisionTable.setInterCropId(transactionSyncResponseDTO.getDoc20().get(i).getInterCropId());
+                            divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getDoc20().get(i).getSeedMaterialUsedId());
+                            divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getDoc20().get(i).getPlotExistOnId());
+                            divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getDoc20().get(i).getDistanceFromPlot());
+                            divisionTable.setProfile(transactionSyncResponseDTO.getDoc20().get(i).getProfile());
+                            divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getDoc20().get(i).getIsSettsHotWaterTreatment());
+                            divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getDoc20().get(i).getIsPreviousRedPlot());
+                            divisionTable.setIsDustApplied(transactionSyncResponseDTO.getDoc20().get(i).getIsDustApplied());
+                            divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getDoc20().get(i).getIsBasalFertilization());
+                            divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getDoc20().get(i).getIsTrashMulching());
+                            divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getDoc20().get(i).getIsCompositeFormYard());
+                            divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getDoc20().get(i).getIsFilterPressMud());
+                            divisionTable.setIsGreenManures(transactionSyncResponseDTO.getDoc20().get(i).getIsGreenManures());
+                            divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getDoc20().get(i).getIsMicronutrientDeficiency());
+                            divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getDoc20().get(i).getIsGapsFilled());
+                            divisionTable.setInspectionDate(transactionSyncResponseDTO.getDoc20().get(i).getInspectionDate());
+                            divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc20().get(i).getPlantingMethodId());
+                            divisionTable.setWeedStatusId(transactionSyncResponseDTO.getDoc20().get(i).getWeedStatusId());
+                            divisionTable.setActionPlanId(transactionSyncResponseDTO.getDoc20().get(i).getActionPlanId());
+                            divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getDoc20().get(i).getPerishableReasonId());
+                            divisionTable.setPerishedArea(transactionSyncResponseDTO.getDoc20().get(i).getPerishedArea());
+                            divisionTable.setNotGrownArea(transactionSyncResponseDTO.getDoc20().get(i).getNotGrownArea());
+                            divisionTable.setHarvestingArea(transactionSyncResponseDTO.getDoc20().get(i).getHarvestingArea());
+                            divisionTable.setPoorCropArea(transactionSyncResponseDTO.getDoc20().get(i).getPoorCropArea());
+                            divisionTable.setRemovedArea(transactionSyncResponseDTO.getDoc20().get(i).getRemovedArea());
+                            divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getDoc20().get(i).getBioFertilizerAppliedArea());
+                            divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getDoc20().get(i).getDeTrashingArea());
+                            divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getDoc20().get(i).getDeepPloughedArea());
+                            divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getDoc20().get(i).getEarthingUpArea());
+                            divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getDoc20().get(i).getRatoonManagedUsedArea());
+                            divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getDoc20().get(i).getTrashShedderArea());
+                            divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getDoc20().get(i).getLoadShedderArea());
+                            divisionTable.setIsSeedArea(transactionSyncResponseDTO.getDoc20().get(i).getIsSeedArea());
+                            divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getDoc20().get(i).getDivertToSelfSeed());
+                            divisionTable.setDivertToOthers(transactionSyncResponseDTO.getDoc20().get(i).getDivertToOthers());
+                            divisionTable.setSync(true);
 //                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
 //                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
 //                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
@@ -2240,505 +2250,1346 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 //                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
 //                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
 //                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
-                       divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20().get(i).getCreatedDate());
-                       divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20().get(i).getCreatedByUserId());
-                       divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20().get(i).getUpdatedByUserId());
-                       divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20().get(i).getUpdatedDate());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20().get(i).getUpdatedDate());
 //                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
 
-                        viewModel.insertD20IntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getDoc10().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        AddD10Table divisionTable = new AddD10Table();
-                        divisionTable.setServerStatus("1");
-                        divisionTable.setId(transactionSyncResponseDTO.getDoc10().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc10().get(i).getSeasonCode());
-                        divisionTable.setCropTypeId(transactionSyncResponseDTO.getDoc10().get(i).getCropTypeId());
-                        divisionTable.setOfferedNo(transactionSyncResponseDTO.getDoc10().get(i).getOfferedNo());
-                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getDoc10().get(i).getFarmerCode());
-                        divisionTable.setFatherName(transactionSyncResponseDTO.getDoc10().get(i).getFatherName());
-                        divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getDoc10().get(i).getRelationShipTypeId());
-                        divisionTable.setNominee(transactionSyncResponseDTO.getDoc10().get(i).getNominee());
-                        divisionTable.setGuarantor1(transactionSyncResponseDTO.getDoc10().get(i).getGuarantor1());
-                        divisionTable.setGuarantor2(transactionSyncResponseDTO.getDoc10().get(i).getGuarantor2());
-                        divisionTable.setGuarantor3(transactionSyncResponseDTO.getDoc10().get(i).getGuarantor3());
-                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getDoc10().get(i).getFarmerVillageId());
-                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getDoc10().get(i).getPlotVillageId());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc10().get(i).getPlotNo());
-                        divisionTable.setPlantingDate(transactionSyncResponseDTO.getDoc10().get(i).getPlantingDate());
-                        divisionTable.setPlotTypeId(transactionSyncResponseDTO.getDoc10().get(i).getPlotTypeId());
-                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getDoc10().get(i).getPlantTypeId());
-                        divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getDoc10().get(i).getPlantSubTypeId());
-                        divisionTable.setVarietyId(transactionSyncResponseDTO.getDoc10().get(i).getVarietyId());
-                        divisionTable.setSurveyNo(transactionSyncResponseDTO.getDoc10().get(i).getSurveyNo());
-                        divisionTable.setFieldName(transactionSyncResponseDTO.getDoc10().get(i).getFieldName());
-                        divisionTable.setBIRNo(transactionSyncResponseDTO.getDoc10().get(i).getBIRNo());
-                        divisionTable.setBIRDate(transactionSyncResponseDTO.getDoc10().get(i).getBIRDate());
-                        divisionTable.setTotalArea(transactionSyncResponseDTO.getDoc10().get(i).getTotalArea());
-                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getDoc10().get(i).getCultivatedArea());
-                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc10().get(i).getDemoPlotArea());
-                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc10().get(i).getReportedArea());
-                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc10().get(i).getMeasureArea());
-                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc10().get(i).getDemoPlotArea());
-                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc10().get(i).getReportedArea());
-                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc10().get(i).getMeasureArea());
-                        divisionTable.setAggrementedArea(transactionSyncResponseDTO.getDoc10().get(i).getAggrementedArea());
-                        divisionTable.setNetArea(transactionSyncResponseDTO.getDoc10().get(i).getNetArea());
-                        divisionTable.setAgreedTon(transactionSyncResponseDTO.getDoc10().get(i).getAgreedTon());
-                        divisionTable.setEstimatedTon(transactionSyncResponseDTO.getDoc10().get(i).getEstimatedTon());
-                        divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getDoc10().get(i).getIrrigationTypeId());
-                        divisionTable.setSoilTypeId(transactionSyncResponseDTO.getDoc10().get(i).getSoilTypeId());
-                        divisionTable.setSpacingId(transactionSyncResponseDTO.getDoc10().get(i).getSpacingId());
-                        divisionTable.setSettsTypeId(transactionSyncResponseDTO.getDoc10().get(i).getSettsTypeId());
-                        divisionTable.setPreviousCropId(transactionSyncResponseDTO.getDoc10().get(i).getPreviousCropId());
-                        divisionTable.setInterCropId(transactionSyncResponseDTO.getDoc10().get(i).getInterCropId());
-                        divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getDoc10().get(i).getSeedMaterialUsedId());
-                        divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getDoc10().get(i).getPlotExistOnId());
-                        divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getDoc10().get(i).getDistanceFromPlot());
-                        divisionTable.setProfile(transactionSyncResponseDTO.getDoc10().get(i).getProfile());
-                        divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getDoc10().get(i).getIsSettsHotWaterTreatment());
-                        divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getDoc10().get(i).getIsPreviousRedPlot());
-                        divisionTable.setIsDustApplied(transactionSyncResponseDTO.getDoc10().get(i).getIsDustApplied());
-                        divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getDoc10().get(i).getIsBasalFertilization());
-                        divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getDoc10().get(i).getIsTrashMulching());
-                        divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getDoc10().get(i).getIsCompositeFormYard());
-                        divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getDoc10().get(i).getIsFilterPressMud());
-                        divisionTable.setIsGreenManures(transactionSyncResponseDTO.getDoc10().get(i).getIsGreenManures());
-                        divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getDoc10().get(i).getIsMicronutrientDeficiency());
-                        divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getDoc10().get(i).getIsGapsFilled());
-                        divisionTable.setInspectionDate(transactionSyncResponseDTO.getDoc10().get(i).getInspectionDate());
-                        divisionTable.setWeedStatusId(transactionSyncResponseDTO.getDoc10().get(i).getWeedStatusId());
-                        divisionTable.setActionPlanId(transactionSyncResponseDTO.getDoc10().get(i).getActionPlanId());
-                        divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getDoc10().get(i).getPerishableReasonId());
-                        divisionTable.setPerishedArea(transactionSyncResponseDTO.getDoc10().get(i).getPerishedArea());
-                        divisionTable.setNotGrownArea(transactionSyncResponseDTO.getDoc10().get(i).getNotGrownArea());
-                        divisionTable.setHarvestingArea(transactionSyncResponseDTO.getDoc10().get(i).getHarvestingArea());
-                        divisionTable.setPoorCropArea(transactionSyncResponseDTO.getDoc10().get(i).getPoorCropArea());
-                        divisionTable.setRemovedArea(transactionSyncResponseDTO.getDoc10().get(i).getRemovedArea());
-                        divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getDoc10().get(i).getBioFertilizerAppliedArea());
-                        divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getDoc10().get(i).getDeTrashingArea());
-                        divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getDoc10().get(i).getDeepPloughedArea());
-                        divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getDoc10().get(i).getEarthingUpArea());
-                        divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getDoc10().get(i).getRatoonManagedUsedArea());
-                        divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getDoc10().get(i).getTrashShedderArea());
-                        divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getDoc10().get(i).getLoadShedderArea());
-                        divisionTable.setIsSeedArea(transactionSyncResponseDTO.getDoc10().get(i).getIsSeedArea());
-                        divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getDoc10().get(i).getDivertToSelfSeed());
-                        divisionTable.setDivertToOthers(transactionSyncResponseDTO.getDoc10().get(i).getDivertToOthers());
-                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc10().get(i).getPlantingMethodId());
-                        divisionTable.setSync(true);
-//                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
-//                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
-//                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
-//                        divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
-//                        divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
-//                        divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
-//                        divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
-//                        divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
-//                        divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
-//                        divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
-//                        divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
-//                        divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
-//                        divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
-//                        divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
-//                        divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
-//                        divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
-                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc10().get(i).getPlantingMethodId());
-//                        divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
-//                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
-//                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
-//                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
-//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
-//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
-//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
-//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
-//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-
-                        viewModel.insertD10IntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getDoc30().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        AddD30Table divisionTable = new AddD30Table();
-                        divisionTable.setServerStatus("1");
-                        divisionTable.setId(transactionSyncResponseDTO.getDoc30().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc30().get(i).getSeasonCode());
-                        divisionTable.setCropTypeId(transactionSyncResponseDTO.getDoc30().get(i).getCropTypeId());
-                        divisionTable.setOfferedNo(transactionSyncResponseDTO.getDoc30().get(i).getOfferedNo());
-                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getDoc30().get(i).getFarmerCode());
-                        divisionTable.setFatherName(transactionSyncResponseDTO.getDoc30().get(i).getFatherName());
-                        divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getDoc30().get(i).getRelationShipTypeId());
-                        divisionTable.setNominee(transactionSyncResponseDTO.getDoc30().get(i).getNominee());
-                        divisionTable.setGuarantor1(transactionSyncResponseDTO.getDoc30().get(i).getGuarantor1());
-                        divisionTable.setGuarantor2(transactionSyncResponseDTO.getDoc30().get(i).getGuarantor2());
-                        divisionTable.setGuarantor3(transactionSyncResponseDTO.getDoc30().get(i).getGuarantor3());
-                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getDoc30().get(i).getFarmerVillageId());
-                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getDoc30().get(i).getPlotVillageId());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc30().get(i).getPlotNo());
-                        divisionTable.setPlantingDate(transactionSyncResponseDTO.getDoc30().get(i).getPlantingDate());
-                        divisionTable.setPlotTypeId(transactionSyncResponseDTO.getDoc30().get(i).getPlotTypeId());
-                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getDoc30().get(i).getPlantTypeId());
-                        divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getDoc30().get(i).getPlantSubTypeId());
-                        divisionTable.setVarietyId(transactionSyncResponseDTO.getDoc30().get(i).getVarietyId());
-                        divisionTable.setSurveyNo(transactionSyncResponseDTO.getDoc30().get(i).getSurveyNo());
-                        divisionTable.setFieldName(transactionSyncResponseDTO.getDoc30().get(i).getFieldName());
-                        divisionTable.setBIRNo(transactionSyncResponseDTO.getDoc30().get(i).getBIRNo());
-                        divisionTable.setBIRDate(transactionSyncResponseDTO.getDoc30().get(i).getBIRDate());
-                        divisionTable.setTotalArea(transactionSyncResponseDTO.getDoc30().get(i).getTotalArea());
-                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getDoc30().get(i).getCultivatedArea());
-                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc30().get(i).getDemoPlotArea());
-                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc30().get(i).getReportedArea());
-                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc30().get(i).getMeasureArea());
-                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc30().get(i).getDemoPlotArea());
-                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc30().get(i).getReportedArea());
-                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc30().get(i).getMeasureArea());
-                        divisionTable.setAggrementedArea(transactionSyncResponseDTO.getDoc30().get(i).getAggrementedArea());
-                        divisionTable.setNetArea(transactionSyncResponseDTO.getDoc30().get(i).getNetArea());
-                        divisionTable.setAgreedTon(transactionSyncResponseDTO.getDoc30().get(i).getAgreedTon());
-                        divisionTable.setEstimatedTon(transactionSyncResponseDTO.getDoc30().get(i).getEstimatedTon());
-                        divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getDoc30().get(i).getIrrigationTypeId());
-                        divisionTable.setSoilTypeId(transactionSyncResponseDTO.getDoc30().get(i).getSoilTypeId());
-                        divisionTable.setSpacingId(transactionSyncResponseDTO.getDoc30().get(i).getSpacingId());
-                        divisionTable.setSettsTypeId(transactionSyncResponseDTO.getDoc30().get(i).getSettsTypeId());
-                        divisionTable.setPreviousCropId(transactionSyncResponseDTO.getDoc30().get(i).getPreviousCropId());
-                        divisionTable.setInterCropId(transactionSyncResponseDTO.getDoc30().get(i).getInterCropId());
-                        divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getDoc30().get(i).getSeedMaterialUsedId());
-                        divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getDoc30().get(i).getPlotExistOnId());
-                        divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getDoc30().get(i).getDistanceFromPlot());
-                        divisionTable.setProfile(transactionSyncResponseDTO.getDoc30().get(i).getProfile());
-                        divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getDoc30().get(i).getIsSettsHotWaterTreatment());
-                        divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getDoc30().get(i).getIsPreviousRedPlot());
-                        divisionTable.setIsDustApplied(transactionSyncResponseDTO.getDoc30().get(i).getIsDustApplied());
-                        divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getDoc30().get(i).getIsBasalFertilization());
-                        divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getDoc30().get(i).getIsTrashMulching());
-                        divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getDoc30().get(i).getIsCompositeFormYard());
-                        divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getDoc30().get(i).getIsFilterPressMud());
-                        divisionTable.setIsGreenManures(transactionSyncResponseDTO.getDoc30().get(i).getIsGreenManures());
-                        divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getDoc30().get(i).getIsMicronutrientDeficiency());
-                        divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getDoc30().get(i).getIsGapsFilled());
-                        divisionTable.setInspectionDate(transactionSyncResponseDTO.getDoc30().get(i).getInspectionDate());
-                        divisionTable.setWeedStatusId(transactionSyncResponseDTO.getDoc30().get(i).getWeedStatusId());
-                        divisionTable.setActionPlanId(transactionSyncResponseDTO.getDoc30().get(i).getActionPlanId());
-                        divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getDoc30().get(i).getPerishableReasonId());
-                        divisionTable.setPerishedArea(transactionSyncResponseDTO.getDoc30().get(i).getPerishedArea());
-                        divisionTable.setNotGrownArea(transactionSyncResponseDTO.getDoc30().get(i).getNotGrownArea());
-                        divisionTable.setHarvestingArea(transactionSyncResponseDTO.getDoc30().get(i).getHarvestingArea());
-                        divisionTable.setPoorCropArea(transactionSyncResponseDTO.getDoc30().get(i).getPoorCropArea());
-                        divisionTable.setRemovedArea(transactionSyncResponseDTO.getDoc30().get(i).getRemovedArea());
-                        divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getDoc30().get(i).getBioFertilizerAppliedArea());
-                        divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getDoc30().get(i).getDeTrashingArea());
-                        divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getDoc30().get(i).getDeepPloughedArea());
-                        divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getDoc30().get(i).getEarthingUpArea());
-                        divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getDoc30().get(i).getRatoonManagedUsedArea());
-                        divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getDoc30().get(i).getTrashShedderArea());
-                        divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getDoc30().get(i).getLoadShedderArea());
-                        divisionTable.setIsSeedArea(transactionSyncResponseDTO.getDoc30().get(i).getIsSeedArea());
-                        divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getDoc30().get(i).getDivertToSelfSeed());
-                        divisionTable.setDivertToOthers(transactionSyncResponseDTO.getDoc30().get(i).getDivertToOthers());
-                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc30().get(i).getPlantingMethodId());
-                        divisionTable.setSync(true);
-//                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
-//                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
-//                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
-//                        divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
-//                        divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
-//                        divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
-//                        divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
-//                        divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
-//                        divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
-//                        divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
-//                        divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
-//                        divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
-//                        divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
-//                        divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
-//                        divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
-//                        divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
-                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc30().get(i).getPlantingMethodId());
-//                        divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
-//                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
-//                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
-//                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
-//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
-//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
-//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
-//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
-//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-
-                        viewModel.insertD30IntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getGeoBoundaries().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        AddGeoBoundriesTable divisionTable = new AddGeoBoundriesTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getGeoBoundaries().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getGeoBoundaries().get(i).getSeasonCode());
-                        divisionTable.setStage(transactionSyncResponseDTO.getGeoBoundaries().get(i).getStage());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getGeoBoundaries().get(i).getPlotNo());
-                        divisionTable.setLatitude(transactionSyncResponseDTO.getGeoBoundaries().get(i).getLatitude());
-                        divisionTable.setLongitude(transactionSyncResponseDTO.getGeoBoundaries().get(i).getLongitude());
-                        divisionTable.setIsActive(transactionSyncResponseDTO.getGeoBoundaries().get(i).getIsActive());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getGeoBoundaries().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getGeoBoundaries().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getGeoBoundaries().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getGeoBoundaries().get(i).getUpdatedDate());
-                        divisionTable.setSync(true);
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertPlotGeoIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getPlotOffer().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        AddPlotOfferTable divisionTable = new AddPlotOfferTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getPlotOffer().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getPlotOffer().get(i).getSeasonCode());
-                        divisionTable.setNewFarmer(transactionSyncResponseDTO.getPlotOffer().get(i).getNewFarmer());
-                        divisionTable.setOfferNo(transactionSyncResponseDTO.getPlotOffer().get(i).getOfferNo());
-                        divisionTable.setOfferDate(transactionSyncResponseDTO.getPlotOffer().get(i).getOfferDate());
-                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getPlotOffer().get(i).getFarmerCode());
-                        divisionTable.setFarmerName(transactionSyncResponseDTO.getPlotOffer().get(i).getFarmerName());
-                        divisionTable.setFatherName(transactionSyncResponseDTO.getPlotOffer().get(i).getFatherName());
-                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getPlotOffer().get(i).getFarmerVillageId());
-                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getPlotOffer().get(i).getPlotVillageId());
-                        divisionTable.setPlotIndNo(transactionSyncResponseDTO.getPlotOffer().get(i).getPlotIndNo());
-                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getPlotOffer().get(i).getPlantTypeId());
-                        divisionTable.setExpectedVarityId(transactionSyncResponseDTO.getPlotOffer().get(i).getExpectedVarityId());
-                        divisionTable.setExpectedPlantingDate(transactionSyncResponseDTO.getPlotOffer().get(i).getExpectedPlantingDate());
-                        divisionTable.setExpectedArea(transactionSyncResponseDTO.getPlotOffer().get(i).getExpectedArea());
-                        divisionTable.setReportedArea(transactionSyncResponseDTO.getPlotOffer().get(i).getReportedArea());
-                        divisionTable.setReasonForNotPlantingId(transactionSyncResponseDTO.getPlotOffer().get(i).getReasonForNotPlantingId());
-                        divisionTable.setActive(transactionSyncResponseDTO.getPlotOffer().get(i).getActive());
-                        divisionTable.setStatus(transactionSyncResponseDTO.getPlotOffer().get(i).getStatus());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlotOffer().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlotOffer().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlotOffer().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlotOffer().get(i).getUpdatedDate());
-                        divisionTable.setServerStatus("1");
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertPlotOfferIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getUserSection().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        UserSectionTable divisionTable = new UserSectionTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getUserSection().get(i).getId());
-                        divisionTable.setSectionId(transactionSyncResponseDTO.getUserSection().get(i).getSectionId());
-                        divisionTable.setUserId(transactionSyncResponseDTO.getUserSection().get(i).getUserId());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getUserSection().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getUserSection().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getUserSection().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getUserSection().get(i).getUpdatedDate());
-                        divisionTable.setActive(true);
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertUserSectionIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20Fertilizer().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        D20FertilizerTable divisionTable = new D20FertilizerTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getSeasonCode());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getPlotNo());
-                        divisionTable.setFertilizerId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getFertilizerId());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getUpdatedDate());
-                        divisionTable.setIsActive(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getIsActive());
-                        divisionTable.setSync(true);
-                        divisionTable.setServerStatus("1");
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertD20FertilizerIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20Weed().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        D20WeedTable divisionTable = new D20WeedTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getDoc20Weed().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Weed().get(i).getSeasonCode());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Weed().get(i).getPlotNo());
-                        divisionTable.setWeedId(transactionSyncResponseDTO.getDoc20Weed().get(i).getWeedId());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Weed().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Weed().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Weed().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Weed().get(i).getUpdatedDate());
-                        divisionTable.setIsActive(transactionSyncResponseDTO.getDoc20Weed().get(i).getIsActive());
-                        divisionTable.setSync("1");
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertD20WeedIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getComplaints().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        AddComplaintsDetailsTable divisionTable = new AddComplaintsDetailsTable();
-                        divisionTable.setCode(transactionSyncResponseDTO.getComplaints().get(i).getCode());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getComplaints().get(i).getSeasonCode());
-                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getComplaints().get(i).getFarmerCode());
-                        divisionTable.setComplaintStatus(transactionSyncResponseDTO.getComplaints().get(i).getComplaintStatus());
-                        divisionTable.setComplaintType(transactionSyncResponseDTO.getComplaints().get(i).getComplaintType());
-                        divisionTable.setSolution(transactionSyncResponseDTO.getComplaints().get(i).getSolution());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getComplaints().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getComplaints().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getComplaints().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getComplaints().get(i).getUpdatedDate());
-                        divisionTable.setIsActive(transactionSyncResponseDTO.getComplaints().get(i).getIsActive());
-                        divisionTable.setLogBookNo(transactionSyncResponseDTO.getComplaints().get(i).getLogBookNo());
-                        divisionTable.setSync(true);
-                        divisionTable.setServerStatus("1");
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertAddComplainFormTableLocalDb(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getComplaintRepository().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        SavingComplainImagesTable divisionTable = new SavingComplainImagesTable();
-                        divisionTable.setComplaintCode(transactionSyncResponseDTO.getComplaintRepository().get(i).getComplaintCode());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getComplaintRepository().get(i).getSeasonCode());
-                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getComplaintRepository().get(i).getFarmerCode());
-                        divisionTable.setFileName(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileName());
-                        divisionTable.setFileLocation(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileLocation());
-                        divisionTable.setFileExtension(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileExtension());
-                        divisionTable.setLocalDocUrl(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileLocation());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getComplaintRepository().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getComplaintRepository().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getComplaintRepository().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getComplaintRepository().get(i).getUpdatedDate());
-                        divisionTable.setIsActive(transactionSyncResponseDTO.getComplaintRepository().get(i).getIsActive());
-                        divisionTable.setLogBookNo(transactionSyncResponseDTO.getComplaintRepository().get(i).getLogBookNo());
-                        divisionTable.setIsResult(transactionSyncResponseDTO.getComplaintRepository().get(i).getIsResult());
-                        divisionTable.setIsVideoRecording(transactionSyncResponseDTO.getComplaintRepository().get(i).getIsVideoRecording());
-                        divisionTable.setModuleTypeId(transactionSyncResponseDTO.getComplaintRepository().get(i).getModuleTypeId());
-                        divisionTable.setSync(true);
-                        divisionTable.setServerStatus("1");
-                        divisionTable.setServerUpdatedStatus(true);
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertComplainImagesToServer(divisionTable,transactionSyncResponseDTO.getComplaintRepository().get(i).getLogBookNo());
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20Disease().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        D20DiseaseTable divisionTable = new D20DiseaseTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getDoc20Disease().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Disease().get(i).getSeasonCode());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Disease().get(i).getPlotNo());
-                        divisionTable.setDiseasesId(transactionSyncResponseDTO.getDoc20Disease().get(i).getDiseasesId());
-                        divisionTable.setIdentifiedDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getIdentifiedDate());
-                        divisionTable.setControlDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getControlDate());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Disease().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Disease().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getUpdatedDate());
-                        divisionTable.setActive(transactionSyncResponseDTO.getDoc20Disease().get(i).getActive());
-                        divisionTable.setSync(true);
-                        divisionTable.setServerStatus("1");
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertD20DiseaseIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20Pest().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        D20PestTable divisionTable = new D20PestTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getDoc20Pest().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Pest().get(i).getSeasonCode());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Pest().get(i).getPlotNo());
-                        divisionTable.setPestId(transactionSyncResponseDTO.getDoc20Pest().get(i).getPestId());
-                        divisionTable.setIdentifiedDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getIdentifiedDate());
-                        divisionTable.setControlDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getControlDate());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Pest().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Pest().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getUpdatedDate());
-                        divisionTable.setActive(transactionSyncResponseDTO.getDoc20Pest().get(i).getActive());
-                        divisionTable.setSync(true);
-                        divisionTable.setServerStatus("1");
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertD20PestIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-                    for (int i = 0; i < transactionSyncResponseDTO.getGrowthMonitoring().size(); i++) {
-//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
-                        AddGrowthMonitoringTable divisionTable = new AddGrowthMonitoringTable();
-                        divisionTable.setId(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getId());
-                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getSeasonCode());
-                        divisionTable.setPlotNo(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getPlotNo());
-                        divisionTable.setFileUrl(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getFileUrl());
-                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getFarmerCode());
-                        divisionTable.setRemarks(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getRemarks());
-                        divisionTable.setStage(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getStage());
-                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getCreatedDate());
-                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getCreatedByUserId());
-                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getUpdatedByUserId());
-                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getUpdatedDate());
-                        divisionTable.setActive(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getActive());
-                        divisionTable.setSync(true);
-                        divisionTable.setServerStatus("1");
-                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
-                        viewModel.insertGrowthMonitoringIntoLocalDBQuery(divisionTable);
-                        //getClusterHDRList.add(clusterHDr_value);
-                    }
-
-                    new Handler().postDelayed(new Runnable() {
-
-                        @Override
-                        public void run() {
-//                Intent i = new Intent(MainActivity.this, DashBoardActivity.class);
-
-                            progressDialog.dismiss();
+                            viewModel.insertD20IntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
                         }
 
-                    }, 1 * 120000);
+                        for (int i = 0; i < transactionSyncResponseDTO.getDoc10().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            AddD10Table divisionTable = new AddD10Table();
+                            divisionTable.setServerStatus("1");
+                            divisionTable.setId(transactionSyncResponseDTO.getDoc10().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc10().get(i).getSeasonCode());
+                            divisionTable.setCropTypeId(transactionSyncResponseDTO.getDoc10().get(i).getCropTypeId());
+                            divisionTable.setOfferedNo(transactionSyncResponseDTO.getDoc10().get(i).getOfferedNo());
+                            divisionTable.setFarmerCode(transactionSyncResponseDTO.getDoc10().get(i).getFarmerCode());
+                            divisionTable.setFatherName(transactionSyncResponseDTO.getDoc10().get(i).getFatherName());
+                            divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getDoc10().get(i).getRelationShipTypeId());
+                            divisionTable.setNominee(transactionSyncResponseDTO.getDoc10().get(i).getNominee());
+                            divisionTable.setGuarantor1(transactionSyncResponseDTO.getDoc10().get(i).getGuarantor1());
+                            divisionTable.setGuarantor2(transactionSyncResponseDTO.getDoc10().get(i).getGuarantor2());
+                            divisionTable.setGuarantor3(transactionSyncResponseDTO.getDoc10().get(i).getGuarantor3());
+                            divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getDoc10().get(i).getFarmerVillageId());
+                            divisionTable.setPlotVillageId(transactionSyncResponseDTO.getDoc10().get(i).getPlotVillageId());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc10().get(i).getPlotNo());
+                            divisionTable.setPlantingDate(transactionSyncResponseDTO.getDoc10().get(i).getPlantingDate());
+                            divisionTable.setPlotTypeId(transactionSyncResponseDTO.getDoc10().get(i).getPlotTypeId());
+                            divisionTable.setPlantTypeId(transactionSyncResponseDTO.getDoc10().get(i).getPlantTypeId());
+                            divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getDoc10().get(i).getPlantSubTypeId());
+                            divisionTable.setVarietyId(transactionSyncResponseDTO.getDoc10().get(i).getVarietyId());
+                            divisionTable.setSurveyNo(transactionSyncResponseDTO.getDoc10().get(i).getSurveyNo());
+                            divisionTable.setFieldName(transactionSyncResponseDTO.getDoc10().get(i).getFieldName());
+                            divisionTable.setBIRNo(transactionSyncResponseDTO.getDoc10().get(i).getBIRNo());
+                            divisionTable.setBIRDate(transactionSyncResponseDTO.getDoc10().get(i).getBIRDate());
+                            divisionTable.setTotalArea(transactionSyncResponseDTO.getDoc10().get(i).getTotalArea());
+                            divisionTable.setCultivatedArea(transactionSyncResponseDTO.getDoc10().get(i).getCultivatedArea());
+                            divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc10().get(i).getDemoPlotArea());
+                            divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc10().get(i).getReportedArea());
+                            divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc10().get(i).getMeasureArea());
+                            divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc10().get(i).getDemoPlotArea());
+                            divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc10().get(i).getReportedArea());
+                            divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc10().get(i).getMeasureArea());
+                            divisionTable.setAggrementedArea(transactionSyncResponseDTO.getDoc10().get(i).getAggrementedArea());
+                            divisionTable.setNetArea(transactionSyncResponseDTO.getDoc10().get(i).getNetArea());
+                            divisionTable.setAgreedTon(transactionSyncResponseDTO.getDoc10().get(i).getAgreedTon());
+                            divisionTable.setEstimatedTon(transactionSyncResponseDTO.getDoc10().get(i).getEstimatedTon());
+                            divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getDoc10().get(i).getIrrigationTypeId());
+                            divisionTable.setSoilTypeId(transactionSyncResponseDTO.getDoc10().get(i).getSoilTypeId());
+                            divisionTable.setSpacingId(transactionSyncResponseDTO.getDoc10().get(i).getSpacingId());
+                            divisionTable.setSettsTypeId(transactionSyncResponseDTO.getDoc10().get(i).getSettsTypeId());
+                            divisionTable.setPreviousCropId(transactionSyncResponseDTO.getDoc10().get(i).getPreviousCropId());
+                            divisionTable.setInterCropId(transactionSyncResponseDTO.getDoc10().get(i).getInterCropId());
+                            divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getDoc10().get(i).getSeedMaterialUsedId());
+                            divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getDoc10().get(i).getPlotExistOnId());
+                            divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getDoc10().get(i).getDistanceFromPlot());
+                            divisionTable.setProfile(transactionSyncResponseDTO.getDoc10().get(i).getProfile());
+                            divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getDoc10().get(i).getIsSettsHotWaterTreatment());
+                            divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getDoc10().get(i).getIsPreviousRedPlot());
+                            divisionTable.setIsDustApplied(transactionSyncResponseDTO.getDoc10().get(i).getIsDustApplied());
+                            divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getDoc10().get(i).getIsBasalFertilization());
+                            divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getDoc10().get(i).getIsTrashMulching());
+                            divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getDoc10().get(i).getIsCompositeFormYard());
+                            divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getDoc10().get(i).getIsFilterPressMud());
+                            divisionTable.setIsGreenManures(transactionSyncResponseDTO.getDoc10().get(i).getIsGreenManures());
+                            divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getDoc10().get(i).getIsMicronutrientDeficiency());
+                            divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getDoc10().get(i).getIsGapsFilled());
+                            divisionTable.setInspectionDate(transactionSyncResponseDTO.getDoc10().get(i).getInspectionDate());
+                            divisionTable.setWeedStatusId(transactionSyncResponseDTO.getDoc10().get(i).getWeedStatusId());
+                            divisionTable.setActionPlanId(transactionSyncResponseDTO.getDoc10().get(i).getActionPlanId());
+                            divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getDoc10().get(i).getPerishableReasonId());
+                            divisionTable.setPerishedArea(transactionSyncResponseDTO.getDoc10().get(i).getPerishedArea());
+                            divisionTable.setNotGrownArea(transactionSyncResponseDTO.getDoc10().get(i).getNotGrownArea());
+                            divisionTable.setHarvestingArea(transactionSyncResponseDTO.getDoc10().get(i).getHarvestingArea());
+                            divisionTable.setPoorCropArea(transactionSyncResponseDTO.getDoc10().get(i).getPoorCropArea());
+                            divisionTable.setRemovedArea(transactionSyncResponseDTO.getDoc10().get(i).getRemovedArea());
+                            divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getDoc10().get(i).getBioFertilizerAppliedArea());
+                            divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getDoc10().get(i).getDeTrashingArea());
+                            divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getDoc10().get(i).getDeepPloughedArea());
+                            divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getDoc10().get(i).getEarthingUpArea());
+                            divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getDoc10().get(i).getRatoonManagedUsedArea());
+                            divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getDoc10().get(i).getTrashShedderArea());
+                            divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getDoc10().get(i).getLoadShedderArea());
+                            divisionTable.setIsSeedArea(transactionSyncResponseDTO.getDoc10().get(i).getIsSeedArea());
+                            divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getDoc10().get(i).getDivertToSelfSeed());
+                            divisionTable.setDivertToOthers(transactionSyncResponseDTO.getDoc10().get(i).getDivertToOthers());
+                            divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc10().get(i).getPlantingMethodId());
+                            divisionTable.setSync(true);
+//                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
+//                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
+//                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
+//                        divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
+//                        divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
+//                        divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
+//                        divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
+//                        divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
+//                        divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
+//                        divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
+//                        divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
+//                        divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
+//                        divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
+//                        divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
+//                        divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
+//                        divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
+                            divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc10().get(i).getPlantingMethodId());
+//                        divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
+//                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
+//                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
+//                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
 
-                    Log.d("TAG", "onResponse: >>>"+strResponse);
-//                    progressDialog.dismiss();
+                            viewModel.insertD10IntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
 
+                        for (int i = 0; i < transactionSyncResponseDTO.getDoc30().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            AddD30Table divisionTable = new AddD30Table();
+                            divisionTable.setServerStatus("1");
+                            divisionTable.setId(transactionSyncResponseDTO.getDoc30().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc30().get(i).getSeasonCode());
+                            divisionTable.setCropTypeId(transactionSyncResponseDTO.getDoc30().get(i).getCropTypeId());
+                            divisionTable.setOfferedNo(transactionSyncResponseDTO.getDoc30().get(i).getOfferedNo());
+                            divisionTable.setFarmerCode(transactionSyncResponseDTO.getDoc30().get(i).getFarmerCode());
+                            divisionTable.setFatherName(transactionSyncResponseDTO.getDoc30().get(i).getFatherName());
+                            divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getDoc30().get(i).getRelationShipTypeId());
+                            divisionTable.setNominee(transactionSyncResponseDTO.getDoc30().get(i).getNominee());
+                            divisionTable.setGuarantor1(transactionSyncResponseDTO.getDoc30().get(i).getGuarantor1());
+                            divisionTable.setGuarantor2(transactionSyncResponseDTO.getDoc30().get(i).getGuarantor2());
+                            divisionTable.setGuarantor3(transactionSyncResponseDTO.getDoc30().get(i).getGuarantor3());
+                            divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getDoc30().get(i).getFarmerVillageId());
+                            divisionTable.setPlotVillageId(transactionSyncResponseDTO.getDoc30().get(i).getPlotVillageId());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc30().get(i).getPlotNo());
+                            divisionTable.setPlantingDate(transactionSyncResponseDTO.getDoc30().get(i).getPlantingDate());
+                            divisionTable.setPlotTypeId(transactionSyncResponseDTO.getDoc30().get(i).getPlotTypeId());
+                            divisionTable.setPlantTypeId(transactionSyncResponseDTO.getDoc30().get(i).getPlantTypeId());
+                            divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getDoc30().get(i).getPlantSubTypeId());
+                            divisionTable.setVarietyId(transactionSyncResponseDTO.getDoc30().get(i).getVarietyId());
+                            divisionTable.setSurveyNo(transactionSyncResponseDTO.getDoc30().get(i).getSurveyNo());
+                            divisionTable.setFieldName(transactionSyncResponseDTO.getDoc30().get(i).getFieldName());
+                            divisionTable.setBIRNo(transactionSyncResponseDTO.getDoc30().get(i).getBIRNo());
+                            divisionTable.setBIRDate(transactionSyncResponseDTO.getDoc30().get(i).getBIRDate());
+                            divisionTable.setTotalArea(transactionSyncResponseDTO.getDoc30().get(i).getTotalArea());
+                            divisionTable.setCultivatedArea(transactionSyncResponseDTO.getDoc30().get(i).getCultivatedArea());
+                            divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc30().get(i).getDemoPlotArea());
+                            divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc30().get(i).getReportedArea());
+                            divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc30().get(i).getMeasureArea());
+                            divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc30().get(i).getDemoPlotArea());
+                            divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc30().get(i).getReportedArea());
+                            divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc30().get(i).getMeasureArea());
+                            divisionTable.setAggrementedArea(transactionSyncResponseDTO.getDoc30().get(i).getAggrementedArea());
+                            divisionTable.setNetArea(transactionSyncResponseDTO.getDoc30().get(i).getNetArea());
+                            divisionTable.setAgreedTon(transactionSyncResponseDTO.getDoc30().get(i).getAgreedTon());
+                            divisionTable.setEstimatedTon(transactionSyncResponseDTO.getDoc30().get(i).getEstimatedTon());
+                            divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getDoc30().get(i).getIrrigationTypeId());
+                            divisionTable.setSoilTypeId(transactionSyncResponseDTO.getDoc30().get(i).getSoilTypeId());
+                            divisionTable.setSpacingId(transactionSyncResponseDTO.getDoc30().get(i).getSpacingId());
+                            divisionTable.setSettsTypeId(transactionSyncResponseDTO.getDoc30().get(i).getSettsTypeId());
+                            divisionTable.setPreviousCropId(transactionSyncResponseDTO.getDoc30().get(i).getPreviousCropId());
+                            divisionTable.setInterCropId(transactionSyncResponseDTO.getDoc30().get(i).getInterCropId());
+                            divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getDoc30().get(i).getSeedMaterialUsedId());
+                            divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getDoc30().get(i).getPlotExistOnId());
+                            divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getDoc30().get(i).getDistanceFromPlot());
+                            divisionTable.setProfile(transactionSyncResponseDTO.getDoc30().get(i).getProfile());
+                            divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getDoc30().get(i).getIsSettsHotWaterTreatment());
+                            divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getDoc30().get(i).getIsPreviousRedPlot());
+                            divisionTable.setIsDustApplied(transactionSyncResponseDTO.getDoc30().get(i).getIsDustApplied());
+                            divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getDoc30().get(i).getIsBasalFertilization());
+                            divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getDoc30().get(i).getIsTrashMulching());
+                            divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getDoc30().get(i).getIsCompositeFormYard());
+                            divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getDoc30().get(i).getIsFilterPressMud());
+                            divisionTable.setIsGreenManures(transactionSyncResponseDTO.getDoc30().get(i).getIsGreenManures());
+                            divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getDoc30().get(i).getIsMicronutrientDeficiency());
+                            divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getDoc30().get(i).getIsGapsFilled());
+                            divisionTable.setInspectionDate(transactionSyncResponseDTO.getDoc30().get(i).getInspectionDate());
+                            divisionTable.setWeedStatusId(transactionSyncResponseDTO.getDoc30().get(i).getWeedStatusId());
+                            divisionTable.setActionPlanId(transactionSyncResponseDTO.getDoc30().get(i).getActionPlanId());
+                            divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getDoc30().get(i).getPerishableReasonId());
+                            divisionTable.setPerishedArea(transactionSyncResponseDTO.getDoc30().get(i).getPerishedArea());
+                            divisionTable.setNotGrownArea(transactionSyncResponseDTO.getDoc30().get(i).getNotGrownArea());
+                            divisionTable.setHarvestingArea(transactionSyncResponseDTO.getDoc30().get(i).getHarvestingArea());
+                            divisionTable.setPoorCropArea(transactionSyncResponseDTO.getDoc30().get(i).getPoorCropArea());
+                            divisionTable.setRemovedArea(transactionSyncResponseDTO.getDoc30().get(i).getRemovedArea());
+                            divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getDoc30().get(i).getBioFertilizerAppliedArea());
+                            divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getDoc30().get(i).getDeTrashingArea());
+                            divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getDoc30().get(i).getDeepPloughedArea());
+                            divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getDoc30().get(i).getEarthingUpArea());
+                            divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getDoc30().get(i).getRatoonManagedUsedArea());
+                            divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getDoc30().get(i).getTrashShedderArea());
+                            divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getDoc30().get(i).getLoadShedderArea());
+                            divisionTable.setIsSeedArea(transactionSyncResponseDTO.getDoc30().get(i).getIsSeedArea());
+                            divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getDoc30().get(i).getDivertToSelfSeed());
+                            divisionTable.setDivertToOthers(transactionSyncResponseDTO.getDoc30().get(i).getDivertToOthers());
+                            divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc30().get(i).getPlantingMethodId());
+                            divisionTable.setSync(true);
+//                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
+//                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
+//                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
+//                        divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
+//                        divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
+//                        divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
+//                        divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
+//                        divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
+//                        divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
+//                        divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
+//                        divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
+//                        divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
+//                        divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
+//                        divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
+//                        divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
+//                        divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
+                            divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc30().get(i).getPlantingMethodId());
+//                        divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
+//                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
+//                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
+//                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+
+                            viewModel.insertD30IntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getGeoBoundaries().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            AddGeoBoundriesTable divisionTable = new AddGeoBoundriesTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getGeoBoundaries().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getGeoBoundaries().get(i).getSeasonCode());
+                            divisionTable.setStage(transactionSyncResponseDTO.getGeoBoundaries().get(i).getStage());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getGeoBoundaries().get(i).getPlotNo());
+                            divisionTable.setLatitude(transactionSyncResponseDTO.getGeoBoundaries().get(i).getLatitude());
+                            divisionTable.setLongitude(transactionSyncResponseDTO.getGeoBoundaries().get(i).getLongitude());
+                            divisionTable.setIsActive(transactionSyncResponseDTO.getGeoBoundaries().get(i).getIsActive());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getGeoBoundaries().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getGeoBoundaries().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getGeoBoundaries().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getGeoBoundaries().get(i).getUpdatedDate());
+                            divisionTable.setSync(true);
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertPlotGeoIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getPlotOffer().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            AddPlotOfferTable divisionTable = new AddPlotOfferTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getPlotOffer().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getPlotOffer().get(i).getSeasonCode());
+                            divisionTable.setNewFarmer(transactionSyncResponseDTO.getPlotOffer().get(i).getNewFarmer());
+                            divisionTable.setOfferNo(transactionSyncResponseDTO.getPlotOffer().get(i).getOfferNo());
+                            divisionTable.setOfferDate(transactionSyncResponseDTO.getPlotOffer().get(i).getOfferDate());
+                            divisionTable.setFarmerCode(transactionSyncResponseDTO.getPlotOffer().get(i).getFarmerCode());
+                            divisionTable.setFarmerName(transactionSyncResponseDTO.getPlotOffer().get(i).getFarmerName());
+                            divisionTable.setFatherName(transactionSyncResponseDTO.getPlotOffer().get(i).getFatherName());
+                            divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getPlotOffer().get(i).getFarmerVillageId());
+                            divisionTable.setPlotVillageId(transactionSyncResponseDTO.getPlotOffer().get(i).getPlotVillageId());
+                            divisionTable.setPlotIndNo(transactionSyncResponseDTO.getPlotOffer().get(i).getPlotIndNo());
+                            divisionTable.setPlantTypeId(transactionSyncResponseDTO.getPlotOffer().get(i).getPlantTypeId());
+                            divisionTable.setExpectedVarityId(transactionSyncResponseDTO.getPlotOffer().get(i).getExpectedVarityId());
+                            divisionTable.setExpectedPlantingDate(transactionSyncResponseDTO.getPlotOffer().get(i).getExpectedPlantingDate());
+                            divisionTable.setExpectedArea(transactionSyncResponseDTO.getPlotOffer().get(i).getExpectedArea());
+                            divisionTable.setReportedArea(transactionSyncResponseDTO.getPlotOffer().get(i).getReportedArea());
+                            divisionTable.setReasonForNotPlantingId(transactionSyncResponseDTO.getPlotOffer().get(i).getReasonForNotPlantingId());
+                            divisionTable.setActive(transactionSyncResponseDTO.getPlotOffer().get(i).getActive());
+                            divisionTable.setStatus(transactionSyncResponseDTO.getPlotOffer().get(i).getStatus());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlotOffer().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlotOffer().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlotOffer().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlotOffer().get(i).getUpdatedDate());
+                            divisionTable.setServerStatus("1");
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertPlotOfferIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getUserSection().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            UserSectionTable divisionTable = new UserSectionTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getUserSection().get(i).getId());
+                            divisionTable.setSectionId(transactionSyncResponseDTO.getUserSection().get(i).getSectionId());
+                            divisionTable.setUserId(transactionSyncResponseDTO.getUserSection().get(i).getUserId());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getUserSection().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getUserSection().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getUserSection().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getUserSection().get(i).getUpdatedDate());
+                            divisionTable.setActive(true);
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertUserSectionIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getDoc20Fertilizer().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            D20FertilizerTable divisionTable = new D20FertilizerTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getSeasonCode());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getPlotNo());
+                            divisionTable.setFertilizerId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getFertilizerId());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getUpdatedDate());
+                            divisionTable.setIsActive(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getIsActive());
+                            divisionTable.setSync(true);
+                            divisionTable.setServerStatus("1");
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertD20FertilizerIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getDoc20Weed().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            D20WeedTable divisionTable = new D20WeedTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getDoc20Weed().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Weed().get(i).getSeasonCode());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Weed().get(i).getPlotNo());
+                            divisionTable.setWeedId(transactionSyncResponseDTO.getDoc20Weed().get(i).getWeedId());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Weed().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Weed().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Weed().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Weed().get(i).getUpdatedDate());
+                            divisionTable.setIsActive(transactionSyncResponseDTO.getDoc20Weed().get(i).getIsActive());
+                            divisionTable.setSync("1");
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertD20WeedIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getComplaints().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            AddComplaintsDetailsTable divisionTable = new AddComplaintsDetailsTable();
+                            divisionTable.setCode(transactionSyncResponseDTO.getComplaints().get(i).getCode());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getComplaints().get(i).getSeasonCode());
+                            divisionTable.setFarmerCode(transactionSyncResponseDTO.getComplaints().get(i).getFarmerCode());
+                            divisionTable.setComplaintStatus(transactionSyncResponseDTO.getComplaints().get(i).getComplaintStatus());
+                            divisionTable.setComplaintType(transactionSyncResponseDTO.getComplaints().get(i).getComplaintType());
+                            divisionTable.setSolution(transactionSyncResponseDTO.getComplaints().get(i).getSolution());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getComplaints().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getComplaints().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getComplaints().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getComplaints().get(i).getUpdatedDate());
+                            divisionTable.setIsActive(transactionSyncResponseDTO.getComplaints().get(i).getIsActive());
+                            divisionTable.setLogBookNo(transactionSyncResponseDTO.getComplaints().get(i).getLogBookNo());
+                            divisionTable.setSync(true);
+                            divisionTable.setServerStatus("1");
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertAddComplainFormTableLocalDb(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getComplaintRepository().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            SavingComplainImagesTable divisionTable = new SavingComplainImagesTable();
+                            divisionTable.setComplaintCode(transactionSyncResponseDTO.getComplaintRepository().get(i).getComplaintCode());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getComplaintRepository().get(i).getSeasonCode());
+                            divisionTable.setFarmerCode(transactionSyncResponseDTO.getComplaintRepository().get(i).getFarmerCode());
+                            divisionTable.setFileName(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileName());
+                            divisionTable.setFileLocation(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileLocation());
+                            divisionTable.setFileExtension(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileExtension());
+                            divisionTable.setLocalDocUrl(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileLocation());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getComplaintRepository().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getComplaintRepository().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getComplaintRepository().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getComplaintRepository().get(i).getUpdatedDate());
+                            divisionTable.setIsActive(transactionSyncResponseDTO.getComplaintRepository().get(i).getIsActive());
+                            divisionTable.setLogBookNo(transactionSyncResponseDTO.getComplaintRepository().get(i).getLogBookNo());
+                            divisionTable.setIsResult(transactionSyncResponseDTO.getComplaintRepository().get(i).getIsResult());
+                            divisionTable.setIsVideoRecording(transactionSyncResponseDTO.getComplaintRepository().get(i).getIsVideoRecording());
+                            divisionTable.setModuleTypeId(transactionSyncResponseDTO.getComplaintRepository().get(i).getModuleTypeId());
+                            divisionTable.setSync(true);
+                            divisionTable.setServerStatus("1");
+                            divisionTable.setServerUpdatedStatus(true);
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertComplainImagesToServer(divisionTable,transactionSyncResponseDTO.getComplaintRepository().get(i).getLogBookNo());
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getDoc20Disease().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            D20DiseaseTable divisionTable = new D20DiseaseTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getDoc20Disease().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Disease().get(i).getSeasonCode());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Disease().get(i).getPlotNo());
+                            divisionTable.setDiseasesId(transactionSyncResponseDTO.getDoc20Disease().get(i).getDiseasesId());
+                            divisionTable.setIdentifiedDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getIdentifiedDate());
+                            divisionTable.setControlDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getControlDate());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Disease().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Disease().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getUpdatedDate());
+                            divisionTable.setActive(transactionSyncResponseDTO.getDoc20Disease().get(i).getActive());
+                            divisionTable.setSync(true);
+                            divisionTable.setServerStatus("1");
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertD20DiseaseIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getDoc20Pest().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            D20PestTable divisionTable = new D20PestTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getDoc20Pest().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Pest().get(i).getSeasonCode());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Pest().get(i).getPlotNo());
+                            divisionTable.setPestId(transactionSyncResponseDTO.getDoc20Pest().get(i).getPestId());
+                            divisionTable.setIdentifiedDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getIdentifiedDate());
+                            divisionTable.setControlDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getControlDate());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Pest().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Pest().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getUpdatedDate());
+                            divisionTable.setActive(transactionSyncResponseDTO.getDoc20Pest().get(i).getActive());
+                            divisionTable.setSync(true);
+                            divisionTable.setServerStatus("1");
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertD20PestIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+
+                        for (int i = 0; i < transactionSyncResponseDTO.getGrowthMonitoring().size(); i++) {
+//                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+                            AddGrowthMonitoringTable divisionTable = new AddGrowthMonitoringTable();
+                            divisionTable.setId(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getId());
+                            divisionTable.setSeasonCode(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getSeasonCode());
+                            divisionTable.setPlotNo(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getPlotNo());
+                            divisionTable.setFileUrl(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getFileUrl());
+                            divisionTable.setFarmerCode(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getFarmerCode());
+                            divisionTable.setRemarks(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getRemarks());
+                            divisionTable.setStage(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getStage());
+                            divisionTable.setCreatedDate(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getCreatedDate());
+                            divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getCreatedByUserId());
+                            divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getUpdatedByUserId());
+                            divisionTable.setUpdatedDate(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getUpdatedDate());
+                            divisionTable.setActive(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getActive());
+                            divisionTable.setSync(true);
+                            divisionTable.setServerStatus("1");
+                            //insertClusterValuesIntoLocalDB(clusterHDr_value);
+                            viewModel.insertGrowthMonitoringIntoLocalDBQuery(divisionTable);
+                            //getClusterHDRList.add(clusterHDr_value);
+                        }
+                        Toast.makeText(SettingsActivity.this, "Sync Successfully", Toast.LENGTH_LONG).show();
+                        finish();
+                    } else {
+                        // Handle unsuccessful response
+                        Log.e("Error", "Unsuccessful response. Code: " + response.code());
+                        // Display an error message to the user
+                        Toast.makeText(SettingsActivity.this, "Error: " + response.message(), Toast.LENGTH_LONG).show();
+                    }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    progressDialog.dismiss();
-                    Toast.makeText(SettingsActivity.this, " Sync Successfully", Toast.LENGTH_LONG).show();
-
-                    Log.d("Error", ">>>>" + ex.toString());
+                    Log.e("Error", "Exception: " + ex.toString());
+                    // Display an error message to the user
+                    Toast.makeText(SettingsActivity.this, "Error: " + ex.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
 
+            @Override
             public void onFailure(Call<TransactionSyncResponseDTO> call, Throwable t) {
                 progressDialog.dismiss();
                 if (t instanceof SocketTimeoutException) {
-                    // Handle SocketTimeoutException
-                    // You can display an error message to the user or retry the request
                     Log.e("Error", "SocketTimeoutException: " + t.getMessage());
-
-                    // You may choose to retry the request here, or show an error message to the user.
-                    // Example: Retry the request after a delay
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            getSyncFarmerAllDataFromServer(seasonCode); // Retry the request
-                        }
-                    }, 5000); // Retry after 5 seconds
+                    // Retry the request after a delay
+                    retryRequestAfterDelay(seasonCode);
                 } else {
-                    // Handle other types of exceptions
                     Log.e("Error", "Other error: " + t.getMessage());
+                    // Retry the request after a delay
+                    retryRequestAfterDelay(seasonCode);
                 }
             }
         });
     }
+
+    private void retryRequestAfterDelay(final String seasonCode) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getSyncFarmerAllDataFromServer(seasonCode); // Retry the request
+            }
+        }, 5000); // Retry after 5 seconds
+    }
+
+//    public void getSyncFarmerAllDataFromServer(String seasonCode) {
+////        viewModel.deleteAlltablesFromTransactionSync();
+//        final AppAPI service = Retrofit_funtion_class.getClient().create(AppAPI.class);
+//        Call<TransactionSyncResponseDTO> callRetrofit = null;
+////        String seasonCode= appHelper.getSharedPrefObj().getString(SeasonCode,"");
+//        if(seasonCode.isEmpty()){
+//            callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),"2022-23");
+//        } else {
+//            callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),seasonCode);
+//        }
+//
+//        final ProgressDialog progressDialog = new ProgressDialog(SettingsActivity.this, R.style.AppCompatAlertDialogStyle);
+//        progressDialog.setCancelable(false);
+//        progressDialog.setMessage("Fetching All Data From Server please wait..."+seasonCode);
+//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progressDialog.show();
+//        callRetrofit.enqueue(new Callback<TransactionSyncResponseDTO>() {
+//            @Override
+//            public void onResponse(Call<TransactionSyncResponseDTO> call, Response<TransactionSyncResponseDTO> response) {
+//                progressDialog.dismiss();
+//                try {
+//                    String strResponse = String.valueOf(response.body());
+//                    TransactionSyncResponseDTO transactionSyncResponseDTO = response.body();
+//
+//
+//                    Log.d("TAG", "onResponse: >>>"+strResponse);
+////                    progressDialog.dismiss();
+//
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                    progressDialog.dismiss();
+//                    Toast.makeText(SettingsActivity.this, " Sync Successfully", Toast.LENGTH_LONG).show();
+//
+//                    Log.d("Error", ">>>>" + ex.toString());
+//                }
+//            }
+//
+//            public void onFailure(Call<TransactionSyncResponseDTO> call, Throwable t) {
+//                progressDialog.dismiss();
+//                if (t instanceof SocketTimeoutException) {
+//                    // Handle SocketTimeoutException
+//                    // You can display an error message to the user or retry the request
+//                    Log.e("Error", "SocketTimeoutException: " + t.getMessage());
+//
+//                    // You may choose to retry the request here, or show an error message to the user.
+//                    // Example: Retry the request after a delay
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            getSyncFarmerAllDataFromServer(seasonCode); // Retry the request
+//                        }
+//                    }, 5000); // Retry after 5 seconds
+//                } else {
+//                    // Handle other types of exceptions
+//                    Log.e("Error", "Other error: " + t.getMessage());
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            getSyncFarmerAllDataFromServer(seasonCode); // Retry the request
+//                        }
+//                    }, 5000);
+//                }
+//            }
+//        });
+//    }
+//
+
+
+    // TODO: 2/25/2022 get data from server
+//    public void getSyncFarmerAllDataFromServer(String seasonCode) {
+////        viewModel.deleteAlltablesFromTransactionSync();
+//        final AppAPI service = Retrofit_funtion_class.getClient().create(AppAPI.class);
+//        Call<TransactionSyncResponseDTO> callRetrofit = null;
+////        String seasonCode= appHelper.getSharedPrefObj().getString(SeasonCode,"");
+//        if(seasonCode.isEmpty()){
+//            callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),"2022-23");
+//        } else {
+//            callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),seasonCode);
+//        }
+////        callRetrofit = service.getTransactionDetails(appHelper.getSharedPrefObj().getString(DeviceUserID,""),"2022-23");
+////        callRetrofit = service.getTransactionDetails("101");
+////        callRetrofit = service.getTransactionDetails("28");
+////        callRetrofit = service.getTransactionDetails("1");
+////        callRetrofit = service.getTransactionDetails(CommonUtils.getIMEInumber(DashBoardActivity.this), appHelper.getSharedPrefObj().getString(accessToken, ""));
+//        final ProgressDialog progressDialog = new ProgressDialog(SettingsActivity.this, R.style.AppCompatAlertDialogStyle);
+//        progressDialog.setCancelable(false);
+//        progressDialog.setMessage("Fetching All Data From Server please wait..."+seasonCode);
+//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progressDialog.show();
+//        callRetrofit.enqueue(new Callback<TransactionSyncResponseDTO>() {
+//            @Override
+//            public void onResponse(Call<TransactionSyncResponseDTO> call, Response<TransactionSyncResponseDTO> response) {
+//                progressDialog.dismiss();
+//                try {
+//                    String strResponse = String.valueOf(response.body());
+//                    TransactionSyncResponseDTO transactionSyncResponseDTO = response.body();
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getFarmer().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        AddFarmerTable divisionTable = new AddFarmerTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getFarmer().get(i).getId());
+//                        divisionTable.setCode(transactionSyncResponseDTO.getFarmer().get(i).getCode());
+//                        divisionTable.setAliasName(transactionSyncResponseDTO.getFarmer().get(i).getAliasName());
+//                        divisionTable.setName(transactionSyncResponseDTO.getFarmer().get(i).getName());
+//                        divisionTable.setGender(transactionSyncResponseDTO.getFarmer().get(i).getGender());
+//                        divisionTable.setFatherName(transactionSyncResponseDTO.getFarmer().get(i).getFatherName());
+//                        divisionTable.setCastId(transactionSyncResponseDTO.getFarmer().get(i).getCastId());
+//                        divisionTable.setAddress(transactionSyncResponseDTO.getFarmer().get(i).getAddress());
+//                        divisionTable.setVillageId(transactionSyncResponseDTO.getFarmer().get(i).getVillageId());
+//                        divisionTable.setMobile(transactionSyncResponseDTO.getFarmer().get(i).getMobile());
+//                        divisionTable.setEmail(transactionSyncResponseDTO.getFarmer().get(i).getEmail());
+//                        divisionTable.setPanNo(transactionSyncResponseDTO.getFarmer().get(i).getPanNo());
+//                        divisionTable.setAadharNo(transactionSyncResponseDTO.getFarmer().get(i).getAadharNo());
+//                        divisionTable.setOldCode(transactionSyncResponseDTO.getFarmer().get(i).getOldCode());
+//                        divisionTable.setJFNo(transactionSyncResponseDTO.getFarmer().get(i).getJFNo());
+//                        divisionTable.setBranchId(transactionSyncResponseDTO.getFarmer().get(i).getBranchId());
+//                        divisionTable.setACNo(transactionSyncResponseDTO.getFarmer().get(i).getACNo());
+//                        divisionTable.setTotalArea(transactionSyncResponseDTO.getFarmer().get(i).getTotalArea());
+//                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getFarmer().get(i).getCultivatedArea());
+//                        divisionTable.setGLCode(transactionSyncResponseDTO.getFarmer().get(i).getGLCode());
+//                        divisionTable.setSubGLCode(transactionSyncResponseDTO.getFarmer().get(i).getSubGLCode());
+//                        divisionTable.setOtherCode(transactionSyncResponseDTO.getFarmer().get(i).getOtherCode());
+//                        divisionTable.setImageUrl(transactionSyncResponseDTO.getFarmer().get(i).getImageUrl());
+//                        divisionTable.setRegistered(transactionSyncResponseDTO.getFarmer().get(i).getRegistered());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getFarmer().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getFarmer().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getFarmer().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getFarmer().get(i).getUpdatedDate());
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertFarmerIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getPlot().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        AddPlotTable divisionTable = new AddPlotTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getPlot().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getPlot().get(i).getSeasonCode());
+//                        divisionTable.setCropTypeId(transactionSyncResponseDTO.getPlot().get(i).getCropTypeId());
+//                        divisionTable.setOfferedNo(transactionSyncResponseDTO.getPlot().get(i).getOfferedNo());
+//                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getPlot().get(i).getFarmerCode());
+//                        divisionTable.setFatherName(transactionSyncResponseDTO.getPlot().get(i).getFatherName());
+//                        divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getPlot().get(i).getRelationShipTypeId());
+//                        divisionTable.setNominee(transactionSyncResponseDTO.getPlot().get(i).getNominee());
+//                        divisionTable.setGuarantor1(transactionSyncResponseDTO.getPlot().get(i).getGuarantor1());
+//                        divisionTable.setGuarantor2(transactionSyncResponseDTO.getPlot().get(i).getGuarantor2());
+//                        divisionTable.setGuarantor3(transactionSyncResponseDTO.getPlot().get(i).getGuarantor3());
+//                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getPlot().get(i).getFarmerVillageId());
+//                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getPlot().get(i).getPlotVillageId());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getPlot().get(i).getPlotNo());
+//                        divisionTable.setPlantingDate(transactionSyncResponseDTO.getPlot().get(i).getPlantingDate());
+//                        divisionTable.setPlotTypeId(transactionSyncResponseDTO.getPlot().get(i).getPlotTypeId());
+//                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getPlot().get(i).getPlantTypeId());
+//                        divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getPlot().get(i).getPlantSubTypeId());
+//                        divisionTable.setVarietyId(transactionSyncResponseDTO.getPlot().get(i).getVarietyId());
+//                        divisionTable.setSurveyNo(transactionSyncResponseDTO.getPlot().get(i).getSurveyNo());
+//                        divisionTable.setFieldName(transactionSyncResponseDTO.getPlot().get(i).getFieldName());
+//                        divisionTable.setBIRNo(transactionSyncResponseDTO.getPlot().get(i).getBIRNo());
+//                        divisionTable.setBIRDate(transactionSyncResponseDTO.getPlot().get(i).getBIRDate());
+//                        divisionTable.setTotalArea(transactionSyncResponseDTO.getPlot().get(i).getTotalArea());
+//                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getPlot().get(i).getCultivatedArea());
+//                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getPlot().get(i).getDemoPlotArea());
+//                        divisionTable.setReportedArea(transactionSyncResponseDTO.getPlot().get(i).getReportedArea());
+//                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getPlot().get(i).getMeasureArea());
+//                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getPlot().get(i).getDemoPlotArea());
+//                        divisionTable.setReportedArea(transactionSyncResponseDTO.getPlot().get(i).getReportedArea());
+//                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getPlot().get(i).getMeasureArea());
+//                        divisionTable.setAggrementedArea(transactionSyncResponseDTO.getPlot().get(i).getAggrementedArea());
+//                        divisionTable.setNetArea(transactionSyncResponseDTO.getPlot().get(i).getNetArea());
+//                        divisionTable.setAgreedTon(transactionSyncResponseDTO.getPlot().get(i).getAgreedTon());
+//                        divisionTable.setEstimatedTon(transactionSyncResponseDTO.getPlot().get(i).getEstimatedTon());
+//                        divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getPlot().get(i).getIrrigationTypeId());
+//                        divisionTable.setSoilTypeId(transactionSyncResponseDTO.getPlot().get(i).getSoilTypeId());
+//                        divisionTable.setSpacingId(transactionSyncResponseDTO.getPlot().get(i).getSpacingId());
+//                        divisionTable.setSettsTypeId(transactionSyncResponseDTO.getPlot().get(i).getSettsTypeId());
+//                        divisionTable.setPreviousCropId(transactionSyncResponseDTO.getPlot().get(i).getPreviousCropId());
+//                        divisionTable.setInterCropId(transactionSyncResponseDTO.getPlot().get(i).getInterCropId());
+//                        divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getPlot().get(i).getSeedMaterialUsedId());
+//                        divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getPlot().get(i).getPlotExistOnId());
+//                        divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getPlot().get(i).getDistanceFromPlot());
+//                        divisionTable.setProfile(transactionSyncResponseDTO.getPlot().get(i).getProfile());
+//                        divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getPlot().get(i).getIsSettsHotWaterTreatment());
+//                        divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getPlot().get(i).getIsPreviousRedPlot());
+//                        divisionTable.setIsDustApplied(transactionSyncResponseDTO.getPlot().get(i).getIsDustApplied());
+//                        divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getPlot().get(i).getIsBasalFertilization());
+//                        divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getPlot().get(i).getIsTrashMulching());
+//                        divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getPlot().get(i).getIsCompositeFormYard());
+//                        divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getPlot().get(i).getIsFilterPressMud());
+//                        divisionTable.setIsGreenManures(transactionSyncResponseDTO.getPlot().get(i).getIsGreenManures());
+//                        divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getPlot().get(i).getIsMicronutrientDeficiency());
+//                        divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getPlot().get(i).getIsGapsFilled());
+//                        divisionTable.setInspectionDate(transactionSyncResponseDTO.getPlot().get(i).getInspectionDate());
+//                        divisionTable.setWeedStatusId(transactionSyncResponseDTO.getPlot().get(i).getWeedStatusId());
+//                        divisionTable.setActionPlanId(transactionSyncResponseDTO.getPlot().get(i).getActionPlanId());
+//                        divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getPlot().get(i).getPerishableReasonId());
+//                        divisionTable.setPerishedArea(transactionSyncResponseDTO.getPlot().get(i).getPerishedArea());
+//                        divisionTable.setNotGrownArea(transactionSyncResponseDTO.getPlot().get(i).getNotGrownArea());
+//                        divisionTable.setHarvestingArea(transactionSyncResponseDTO.getPlot().get(i).getHarvestingArea());
+//                        divisionTable.setPoorCropArea(transactionSyncResponseDTO.getPlot().get(i).getPoorCropArea());
+//                        divisionTable.setRemovedArea(transactionSyncResponseDTO.getPlot().get(i).getRemovedArea());
+//                        divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getPlot().get(i).getBioFertilizerAppliedArea());
+//                        divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getPlot().get(i).getDeTrashingArea());
+//                        divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getPlot().get(i).getDeepPloughedArea());
+//                        divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getPlot().get(i).getEarthingUpArea());
+//                        divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getPlot().get(i).getRatoonManagedUsedArea());
+//                        divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getPlot().get(i).getTrashShedderArea());
+//                        divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getPlot().get(i).getLoadShedderArea());
+//                        divisionTable.setIsSeedArea(transactionSyncResponseDTO.getPlot().get(i).getIsSeedArea());
+//                        divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getPlot().get(i).getDivertToSelfSeed());
+//                        divisionTable.setDivertToOthers(transactionSyncResponseDTO.getPlot().get(i).getDivertToOthers());
+//                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
+//                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
+//                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
+//                        divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
+//                        divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
+//                        divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
+//                        divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
+//                        divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
+//                        divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
+//                        divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
+//                        divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
+//                        divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
+//                        divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
+//                        divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
+//                        divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
+//                        divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
+//                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getPlot().get(i).getPlantingMethodId());
+//                        divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
+//                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
+//                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
+//                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertPlotIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        AddD20Table divisionTable = new AddD20Table();
+//                        divisionTable.setServerStatus("1");
+//                        divisionTable.setId(transactionSyncResponseDTO.getDoc20().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20().get(i).getSeasonCode());
+//                        divisionTable.setCropTypeId(transactionSyncResponseDTO.getDoc20().get(i).getCropTypeId());
+//                        divisionTable.setOfferedNo(transactionSyncResponseDTO.getDoc20().get(i).getOfferedNo());
+//                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getDoc20().get(i).getFarmerCode());
+//                        divisionTable.setFatherName(transactionSyncResponseDTO.getDoc20().get(i).getFatherName());
+//                        divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getDoc20().get(i).getRelationShipTypeId());
+//                        divisionTable.setNominee(transactionSyncResponseDTO.getDoc20().get(i).getNominee());
+//                        divisionTable.setGuarantor1(transactionSyncResponseDTO.getDoc20().get(i).getGuarantor1());
+//                        divisionTable.setGuarantor2(transactionSyncResponseDTO.getDoc20().get(i).getGuarantor2());
+//                        divisionTable.setGuarantor3(transactionSyncResponseDTO.getDoc20().get(i).getGuarantor3());
+//                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getDoc20().get(i).getFarmerVillageId());
+//                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getDoc20().get(i).getPlotVillageId());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20().get(i).getPlotNo());
+//                        divisionTable.setPlantingDate(transactionSyncResponseDTO.getDoc20().get(i).getPlantingDate());
+//                        divisionTable.setPlotTypeId(transactionSyncResponseDTO.getDoc20().get(i).getPlotTypeId());
+//                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getDoc20().get(i).getPlantTypeId());
+//                        divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getDoc20().get(i).getPlantSubTypeId());
+//                        divisionTable.setVarietyId(transactionSyncResponseDTO.getDoc20().get(i).getVarietyId());
+//                        divisionTable.setSurveyNo(transactionSyncResponseDTO.getDoc20().get(i).getSurveyNo());
+//                        divisionTable.setFieldName(transactionSyncResponseDTO.getDoc20().get(i).getFieldName());
+//                        divisionTable.setBIRNo(transactionSyncResponseDTO.getDoc20().get(i).getBIRNo());
+//                        divisionTable.setBIRDate(transactionSyncResponseDTO.getDoc20().get(i).getBIRDate());
+//                        divisionTable.setTotalArea(transactionSyncResponseDTO.getDoc20().get(i).getTotalArea());
+//                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getDoc20().get(i).getCultivatedArea());
+//                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc20().get(i).getDemoPlotArea());
+//                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc20().get(i).getReportedArea());
+//                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc20().get(i).getMeasureArea());
+//                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc20().get(i).getDemoPlotArea());
+//                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc20().get(i).getReportedArea());
+//                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc20().get(i).getMeasureArea());
+//                        divisionTable.setAggrementedArea(transactionSyncResponseDTO.getDoc20().get(i).getAggrementedArea());
+//                        divisionTable.setNetArea(transactionSyncResponseDTO.getDoc20().get(i).getNetArea());
+//                        divisionTable.setAgreedTon(transactionSyncResponseDTO.getDoc20().get(i).getAgreedTon());
+//                        divisionTable.setEstimatedTon(transactionSyncResponseDTO.getDoc20().get(i).getEstimatedTon());
+//                        divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getDoc20().get(i).getIrrigationTypeId());
+//                        divisionTable.setSoilTypeId(transactionSyncResponseDTO.getDoc20().get(i).getSoilTypeId());
+//                        divisionTable.setSpacingId(transactionSyncResponseDTO.getDoc20().get(i).getSpacingId());
+//                        divisionTable.setSettsTypeId(transactionSyncResponseDTO.getDoc20().get(i).getSettsTypeId());
+//                        divisionTable.setPreviousCropId(transactionSyncResponseDTO.getDoc20().get(i).getPreviousCropId());
+//                        divisionTable.setInterCropId(transactionSyncResponseDTO.getDoc20().get(i).getInterCropId());
+//                        divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getDoc20().get(i).getSeedMaterialUsedId());
+//                        divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getDoc20().get(i).getPlotExistOnId());
+//                        divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getDoc20().get(i).getDistanceFromPlot());
+//                        divisionTable.setProfile(transactionSyncResponseDTO.getDoc20().get(i).getProfile());
+//                        divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getDoc20().get(i).getIsSettsHotWaterTreatment());
+//                        divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getDoc20().get(i).getIsPreviousRedPlot());
+//                        divisionTable.setIsDustApplied(transactionSyncResponseDTO.getDoc20().get(i).getIsDustApplied());
+//                        divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getDoc20().get(i).getIsBasalFertilization());
+//                        divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getDoc20().get(i).getIsTrashMulching());
+//                        divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getDoc20().get(i).getIsCompositeFormYard());
+//                        divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getDoc20().get(i).getIsFilterPressMud());
+//                        divisionTable.setIsGreenManures(transactionSyncResponseDTO.getDoc20().get(i).getIsGreenManures());
+//                        divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getDoc20().get(i).getIsMicronutrientDeficiency());
+//                        divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getDoc20().get(i).getIsGapsFilled());
+//                        divisionTable.setInspectionDate(transactionSyncResponseDTO.getDoc20().get(i).getInspectionDate());
+//                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc20().get(i).getPlantingMethodId());
+//                        divisionTable.setWeedStatusId(transactionSyncResponseDTO.getDoc20().get(i).getWeedStatusId());
+//                        divisionTable.setActionPlanId(transactionSyncResponseDTO.getDoc20().get(i).getActionPlanId());
+//                        divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getDoc20().get(i).getPerishableReasonId());
+//                        divisionTable.setPerishedArea(transactionSyncResponseDTO.getDoc20().get(i).getPerishedArea());
+//                        divisionTable.setNotGrownArea(transactionSyncResponseDTO.getDoc20().get(i).getNotGrownArea());
+//                        divisionTable.setHarvestingArea(transactionSyncResponseDTO.getDoc20().get(i).getHarvestingArea());
+//                        divisionTable.setPoorCropArea(transactionSyncResponseDTO.getDoc20().get(i).getPoorCropArea());
+//                        divisionTable.setRemovedArea(transactionSyncResponseDTO.getDoc20().get(i).getRemovedArea());
+//                        divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getDoc20().get(i).getBioFertilizerAppliedArea());
+//                        divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getDoc20().get(i).getDeTrashingArea());
+//                        divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getDoc20().get(i).getDeepPloughedArea());
+//                        divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getDoc20().get(i).getEarthingUpArea());
+//                        divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getDoc20().get(i).getRatoonManagedUsedArea());
+//                        divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getDoc20().get(i).getTrashShedderArea());
+//                        divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getDoc20().get(i).getLoadShedderArea());
+//                        divisionTable.setIsSeedArea(transactionSyncResponseDTO.getDoc20().get(i).getIsSeedArea());
+//                        divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getDoc20().get(i).getDivertToSelfSeed());
+//                        divisionTable.setDivertToOthers(transactionSyncResponseDTO.getDoc20().get(i).getDivertToOthers());
+//                        divisionTable.setSync(true);
+////                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
+////                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
+////                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
+////                        divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
+////                        divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
+////                        divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
+////                        divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
+////                        divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
+////                        divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
+////                        divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
+////                        divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
+////                        divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
+////                        divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
+////                        divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
+////                        divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
+////                        divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
+////                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getPlot().get(i).getPlantingMethodId());
+////                        divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
+////                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
+////                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
+////                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
+//                       divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20().get(i).getCreatedDate());
+//                       divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20().get(i).getCreatedByUserId());
+//                       divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20().get(i).getUpdatedByUserId());
+//                       divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20().get(i).getUpdatedDate());
+////                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//
+//                        viewModel.insertD20IntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getDoc10().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        AddD10Table divisionTable = new AddD10Table();
+//                        divisionTable.setServerStatus("1");
+//                        divisionTable.setId(transactionSyncResponseDTO.getDoc10().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc10().get(i).getSeasonCode());
+//                        divisionTable.setCropTypeId(transactionSyncResponseDTO.getDoc10().get(i).getCropTypeId());
+//                        divisionTable.setOfferedNo(transactionSyncResponseDTO.getDoc10().get(i).getOfferedNo());
+//                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getDoc10().get(i).getFarmerCode());
+//                        divisionTable.setFatherName(transactionSyncResponseDTO.getDoc10().get(i).getFatherName());
+//                        divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getDoc10().get(i).getRelationShipTypeId());
+//                        divisionTable.setNominee(transactionSyncResponseDTO.getDoc10().get(i).getNominee());
+//                        divisionTable.setGuarantor1(transactionSyncResponseDTO.getDoc10().get(i).getGuarantor1());
+//                        divisionTable.setGuarantor2(transactionSyncResponseDTO.getDoc10().get(i).getGuarantor2());
+//                        divisionTable.setGuarantor3(transactionSyncResponseDTO.getDoc10().get(i).getGuarantor3());
+//                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getDoc10().get(i).getFarmerVillageId());
+//                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getDoc10().get(i).getPlotVillageId());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc10().get(i).getPlotNo());
+//                        divisionTable.setPlantingDate(transactionSyncResponseDTO.getDoc10().get(i).getPlantingDate());
+//                        divisionTable.setPlotTypeId(transactionSyncResponseDTO.getDoc10().get(i).getPlotTypeId());
+//                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getDoc10().get(i).getPlantTypeId());
+//                        divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getDoc10().get(i).getPlantSubTypeId());
+//                        divisionTable.setVarietyId(transactionSyncResponseDTO.getDoc10().get(i).getVarietyId());
+//                        divisionTable.setSurveyNo(transactionSyncResponseDTO.getDoc10().get(i).getSurveyNo());
+//                        divisionTable.setFieldName(transactionSyncResponseDTO.getDoc10().get(i).getFieldName());
+//                        divisionTable.setBIRNo(transactionSyncResponseDTO.getDoc10().get(i).getBIRNo());
+//                        divisionTable.setBIRDate(transactionSyncResponseDTO.getDoc10().get(i).getBIRDate());
+//                        divisionTable.setTotalArea(transactionSyncResponseDTO.getDoc10().get(i).getTotalArea());
+//                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getDoc10().get(i).getCultivatedArea());
+//                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc10().get(i).getDemoPlotArea());
+//                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc10().get(i).getReportedArea());
+//                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc10().get(i).getMeasureArea());
+//                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc10().get(i).getDemoPlotArea());
+//                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc10().get(i).getReportedArea());
+//                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc10().get(i).getMeasureArea());
+//                        divisionTable.setAggrementedArea(transactionSyncResponseDTO.getDoc10().get(i).getAggrementedArea());
+//                        divisionTable.setNetArea(transactionSyncResponseDTO.getDoc10().get(i).getNetArea());
+//                        divisionTable.setAgreedTon(transactionSyncResponseDTO.getDoc10().get(i).getAgreedTon());
+//                        divisionTable.setEstimatedTon(transactionSyncResponseDTO.getDoc10().get(i).getEstimatedTon());
+//                        divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getDoc10().get(i).getIrrigationTypeId());
+//                        divisionTable.setSoilTypeId(transactionSyncResponseDTO.getDoc10().get(i).getSoilTypeId());
+//                        divisionTable.setSpacingId(transactionSyncResponseDTO.getDoc10().get(i).getSpacingId());
+//                        divisionTable.setSettsTypeId(transactionSyncResponseDTO.getDoc10().get(i).getSettsTypeId());
+//                        divisionTable.setPreviousCropId(transactionSyncResponseDTO.getDoc10().get(i).getPreviousCropId());
+//                        divisionTable.setInterCropId(transactionSyncResponseDTO.getDoc10().get(i).getInterCropId());
+//                        divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getDoc10().get(i).getSeedMaterialUsedId());
+//                        divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getDoc10().get(i).getPlotExistOnId());
+//                        divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getDoc10().get(i).getDistanceFromPlot());
+//                        divisionTable.setProfile(transactionSyncResponseDTO.getDoc10().get(i).getProfile());
+//                        divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getDoc10().get(i).getIsSettsHotWaterTreatment());
+//                        divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getDoc10().get(i).getIsPreviousRedPlot());
+//                        divisionTable.setIsDustApplied(transactionSyncResponseDTO.getDoc10().get(i).getIsDustApplied());
+//                        divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getDoc10().get(i).getIsBasalFertilization());
+//                        divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getDoc10().get(i).getIsTrashMulching());
+//                        divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getDoc10().get(i).getIsCompositeFormYard());
+//                        divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getDoc10().get(i).getIsFilterPressMud());
+//                        divisionTable.setIsGreenManures(transactionSyncResponseDTO.getDoc10().get(i).getIsGreenManures());
+//                        divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getDoc10().get(i).getIsMicronutrientDeficiency());
+//                        divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getDoc10().get(i).getIsGapsFilled());
+//                        divisionTable.setInspectionDate(transactionSyncResponseDTO.getDoc10().get(i).getInspectionDate());
+//                        divisionTable.setWeedStatusId(transactionSyncResponseDTO.getDoc10().get(i).getWeedStatusId());
+//                        divisionTable.setActionPlanId(transactionSyncResponseDTO.getDoc10().get(i).getActionPlanId());
+//                        divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getDoc10().get(i).getPerishableReasonId());
+//                        divisionTable.setPerishedArea(transactionSyncResponseDTO.getDoc10().get(i).getPerishedArea());
+//                        divisionTable.setNotGrownArea(transactionSyncResponseDTO.getDoc10().get(i).getNotGrownArea());
+//                        divisionTable.setHarvestingArea(transactionSyncResponseDTO.getDoc10().get(i).getHarvestingArea());
+//                        divisionTable.setPoorCropArea(transactionSyncResponseDTO.getDoc10().get(i).getPoorCropArea());
+//                        divisionTable.setRemovedArea(transactionSyncResponseDTO.getDoc10().get(i).getRemovedArea());
+//                        divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getDoc10().get(i).getBioFertilizerAppliedArea());
+//                        divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getDoc10().get(i).getDeTrashingArea());
+//                        divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getDoc10().get(i).getDeepPloughedArea());
+//                        divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getDoc10().get(i).getEarthingUpArea());
+//                        divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getDoc10().get(i).getRatoonManagedUsedArea());
+//                        divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getDoc10().get(i).getTrashShedderArea());
+//                        divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getDoc10().get(i).getLoadShedderArea());
+//                        divisionTable.setIsSeedArea(transactionSyncResponseDTO.getDoc10().get(i).getIsSeedArea());
+//                        divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getDoc10().get(i).getDivertToSelfSeed());
+//                        divisionTable.setDivertToOthers(transactionSyncResponseDTO.getDoc10().get(i).getDivertToOthers());
+//                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc10().get(i).getPlantingMethodId());
+//                        divisionTable.setSync(true);
+////                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
+////                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
+////                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
+////                        divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
+////                        divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
+////                        divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
+////                        divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
+////                        divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
+////                        divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
+////                        divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
+////                        divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
+////                        divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
+////                        divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
+////                        divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
+////                        divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
+////                        divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
+//                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc10().get(i).getPlantingMethodId());
+////                        divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
+////                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
+////                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
+////                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
+////                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
+////                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
+////                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
+////                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
+////                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//
+//                        viewModel.insertD10IntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getDoc30().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        AddD30Table divisionTable = new AddD30Table();
+//                        divisionTable.setServerStatus("1");
+//                        divisionTable.setId(transactionSyncResponseDTO.getDoc30().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc30().get(i).getSeasonCode());
+//                        divisionTable.setCropTypeId(transactionSyncResponseDTO.getDoc30().get(i).getCropTypeId());
+//                        divisionTable.setOfferedNo(transactionSyncResponseDTO.getDoc30().get(i).getOfferedNo());
+//                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getDoc30().get(i).getFarmerCode());
+//                        divisionTable.setFatherName(transactionSyncResponseDTO.getDoc30().get(i).getFatherName());
+//                        divisionTable.setRelationShipTypeId(transactionSyncResponseDTO.getDoc30().get(i).getRelationShipTypeId());
+//                        divisionTable.setNominee(transactionSyncResponseDTO.getDoc30().get(i).getNominee());
+//                        divisionTable.setGuarantor1(transactionSyncResponseDTO.getDoc30().get(i).getGuarantor1());
+//                        divisionTable.setGuarantor2(transactionSyncResponseDTO.getDoc30().get(i).getGuarantor2());
+//                        divisionTable.setGuarantor3(transactionSyncResponseDTO.getDoc30().get(i).getGuarantor3());
+//                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getDoc30().get(i).getFarmerVillageId());
+//                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getDoc30().get(i).getPlotVillageId());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc30().get(i).getPlotNo());
+//                        divisionTable.setPlantingDate(transactionSyncResponseDTO.getDoc30().get(i).getPlantingDate());
+//                        divisionTable.setPlotTypeId(transactionSyncResponseDTO.getDoc30().get(i).getPlotTypeId());
+//                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getDoc30().get(i).getPlantTypeId());
+//                        divisionTable.setPlantSubTypeId(transactionSyncResponseDTO.getDoc30().get(i).getPlantSubTypeId());
+//                        divisionTable.setVarietyId(transactionSyncResponseDTO.getDoc30().get(i).getVarietyId());
+//                        divisionTable.setSurveyNo(transactionSyncResponseDTO.getDoc30().get(i).getSurveyNo());
+//                        divisionTable.setFieldName(transactionSyncResponseDTO.getDoc30().get(i).getFieldName());
+//                        divisionTable.setBIRNo(transactionSyncResponseDTO.getDoc30().get(i).getBIRNo());
+//                        divisionTable.setBIRDate(transactionSyncResponseDTO.getDoc30().get(i).getBIRDate());
+//                        divisionTable.setTotalArea(transactionSyncResponseDTO.getDoc30().get(i).getTotalArea());
+//                        divisionTable.setCultivatedArea(transactionSyncResponseDTO.getDoc30().get(i).getCultivatedArea());
+//                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc30().get(i).getDemoPlotArea());
+//                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc30().get(i).getReportedArea());
+//                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc30().get(i).getMeasureArea());
+//                        divisionTable.setDemoPlotArea(transactionSyncResponseDTO.getDoc30().get(i).getDemoPlotArea());
+//                        divisionTable.setReportedArea(transactionSyncResponseDTO.getDoc30().get(i).getReportedArea());
+//                        divisionTable.setMeasureArea(transactionSyncResponseDTO.getDoc30().get(i).getMeasureArea());
+//                        divisionTable.setAggrementedArea(transactionSyncResponseDTO.getDoc30().get(i).getAggrementedArea());
+//                        divisionTable.setNetArea(transactionSyncResponseDTO.getDoc30().get(i).getNetArea());
+//                        divisionTable.setAgreedTon(transactionSyncResponseDTO.getDoc30().get(i).getAgreedTon());
+//                        divisionTable.setEstimatedTon(transactionSyncResponseDTO.getDoc30().get(i).getEstimatedTon());
+//                        divisionTable.setIrrigationTypeId(transactionSyncResponseDTO.getDoc30().get(i).getIrrigationTypeId());
+//                        divisionTable.setSoilTypeId(transactionSyncResponseDTO.getDoc30().get(i).getSoilTypeId());
+//                        divisionTable.setSpacingId(transactionSyncResponseDTO.getDoc30().get(i).getSpacingId());
+//                        divisionTable.setSettsTypeId(transactionSyncResponseDTO.getDoc30().get(i).getSettsTypeId());
+//                        divisionTable.setPreviousCropId(transactionSyncResponseDTO.getDoc30().get(i).getPreviousCropId());
+//                        divisionTable.setInterCropId(transactionSyncResponseDTO.getDoc30().get(i).getInterCropId());
+//                        divisionTable.setSeedMaterialUsedId(transactionSyncResponseDTO.getDoc30().get(i).getSeedMaterialUsedId());
+//                        divisionTable.setPlotExistOnId(transactionSyncResponseDTO.getDoc30().get(i).getPlotExistOnId());
+//                        divisionTable.setDistanceFromPlot(transactionSyncResponseDTO.getDoc30().get(i).getDistanceFromPlot());
+//                        divisionTable.setProfile(transactionSyncResponseDTO.getDoc30().get(i).getProfile());
+//                        divisionTable.setIsSettsHotWaterTreatment(transactionSyncResponseDTO.getDoc30().get(i).getIsSettsHotWaterTreatment());
+//                        divisionTable.setIsPreviousRedPlot(transactionSyncResponseDTO.getDoc30().get(i).getIsPreviousRedPlot());
+//                        divisionTable.setIsDustApplied(transactionSyncResponseDTO.getDoc30().get(i).getIsDustApplied());
+//                        divisionTable.setIsBasalFertilization(transactionSyncResponseDTO.getDoc30().get(i).getIsBasalFertilization());
+//                        divisionTable.setIsTrashMulching(transactionSyncResponseDTO.getDoc30().get(i).getIsTrashMulching());
+//                        divisionTable.setIsCompositeFormYard(transactionSyncResponseDTO.getDoc30().get(i).getIsCompositeFormYard());
+//                        divisionTable.setIsFilterPressMud(transactionSyncResponseDTO.getDoc30().get(i).getIsFilterPressMud());
+//                        divisionTable.setIsGreenManures(transactionSyncResponseDTO.getDoc30().get(i).getIsGreenManures());
+//                        divisionTable.setIsMicronutrientDeficiency(transactionSyncResponseDTO.getDoc30().get(i).getIsMicronutrientDeficiency());
+//                        divisionTable.setIsGapsFilled(transactionSyncResponseDTO.getDoc30().get(i).getIsGapsFilled());
+//                        divisionTable.setInspectionDate(transactionSyncResponseDTO.getDoc30().get(i).getInspectionDate());
+//                        divisionTable.setWeedStatusId(transactionSyncResponseDTO.getDoc30().get(i).getWeedStatusId());
+//                        divisionTable.setActionPlanId(transactionSyncResponseDTO.getDoc30().get(i).getActionPlanId());
+//                        divisionTable.setPerishableReasonId(transactionSyncResponseDTO.getDoc30().get(i).getPerishableReasonId());
+//                        divisionTable.setPerishedArea(transactionSyncResponseDTO.getDoc30().get(i).getPerishedArea());
+//                        divisionTable.setNotGrownArea(transactionSyncResponseDTO.getDoc30().get(i).getNotGrownArea());
+//                        divisionTable.setHarvestingArea(transactionSyncResponseDTO.getDoc30().get(i).getHarvestingArea());
+//                        divisionTable.setPoorCropArea(transactionSyncResponseDTO.getDoc30().get(i).getPoorCropArea());
+//                        divisionTable.setRemovedArea(transactionSyncResponseDTO.getDoc30().get(i).getRemovedArea());
+//                        divisionTable.setBioFertilizerAppliedArea(transactionSyncResponseDTO.getDoc30().get(i).getBioFertilizerAppliedArea());
+//                        divisionTable.setDeTrashingArea(transactionSyncResponseDTO.getDoc30().get(i).getDeTrashingArea());
+//                        divisionTable.setDeepPloughedArea(transactionSyncResponseDTO.getDoc30().get(i).getDeepPloughedArea());
+//                        divisionTable.setEarthingUpArea(transactionSyncResponseDTO.getDoc30().get(i).getEarthingUpArea());
+//                        divisionTable.setRatoonManagedUsedArea(transactionSyncResponseDTO.getDoc30().get(i).getRatoonManagedUsedArea());
+//                        divisionTable.setTrashShedderArea(transactionSyncResponseDTO.getDoc30().get(i).getTrashShedderArea());
+//                        divisionTable.setLoadShedderArea(transactionSyncResponseDTO.getDoc30().get(i).getLoadShedderArea());
+//                        divisionTable.setIsSeedArea(transactionSyncResponseDTO.getDoc30().get(i).getIsSeedArea());
+//                        divisionTable.setDivertToSelfSeed(transactionSyncResponseDTO.getDoc30().get(i).getDivertToSelfSeed());
+//                        divisionTable.setDivertToOthers(transactionSyncResponseDTO.getDoc30().get(i).getDivertToOthers());
+//                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc30().get(i).getPlantingMethodId());
+//                        divisionTable.setSync(true);
+////                        divisionTable.setSchGroupNo(transactionSyncResponseDTO.getPlot().get(i).getSchGroupNo());
+////                        divisionTable.setBrix(transactionSyncResponseDTO.getPlot().get(i).getBrix());
+////                        divisionTable.setPol(transactionSyncResponseDTO.getPlot().get(i).getPol());
+////                        divisionTable.setPurity(transactionSyncResponseDTO.getPlot().get(i).getPurity());
+////                        divisionTable.setCCS(transactionSyncResponseDTO.getPlot().get(i).getCCS());
+////                        divisionTable.setNoOfSamples(transactionSyncResponseDTO.getPlot().get(i).getNoOfSamples());
+////                        divisionTable.setSampleDate(transactionSyncResponseDTO.getPlot().get(i).getSampleDate());
+////                        divisionTable.setCuttingOrderNo(transactionSyncResponseDTO.getPlot().get(i).getCuttingOrderNo());
+////                        divisionTable.setProppingArea(transactionSyncResponseDTO.getPlot().get(i).getProppingArea());
+////                        divisionTable.setProppingStageId(transactionSyncResponseDTO.getPlot().get(i).getProppingStageId());
+////                        divisionTable.setTransferArea(transactionSyncResponseDTO.getPlot().get(i).getTransferArea());
+////                        divisionTable.setIsRegistered(transactionSyncResponseDTO.getPlot().get(i).getIsRegistered());
+////                        divisionTable.setIsOver(transactionSyncResponseDTO.getPlot().get(i).getIsOver());
+////                        divisionTable.setPlotOverReasonId(transactionSyncResponseDTO.getPlot().get(i).getPlotOverReasonId());
+////                        divisionTable.setPlotOverDate(transactionSyncResponseDTO.getPlot().get(i).getPlotOverDate());
+////                        divisionTable.setIsActive(transactionSyncResponseDTO.getPlot().get(i).getIsActive());
+//                        divisionTable.setPlantingMethodId(transactionSyncResponseDTO.getDoc30().get(i).getPlantingMethodId());
+////                        divisionTable.setStage(transactionSyncResponseDTO.getPlot().get(i).getStage());
+////                        divisionTable.setImageUrl(transactionSyncResponseDTO.getPlot().get(i).getImageUrl());
+////                        divisionTable.setLatitude(transactionSyncResponseDTO.getPlot().get(i).getLatitude());
+////                        divisionTable.setLongitude(transactionSyncResponseDTO.getPlot().get(i).getLongitude());
+////                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlot().get(i).getCreatedDate());
+////                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getCreatedByUserId());
+////                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlot().get(i).getUpdatedByUserId());
+////                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlot().get(i).getUpdatedDate());
+////                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//
+//                        viewModel.insertD30IntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getGeoBoundaries().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        AddGeoBoundriesTable divisionTable = new AddGeoBoundriesTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getGeoBoundaries().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getGeoBoundaries().get(i).getSeasonCode());
+//                        divisionTable.setStage(transactionSyncResponseDTO.getGeoBoundaries().get(i).getStage());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getGeoBoundaries().get(i).getPlotNo());
+//                        divisionTable.setLatitude(transactionSyncResponseDTO.getGeoBoundaries().get(i).getLatitude());
+//                        divisionTable.setLongitude(transactionSyncResponseDTO.getGeoBoundaries().get(i).getLongitude());
+//                        divisionTable.setIsActive(transactionSyncResponseDTO.getGeoBoundaries().get(i).getIsActive());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getGeoBoundaries().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getGeoBoundaries().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getGeoBoundaries().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getGeoBoundaries().get(i).getUpdatedDate());
+//                        divisionTable.setSync(true);
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertPlotGeoIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getPlotOffer().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        AddPlotOfferTable divisionTable = new AddPlotOfferTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getPlotOffer().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getPlotOffer().get(i).getSeasonCode());
+//                        divisionTable.setNewFarmer(transactionSyncResponseDTO.getPlotOffer().get(i).getNewFarmer());
+//                        divisionTable.setOfferNo(transactionSyncResponseDTO.getPlotOffer().get(i).getOfferNo());
+//                        divisionTable.setOfferDate(transactionSyncResponseDTO.getPlotOffer().get(i).getOfferDate());
+//                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getPlotOffer().get(i).getFarmerCode());
+//                        divisionTable.setFarmerName(transactionSyncResponseDTO.getPlotOffer().get(i).getFarmerName());
+//                        divisionTable.setFatherName(transactionSyncResponseDTO.getPlotOffer().get(i).getFatherName());
+//                        divisionTable.setFarmerVillageId(transactionSyncResponseDTO.getPlotOffer().get(i).getFarmerVillageId());
+//                        divisionTable.setPlotVillageId(transactionSyncResponseDTO.getPlotOffer().get(i).getPlotVillageId());
+//                        divisionTable.setPlotIndNo(transactionSyncResponseDTO.getPlotOffer().get(i).getPlotIndNo());
+//                        divisionTable.setPlantTypeId(transactionSyncResponseDTO.getPlotOffer().get(i).getPlantTypeId());
+//                        divisionTable.setExpectedVarityId(transactionSyncResponseDTO.getPlotOffer().get(i).getExpectedVarityId());
+//                        divisionTable.setExpectedPlantingDate(transactionSyncResponseDTO.getPlotOffer().get(i).getExpectedPlantingDate());
+//                        divisionTable.setExpectedArea(transactionSyncResponseDTO.getPlotOffer().get(i).getExpectedArea());
+//                        divisionTable.setReportedArea(transactionSyncResponseDTO.getPlotOffer().get(i).getReportedArea());
+//                        divisionTable.setReasonForNotPlantingId(transactionSyncResponseDTO.getPlotOffer().get(i).getReasonForNotPlantingId());
+//                        divisionTable.setActive(transactionSyncResponseDTO.getPlotOffer().get(i).getActive());
+//                        divisionTable.setStatus(transactionSyncResponseDTO.getPlotOffer().get(i).getStatus());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getPlotOffer().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getPlotOffer().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getPlotOffer().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getPlotOffer().get(i).getUpdatedDate());
+//                        divisionTable.setServerStatus("1");
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertPlotOfferIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getUserSection().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        UserSectionTable divisionTable = new UserSectionTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getUserSection().get(i).getId());
+//                        divisionTable.setSectionId(transactionSyncResponseDTO.getUserSection().get(i).getSectionId());
+//                        divisionTable.setUserId(transactionSyncResponseDTO.getUserSection().get(i).getUserId());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getUserSection().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getUserSection().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getUserSection().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getUserSection().get(i).getUpdatedDate());
+//                        divisionTable.setActive(true);
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertUserSectionIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20Fertilizer().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        D20FertilizerTable divisionTable = new D20FertilizerTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getSeasonCode());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getPlotNo());
+//                        divisionTable.setFertilizerId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getFertilizerId());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getUpdatedDate());
+//                        divisionTable.setIsActive(transactionSyncResponseDTO.getDoc20Fertilizer().get(i).getIsActive());
+//                        divisionTable.setSync(true);
+//                        divisionTable.setServerStatus("1");
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertD20FertilizerIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20Weed().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        D20WeedTable divisionTable = new D20WeedTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getDoc20Weed().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Weed().get(i).getSeasonCode());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Weed().get(i).getPlotNo());
+//                        divisionTable.setWeedId(transactionSyncResponseDTO.getDoc20Weed().get(i).getWeedId());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Weed().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Weed().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Weed().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Weed().get(i).getUpdatedDate());
+//                        divisionTable.setIsActive(transactionSyncResponseDTO.getDoc20Weed().get(i).getIsActive());
+//                        divisionTable.setSync("1");
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertD20WeedIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getComplaints().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        AddComplaintsDetailsTable divisionTable = new AddComplaintsDetailsTable();
+//                        divisionTable.setCode(transactionSyncResponseDTO.getComplaints().get(i).getCode());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getComplaints().get(i).getSeasonCode());
+//                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getComplaints().get(i).getFarmerCode());
+//                        divisionTable.setComplaintStatus(transactionSyncResponseDTO.getComplaints().get(i).getComplaintStatus());
+//                        divisionTable.setComplaintType(transactionSyncResponseDTO.getComplaints().get(i).getComplaintType());
+//                        divisionTable.setSolution(transactionSyncResponseDTO.getComplaints().get(i).getSolution());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getComplaints().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getComplaints().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getComplaints().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getComplaints().get(i).getUpdatedDate());
+//                        divisionTable.setIsActive(transactionSyncResponseDTO.getComplaints().get(i).getIsActive());
+//                        divisionTable.setLogBookNo(transactionSyncResponseDTO.getComplaints().get(i).getLogBookNo());
+//                        divisionTable.setSync(true);
+//                        divisionTable.setServerStatus("1");
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertAddComplainFormTableLocalDb(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getComplaintRepository().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        SavingComplainImagesTable divisionTable = new SavingComplainImagesTable();
+//                        divisionTable.setComplaintCode(transactionSyncResponseDTO.getComplaintRepository().get(i).getComplaintCode());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getComplaintRepository().get(i).getSeasonCode());
+//                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getComplaintRepository().get(i).getFarmerCode());
+//                        divisionTable.setFileName(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileName());
+//                        divisionTable.setFileLocation(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileLocation());
+//                        divisionTable.setFileExtension(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileExtension());
+//                        divisionTable.setLocalDocUrl(transactionSyncResponseDTO.getComplaintRepository().get(i).getFileLocation());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getComplaintRepository().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getComplaintRepository().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getComplaintRepository().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getComplaintRepository().get(i).getUpdatedDate());
+//                        divisionTable.setIsActive(transactionSyncResponseDTO.getComplaintRepository().get(i).getIsActive());
+//                        divisionTable.setLogBookNo(transactionSyncResponseDTO.getComplaintRepository().get(i).getLogBookNo());
+//                        divisionTable.setIsResult(transactionSyncResponseDTO.getComplaintRepository().get(i).getIsResult());
+//                        divisionTable.setIsVideoRecording(transactionSyncResponseDTO.getComplaintRepository().get(i).getIsVideoRecording());
+//                        divisionTable.setModuleTypeId(transactionSyncResponseDTO.getComplaintRepository().get(i).getModuleTypeId());
+//                        divisionTable.setSync(true);
+//                        divisionTable.setServerStatus("1");
+//                        divisionTable.setServerUpdatedStatus(true);
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertComplainImagesToServer(divisionTable,transactionSyncResponseDTO.getComplaintRepository().get(i).getLogBookNo());
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20Disease().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        D20DiseaseTable divisionTable = new D20DiseaseTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getDoc20Disease().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Disease().get(i).getSeasonCode());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Disease().get(i).getPlotNo());
+//                        divisionTable.setDiseasesId(transactionSyncResponseDTO.getDoc20Disease().get(i).getDiseasesId());
+//                        divisionTable.setIdentifiedDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getIdentifiedDate());
+//                        divisionTable.setControlDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getControlDate());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Disease().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Disease().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Disease().get(i).getUpdatedDate());
+//                        divisionTable.setActive(transactionSyncResponseDTO.getDoc20Disease().get(i).getActive());
+//                        divisionTable.setSync(true);
+//                        divisionTable.setServerStatus("1");
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertD20DiseaseIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getDoc20Pest().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        D20PestTable divisionTable = new D20PestTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getDoc20Pest().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getDoc20Pest().get(i).getSeasonCode());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getDoc20Pest().get(i).getPlotNo());
+//                        divisionTable.setPestId(transactionSyncResponseDTO.getDoc20Pest().get(i).getPestId());
+//                        divisionTable.setIdentifiedDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getIdentifiedDate());
+//                        divisionTable.setControlDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getControlDate());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getDoc20Pest().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getDoc20Pest().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getDoc20Pest().get(i).getUpdatedDate());
+//                        divisionTable.setActive(transactionSyncResponseDTO.getDoc20Pest().get(i).getActive());
+//                        divisionTable.setSync(true);
+//                        divisionTable.setServerStatus("1");
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertD20PestIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+//
+//                    for (int i = 0; i < transactionSyncResponseDTO.getGrowthMonitoring().size(); i++) {
+////                                        JSONObject jsonObjectClusterHDR = jsonClusterHDRArray.getJSONObject(clusterHDR);
+//                        AddGrowthMonitoringTable divisionTable = new AddGrowthMonitoringTable();
+//                        divisionTable.setId(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getId());
+//                        divisionTable.setSeasonCode(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getSeasonCode());
+//                        divisionTable.setPlotNo(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getPlotNo());
+//                        divisionTable.setFileUrl(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getFileUrl());
+//                        divisionTable.setFarmerCode(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getFarmerCode());
+//                        divisionTable.setRemarks(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getRemarks());
+//                        divisionTable.setStage(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getStage());
+//                        divisionTable.setCreatedDate(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getCreatedDate());
+//                        divisionTable.setCreatedByUserId(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getCreatedByUserId());
+//                        divisionTable.setUpdatedByUserId(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getUpdatedByUserId());
+//                        divisionTable.setUpdatedDate(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getUpdatedDate());
+//                        divisionTable.setActive(transactionSyncResponseDTO.getGrowthMonitoring().get(i).getActive());
+//                        divisionTable.setSync(true);
+//                        divisionTable.setServerStatus("1");
+//                        //insertClusterValuesIntoLocalDB(clusterHDr_value);
+//                        viewModel.insertGrowthMonitoringIntoLocalDBQuery(divisionTable);
+//                        //getClusterHDRList.add(clusterHDr_value);
+//                    }
+
+//                    new Handler().postDelayed(new Runnable() {
+//
+//                        @Override
+//                        public void run() {
+////                Intent i = new Intent(MainActivity.this, DashBoardActivity.class);
+//
+//                            progressDialog.dismiss();
+//                        }
+//
+//                    }, 1 * 120000);
+//
+//                    Log.d("TAG", "onResponse: >>>"+strResponse);
+////                    progressDialog.dismiss();
+//
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                    progressDialog.dismiss();
+//                    Toast.makeText(SettingsActivity.this, " Sync Successfully", Toast.LENGTH_LONG).show();
+//
+//                    Log.d("Error", ">>>>" + ex.toString());
+//                }
+//            }
+//
+//            public void onFailure(Call<TransactionSyncResponseDTO> call, Throwable t) {
+//                progressDialog.dismiss();
+//                if (t instanceof SocketTimeoutException) {
+//                    // Handle SocketTimeoutException
+//                    // You can display an error message to the user or retry the request
+//                    Log.e("Error", "SocketTimeoutException: " + t.getMessage());
+//
+//                    // You may choose to retry the request here, or show an error message to the user.
+//                    // Example: Retry the request after a delay
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            getSyncFarmerAllDataFromServer(seasonCode); // Retry the request
+//                        }
+//                    }, 5000); // Retry after 5 seconds
+//                } else {
+//                    // Handle other types of exceptions
+//                    Log.e("Error", "Other error: " + t.getMessage());
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            getSyncFarmerAllDataFromServer(seasonCode); // Retry the request
+//                        }
+//                    }, 5000);
+//                }
+//            }
+//        });
+//    }
 
     private void configureDagger() {
         AndroidInjection.inject(this);
@@ -2800,7 +3651,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 
 //                                for (AddD20Table addFertilizerDetailsTable : addFertilizerDetailsTables) {
 //                                    if (addFertilizerDetailsTable.getServerStatus().equals("0")) {
-                                        syncD20DetailsToServer(addFertilizerDetailsTables.get(0));
+                                syncD20DetailsToServer(addFertilizerDetailsTables.get(0));
 //                                    }
 //                                }
 
@@ -2916,7 +3767,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 
 //                                for (AddD10Table addFertilizerDetailsTable : addFertilizerDetailsTables) {
 //                                    if (addFertilizerDetailsTables.get(0).getServerStatus().equals("0")) {
-                                        syncD10DetailsToServer(addFertilizerDetailsTables.get(0));
+                                syncD10DetailsToServer(addFertilizerDetailsTables.get(0));
 //                                    }
 //                                }
 
@@ -3035,7 +3886,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 
 //                                for (AddD30Table addFertilizerDetailsTable : addFertilizerDetailsTables) {
 //                                    if (addFertilizerDetailsTable.getServerStatus().equals("0")) {
-                                        syncD30DetailsToServer(addFertilizerDetailsTables.get(0));
+                                syncD30DetailsToServer(addFertilizerDetailsTables.get(0));
 //                                    }
 //                                }
 
@@ -3144,7 +3995,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 
 //                                for (D20DiseaseTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
 //                                    if (addFertilizerDetailsTable.getServerStatus().equals("0")) {
-                                        syncD20DiseaseDetailsToServer(addFertilizerDetailsTables.get(0));
+                                syncD20DiseaseDetailsToServer(addFertilizerDetailsTables.get(0));
 //                                    }
 //                                }
 //                                getD20WeedListFromLocalDbCheckDBNotSync(true);
@@ -3243,7 +4094,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 
 //                                for (D20PestTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
 //                                    if (addFertilizerDetailsTable.getServerStatus().equals("0")) {
-                                        syncD20PestDetailsToServer(addFertilizerDetailsTables.get(0));
+                                syncD20PestDetailsToServer(addFertilizerDetailsTables.get(0));
 //                                    }
 //                                }
 
@@ -3337,7 +4188,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 
 //                                for (D20FertilizerTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
 //                                    if (addFertilizerDetailsTable.getServerStatus().equals("0")) {
-                                        syncD20FertilizerDetailsToServer(addFertilizerDetailsTables.get(0));
+                                syncD20FertilizerDetailsToServer(addFertilizerDetailsTables.get(0));
 //                                    }
 //                                }
 
@@ -3431,7 +4282,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 
 //                                for (D20WeedTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
 //                                    if (addFertilizerDetailsTable.getServerStatus().equals("0")) {
-                                        syncD20WeedDetailsToServer(addFertilizerDetailsTables.get(0));
+                                syncD20WeedDetailsToServer(addFertilizerDetailsTables.get(0));
 //                                    }
 //                                }
 //                                getD20FertilizerListFromLocalDbCheckDBNotSync(true);
@@ -3861,7 +4712,7 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
         }
     }
 
-//    public void syncGMToserver(AddGrowthMonitoringTable savingComplainImagesTable) {
+    //    public void syncGMToserver(AddGrowthMonitoringTable savingComplainImagesTable) {
 //        try {
 //            viewModel.syncComplainImgeDetailsToserver(savingComplainImagesTable);
 //            if (viewModel.getStringLiveData() != null) {
@@ -4006,19 +4857,99 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
     protected void onResume() {
         super.onResume();
 //        startService(new Intent(this, FalogService.class));
-        if(!isMyServiceRunning(FalogService.class)){
-            if (isLocationPermissionGranted(this) ) {
-                try {
-                    startService(new Intent(this, FalogService.class));
-                } catch (Exception ex){
 
-                }
+//        if (appHelper.isNetworkAvailable()) { // TODO: Checking internet connection
+//            syncProgressDialog = new ProgressDialog(SettingsActivity.this, R.style.AppCompatAlertDialogStyle);
+////            syncProgressDialog.setCancelable(false);
+////            syncProgressDialog.setMessage("checking  data sync to server please wait..");
+////            syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+////            syncProgressDialog.show();
+//            if(Integer.parseInt(txtFiledTracking.getText().toString())>0){
+//                String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
+//                Log.e("token",appHelper.getSharedPrefObj().getString(TestLoc,""));
+//                LocationDTO locationDTO = new LocationDTO();
+//                Gson gson = new Gson();
+//                gson.fromJson(TestLo, LocationDTO.class);
+//                locationDTO = gson.fromJson(TestLo, LocationDTO.class);
+//                if(locationDTO!=null){
+//                    if(locationDTO.getDoc().size()>0){
+//                        Log.e("trackData",locationDTO.getDoc().get(0).getLat()+"-"+locationDTO.getDoc().get(0).getLon());
+//                        for(int i=0;i<locationDTO.getDoc().size();i++){
+//                            if((locationDTO.getDoc().get(i).getLon()!=0.0)&&(locationDTO.getDoc().get(i).getLat()!=0.0)){
+//                                AddGeoBoundariesTrackingTable addGeoBoundariesTrackingTable = new AddGeoBoundariesTrackingTable();
+//                                addGeoBoundariesTrackingTable.setLatitude(String.valueOf(locationDTO.getDoc().get(i).getLat()));
+//                                addGeoBoundariesTrackingTable.setLongitude(String.valueOf(locationDTO.getDoc().get(i).getLon()));
+//                                addGeoBoundariesTrackingTable.setId(null);
+//                                addGeoBoundariesTrackingTable.setUserId(Integer.parseInt(appHelper.getSharedPrefObj().getString(DeviceUserID,"")));
+//                                addGeoBoundariesTrackingTable.setSeqNo(i);
+//                                addGeoBoundariesTrackingTable.setIsActive(true);
+//                                //  addGeoBoundariesTrackingTable.setIsActive(true);
+//                                String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+//                                Log.d("TAG", "onClick: date" + dateTime);
+//                                addGeoBoundariesTrackingTable.setServerStatus(false);
+//                                addGeoBoundariesTrackingTable.setCreatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+//                                addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+//                                addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+//                                addGeoBoundariesTrackingTable.setUpdatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+////                        addGeoBoundariesTrackingTable.setCreatedDate(dateTime);
+////                        addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+////                        addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+////                        addGeoBoundariesTrackingTable.setUpdatedDate(dateTime);
+//
+//                                viewModel.insertTracking(addGeoBoundariesTrackingTable);
+//                            }
+//
+//
+//                            if(locationDTO.getDoc().size()==i+1){
+//                                LocationDTO locationDTOChange = new LocationDTO();
+//                                ArrayList<Doc> doc= new ArrayList<Doc>();
+//                                locationDTOChange.setDoc(doc);
+//                                Gson gsonChange = new Gson();
+//                                String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
+//                                appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+//                                getTrackingListFromLocalDbCheckDBNotSync();
+//                            }
+//                        }
+//                    }
+//                    else {
+//                        getTrackingListFromLocalDbCheckDBNotSync();
+//                    }
+//
+//                }
+//                else {
+//                    LocationDTO locationDTOChange = new LocationDTO();
+//                    ArrayList<Doc> doc= new ArrayList<Doc>();
+//                    locationDTOChange.setDoc(doc);
+//                    Gson gsonChange = new Gson();
+//                    String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
+//                    appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+//                    getTrackingListFromLocalDbCheckDBNotSync();
+//                }
+//
+//                if(locationDTO!=null){
+//                    txtFiledTracking.setText(locationDTO.getDoc().size()+"");
+//                }
+//
+//            }
+//        }
+//        else {
+//            appHelper.getDialogHelper().getConfirmationDialog().show(ConfirmationDialog.ALERT,
+//                    MESSAGE_NO_INTERNET_CONNECTION);
+//        }
 
-            }
-//            Toast.makeText(this, "Service has started", Toast.LENGTH_SHORT).show();
-        } else {
-//            Toast.makeText(this, "Service is running", Toast.LENGTH_SHORT).show();
-        }
+//        if(!isMyServiceRunning(FalogService.class)){
+//            if (isLocationPermissionGranted(this) ) {
+//                try {
+//                    startService(new Intent(this, FalogService.class));
+//                } catch (Exception ex){
+//
+//                }
+//
+//            }
+////            Toast.makeText(this, "Service has started", Toast.LENGTH_SHORT).show();
+//        } else {
+////            Toast.makeText(this, "Service is running", Toast.LENGTH_SHORT).show();
+//        }
 
     }
 
@@ -4863,4 +5794,4 @@ public class SettingsActivity extends BaseActivity implements HasSupportFragment
 //                        }, 20000);
 //                    } else {
 //                        Toast.makeText(DashBoardActivity.this, "no records found", Toast.LENGTH_LONG).show();
-//                    }
+//                    }o

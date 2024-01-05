@@ -89,6 +89,7 @@ public abstract class AppDAO {
     public abstract void insertD30Table(AddD30Table divisionTable);
 
     @Insert(onConflict = REPLACE)
+
     public abstract void insertTrackingTable(AddGeoBoundariesTrackingTable divisionTable);
 
     @Insert(onConflict = REPLACE)

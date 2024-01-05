@@ -1,7 +1,5 @@
 package com.trst01.locationtracker.repositories;
 
-
-
 import static com.trst01.locationtracker.constant.AppConstant.DeviceUserID;
 import static com.trst01.locationtracker.constant.AppConstant.FAILURE_RESPONSE_MESSAGE;
 import static com.trst01.locationtracker.constant.AppConstant.RAW_DATA_URL;
@@ -13,10 +11,11 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.room.Query;
 
 import com.trst01.locationtracker.constant.AppConstant;
+
 import com.trst01.locationtracker.constant.AppHelper;
+import com.trst01.locationtracker.database.AppDatabase;
 import com.trst01.locationtracker.database.dao.AppDAO;
 import com.trst01.locationtracker.database.entity.AddComplaintsDetailsTable;
 import com.trst01.locationtracker.database.entity.AddD10Table;
@@ -69,12 +68,16 @@ import com.trst01.locationtracker.models.LoginResponseDTO;
 import com.trst01.locationtracker.models.TransactionSyncResponseDTO;
 import com.trst01.locationtracker.services.api.AppAPI;
 import com.trst01.locationtracker.services.webservice.AppWebService;
+import com.trst01.locationtracker.view_models.OnInsertCallback;
+import com.trst01.locationtracker.view_models.OnInsertionCompleteListener;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
-import javax.inject.Inject;
+
 import javax.inject.Singleton;
 
 import retrofit2.Call;
@@ -87,17 +90,22 @@ public class AppRepository {
     private static final String TAG = com.trst01.locationtracker.repositories.AppRepository.class.getCanonicalName();
 
     private final AppDAO appDAO;
-    private final Executor executor;
+//    private final Executor executor;
+    private Executor executor;
     private final AppHelper appHelper;
     Context context;
 
-    @Inject
+
+
     public AppRepository(AppDAO appDAO, Executor executor, AppHelper appHelper, Context context) {
         this.appDAO = appDAO;
         this.executor = executor;
         this.appHelper = appHelper;
         this.context = context;
     }
+
+
+
 
 //    // TODO: LOG IN SERVICE CALL
 //    public LiveData<LoginResponseDTO> logInService(String userId) {
@@ -4845,18 +4853,86 @@ public class AppRepository {
         });
         return data;
     }
+//    public void insertTrackingIntoLocalDB(AddGeoBoundariesTrackingTable clusterHDRTable, OnInsertCallback callback) {
+//        // Perform the database insertion on a background thread
+//        // Assuming you are using Room, and dao is an instance of your DAO
+//        executor.execute(() -> {
+//            // Perform the actual insertion
+//            appDAO.insertTrackingTable(clusterHDRTable);
+//
+//            // Fetch the inserted items if needed
+//            List<AddGeoBoundariesTrackingTable> insertedItems = appDAO.getTrackingDetailsListFromLocalDBNotSync(false);
+//            // Notify the callback with the inserted items
+//            callback.onInsertComplete(insertedItems);
+//        });
+//    }
 
+    public void insertTrackingIntoLocalDB(AddGeoBoundariesTrackingTable clusterHDRTable, OnInsertionCompleteListener listener) {
+        if (executor != null) {
+            executor.execute(() -> {
+                try {
+                    // Perform the database insertion
+                    appDAO.insertTrackingTable(clusterHDRTable);
+                    Log.e("=======>insertTrackingTable1", clusterHDRTable.getLatitude());
+                    Log.e("=======>insertTrackingTable2", clusterHDRTable.getCreatedByUserId());
+                    Log.e("=======>insertTrackingTable3", clusterHDRTable.getCreatedDate());
+
+                    // Notify the listener about successful insertion
+                    if (listener != null) {
+                        listener.onInsertionComplete(true);
+                    }
+                } catch (Exception e) {
+                    // Handle any exceptions and notify the listener about the failure
+                    Log.e("InsertionError", "Error during database insertion", e);
+                    if (listener != null) {
+                        listener.onInsertionComplete(false);
+                    }
+                }
+            });
+        } else {
+            Log.e("=======>error", "error 4867");
+            if (listener != null) {
+                listener.onInsertionComplete(false);
+            }
+        }
+    }
 
     public LiveData<AddGeoBoundariesTrackingTable> insertTrackingIntoLocalDB(AddGeoBoundariesTrackingTable clusterHDRTable) {
         final MutableLiveData<AddGeoBoundariesTrackingTable> data = new MutableLiveData<>();
-        executor.execute(() -> {
-            // FarmerDetailListTable topFarmerDetailListTableTableData = appDAO.getTopFarmerDetailListTableTableData(farmerDetailListTable.getFirstName(), farmerDetailListTable.getFarmerCode());
-            appDAO.insertTrackingTable(clusterHDRTable);
-            //data.postValue(appDAO.getTopMasterSyncClusterTablDataLocalDBQuery(clusterHDRTable.getCode()));
-        });
+
+        if (executor != null) {
+            executor.execute(() -> {
+                // Perform the database insertion
+                appDAO.insertTrackingTable(clusterHDRTable);
+                Log.e("=======>insertTrackingTable1", clusterHDRTable.getLatitude());
+                Log.e("=======>insertTrackingTable2", clusterHDRTable.getCreatedByUserId());
+                Log.e("=======>insertTrackingTable3", clusterHDRTable.getCreatedDate());
+
+                // Notify observers with the inserted data
+                data.postValue(clusterHDRTable);
+            });
+        } else {
+            Log.e("=======>error", "error 4867");
+        }
+        Log.e("=======>insertTrackingTable", data.toString());
         return data;
     }
-
+//    public LiveData<AddGeoBoundariesTrackingTable> insertTrackingIntoLocalDB(AddGeoBoundariesTrackingTable clusterHDRTable) {
+//
+//        final MutableLiveData<AddGeoBoundariesTrackingTable> data = new MutableLiveData<>();
+//        if (executor != null) {
+//        executor.execute(() -> {
+//            // FarmerDetailListTable topFarmerDetailListTableTableData = appDAO.getTopFarmerDetailListTableTableData(farmerDetailListTable.getFirstName(), farmerDetailListTable.getFarmerCode());
+//            appDAO.insertTrackingTable(clusterHDRTable);
+//            Log.e("=======>insertTrackingTable",clusterHDRTable.getUpdatedDate());;
+//            //data.postValue(appDAO.getTopMasterSyncClusterTablDataLocalDBQuery(clusterHDRTable.getCode()));
+//        });}
+//          else  {
+//Log.e("=======>error","error 4867");
+//            }
+//        return data;
+//    }
+//
 
     public LiveData<AddGeoBoundriesTable> insertGeoBoundariesIntoLocalDB(AddGeoBoundriesTable clusterHDRTable) {
         final MutableLiveData<AddGeoBoundriesTable> data = new MutableLiveData<>();
@@ -6941,12 +7017,19 @@ public class AppRepository {
 
     public LiveData<List<AddGeoBoundariesTrackingTable>> getTrackingDetailslistFromLocalDBNotSync() {
         final MutableLiveData<List<AddGeoBoundariesTrackingTable>> data = new MutableLiveData<>();
-        executor.execute(() -> {
-            boolean dataExist = (appDAO.getTrackingDetailsListFromLocalDBNotSync(false) != null);
-            if (dataExist) {
-                data.postValue(appDAO.getTrackingDetailsListFromLocalDBNotSync(false));
-            }
-        });
+        if (executor != null) {
+            executor.execute(() -> {
+                boolean dataExist = (appDAO.getTrackingDetailsListFromLocalDBNotSync(false) != null);
+                Log.e("==========>dataExist",dataExist+"");
+                if (dataExist) {
+                    data.postValue(appDAO.getTrackingDetailsListFromLocalDBNotSync(false));
+                    Log.e("==========>dataExist","getTrackingDetailsListFromLocalDBNotSync");
+                }
+            });
+        }
+        else{
+            Log.e("error===>","error 6965");
+        }
         return data;
     }
 

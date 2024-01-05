@@ -11,15 +11,15 @@ import java.io.File;
      //     TODO: DEV
 //           http://120.138.8.8:9040/api/Master/MasterSync
 //     public static String BASE_AUTH_URL = "http://120.138.8.8:9040/api/";
-     public static String BASE_AUTH_URL = "http://144.48.227.107:3333/api/"; //live
+ public static String BASE_AUTH_URL = "http://144.48.227.107:3333/api/"; //live
 
 
 //public static String BASE_AUTH_URL = "http://182.18.157.215/Madhucon/api/";  // CIS Local
 
  //    // TODO: 2/22/2022 for Live URl
- //    public static String BASE_AUTH_URL = "https://corecorban.trst01.in/api/";
+   // public static String BASE_AUTH_URL = "https://corecorban.trst01.in/api/";
 
-  //public static String BASE_AUTH_URL = "http://144.48.227.107:4444/Madhucon_AMC/api/";  // CIS AMC
+//  public static String BASE_AUTH_URL = "http://144.48.227.107:4444/Madhucon_AMC/api/";  // CIS AMC
      // TODO: 2/22/2022 For Dev URL
      public static String LOGIN_URL = BASE_AUTH_URL;
      public static String LOGOUT_URL = BASE_AUTH_URL;

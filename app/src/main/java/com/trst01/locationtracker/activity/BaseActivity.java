@@ -11,7 +11,7 @@ import com.trst01.locationtracker.uiLibrary.helpers.AppHelper;
 public class BaseActivity extends AppCompatActivity {
 
     
-    public AppHelper appHelper;
+    public static AppHelper appHelper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

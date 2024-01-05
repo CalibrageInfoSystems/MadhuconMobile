@@ -19,14 +19,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Retrofit_funtion_class {
 
     private static Retrofit retrofit = null;
+
+
+
     private static OkHttpClient httpClient =  new OkHttpClient.Builder()
-            .readTimeout(60, TimeUnit.SECONDS)
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .addInterceptor(new LoggingInterceptor())
+            .readTimeout(150, TimeUnit.SECONDS)
+            .connectTimeout(150, TimeUnit.SECONDS)
+            .writeTimeout(150, TimeUnit.SECONDS)
+//            .addInterceptor(new LoggingInterceptor())
             .build();
     public static Retrofit getClient() {
         if (retrofit == null) {
             Gson gson = new GsonBuilder().setLenient().create();
+
             retrofit = new Retrofit.Builder().baseUrl(apiBaseUrl)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

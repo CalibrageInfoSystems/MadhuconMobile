@@ -1307,21 +1307,38 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
                                     //insertClusterValuesIntoLocalDB(clusterHDr_value);
                                     viewModel.insertkeyvalueintoLocalDBQuery(KeyValueTable);
                                     //getClusterHDRList.add(clusterHDr_value);
+
+                                    new Handler().postDelayed(new Runnable() {
+
+                                        @Override
+                                        public void run() {
+                                            progressDialog.dismiss();
+                                            Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
+
+                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(i);
+                                            finish();
+
+                                        }
+
+                                    }, 1 * 120000);
                                 }
                                 progressDialog.dismiss();
+
                                 Toast.makeText(LoginActivity.this, "Master Sync Successfully", Toast.LENGTH_LONG).show();
 
-                                if (appHelper.isNetworkAvailable()) {
-                                    getSyncFarmerAllDataFromServer( );
-//                            viewModel.getDeleteGetDataTablesFromLocal();
-//                        if(sync){
 //
-//                        } else {
-//                            getSyncFarmerAllDataFromServer( );
-//                        }
-                                } else {
-                                    appHelper.getDialogHelper().getConfirmationDialog().show(ConfirmationDialog.ALERT, MESSAGE_NO_INTERNET_CONNECTION);
-                                }
+//                                if (appHelper.isNetworkAvailable()) {
+//                                    getSyncFarmerAllDataFromServer( );
+////                            viewModel.getDeleteGetDataTablesFromLocal();
+////                        if(sync){
+////
+////                        } else {
+////                            getSyncFarmerAllDataFromServer( );
+////                        }
+//                                } else {
+//                                    appHelper.getDialogHelper().getConfirmationDialog().show(ConfirmationDialog.ALERT, MESSAGE_NO_INTERNET_CONNECTION);
+//                                }
                             } catch (Exception ex) {
                                 ex.printStackTrace();
                                 Log.d("Error", ">>>>" + ex.toString());
@@ -2231,20 +2248,20 @@ public class LoginActivity extends BaseActivity implements HasSupportFragmentInj
 
 
 
-                    new Handler().postDelayed(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                            Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
-
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(i);
-                            finish();
-
-                        }
-
-                    }, 1 * 120000);
+//                    new Handler().postDelayed(new Runnable() {
+//
+//                        @Override
+//                        public void run() {
+//                            progressDialog.dismiss();
+//                            Intent i = new Intent(LoginActivity.this, DashBoardActivity.class);
+//
+//                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            startActivity(i);
+//                            finish();
+//
+//                        }
+//
+//                    }, 1 * 120000);
 
 
                     Log.d("TAG", "onResponse: >>>"+strResponse);

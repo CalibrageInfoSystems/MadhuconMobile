@@ -6,6 +6,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -114,6 +115,7 @@ public class ViewFarmerListPlantationActivity extends BaseActivity implements Ha
 
     public void configureViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AppViewModel.class);
+
         getFarmerlistFromLocalDb();
     }
     private void configureDagger() {
@@ -140,6 +142,7 @@ public class ViewFarmerListPlantationActivity extends BaseActivity implements Ha
 
     public void getFarmerlistFromLocalDb() {
         try {
+            Log.e("====>getFarmerlistFromLocalDb","BEGIN");
             INSERT_LOG("getFarmerlistFromLocalDb", "BEGIN");
             String seasonCode= appHelper.getSharedPrefObj().getString(SeasonCode,"");
             if(seasonCode.isEmpty()){
@@ -181,6 +184,8 @@ public class ViewFarmerListPlantationActivity extends BaseActivity implements Ha
             }
         } catch (Exception ex) {
             ex.printStackTrace();
+            Log.e("====>getFarmerlistFromLocalDb","Exception");
+
             //progressDialog.dismiss();
             // appHelper.getDialogHelper().getLoadingDialog().closeDialog();
             INSERT_LOG("getFarmerlistFromLocalDb", "Exception : " + ex.getMessage());

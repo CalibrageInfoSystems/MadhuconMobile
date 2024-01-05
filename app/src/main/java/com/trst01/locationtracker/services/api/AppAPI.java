@@ -51,6 +51,9 @@ public interface AppAPI {
 //    @POST("Sync/AddTransactionDetails")
     @POST("TransactionSync")
     Call<String> syncFarmerDetailsDataToServer(@Body TransactionSyncResponseDTO syncPersonalLandAllDetailsRequestDTO);
+    @POST("TransactionSync")
+    Call<String> syncUserTrackingdata(@Body TransactionSyncResponseDTO syncPersonalLandAllDetailsRequestDTO);
+
 
 
     @Multipart

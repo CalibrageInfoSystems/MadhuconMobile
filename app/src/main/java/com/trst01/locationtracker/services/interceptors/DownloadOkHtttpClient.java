@@ -27,6 +27,7 @@ public class DownloadOkHtttpClient {
     private static final String TAG = DownloadOkHtttpClient.class.getCanonicalName();
     public static OkHttpClient getDownloadOkHttpClient(final ProgressListener progressListener) {
         try {
+
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             builder.connectTimeout(120, TimeUnit.SECONDS);
             builder.readTimeout(120, TimeUnit.SECONDS);

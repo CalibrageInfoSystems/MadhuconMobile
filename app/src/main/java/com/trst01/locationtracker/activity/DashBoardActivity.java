@@ -1,14 +1,19 @@
 package com.trst01.locationtracker.activity;
 
+
 import static com.trst01.locationtracker.constant.AppConstant.DeviceUserID;
 import static com.trst01.locationtracker.constant.AppConstant.MESSAGE_NO_INTERNET_CONNECTION;
+import static com.trst01.locationtracker.constant.AppConstant.SUCCESS_RESPONSE_MESSAGE;
+import static com.trst01.locationtracker.constant.AppConstant.TestLoc;
 import static com.trst01.locationtracker.uiLibrary.helpers.AppConstants.DATE_FORMAT_YYYY_MM_DD;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -31,6 +36,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.trst01.locationtracker.R;
 import com.trst01.locationtracker.activity.complains.ComplainListDetailsActivity;
 import com.trst01.locationtracker.activity.complains.ComplainListsActivity;
@@ -39,8 +45,10 @@ import com.trst01.locationtracker.activity.growthMonitoring.ChooseGrowthMonitori
 import com.trst01.locationtracker.activity.growthMonitoring.ReportedDetailsGrowthMonitoringActivity;
 import com.trst01.locationtracker.activity.plantation.ChoosePlantationActivity;
 import com.trst01.locationtracker.activity.plantation.ViewFarmerListPlantationActivity;
+import com.trst01.locationtracker.constant.AppConstant;
 import com.trst01.locationtracker.dagger.App;
 import com.trst01.locationtracker.database.entity.AddFarmerTable;
+import com.trst01.locationtracker.database.entity.AddGeoBoundariesTrackingTable;
 import com.trst01.locationtracker.database.entity.AddGeoBoundriesTable;
 import com.trst01.locationtracker.database.entity.AddPlotTable;
 import com.trst01.locationtracker.database.entity.BankTable;
@@ -70,6 +78,8 @@ import com.trst01.locationtracker.database.entity.VarietyTable;
 import com.trst01.locationtracker.database.entity.VillageTable;
 import com.trst01.locationtracker.database.entity.WarehouseTable;
 import com.trst01.locationtracker.database.entity.WeedTable;
+import com.trst01.locationtracker.models.Doc;
+import com.trst01.locationtracker.models.LocationDTO;
 import com.trst01.locationtracker.models.MastersResponseDTO;
 import com.trst01.locationtracker.models.TransactionSyncResponseDTO;
 import com.trst01.locationtracker.repositories.Retrofit_funtion_class;
@@ -127,19 +137,20 @@ public class DashBoardActivity extends BaseActivity  implements HasSupportFragme
     ProgressBar progressBar;
     int i = 0;
     String strTodayDate;
-
+String latlongsize;
 
     //    TextView txtGrowth,txtKpi,txtFramer,txtPlantation;
     ImageView imgRefresh;
     CardView cardFarmer,cardPlantation,cardGrowth,cardKpi,cardComplaints;
     protected PowerManager.WakeLock mWakeLock;
-
+TextView txtFiledTracking;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
         /* This code together with the one in onDestroy()
          * will make the screen be always on until this Activity gets destroyed. */
+
         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "My Tag");
         this.mWakeLock.acquire();
@@ -171,8 +182,46 @@ public class DashBoardActivity extends BaseActivity  implements HasSupportFragme
                 configureViewModel();
             }
         });
+        String TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
+
+        Log.e("token202===",appHelper.getSharedPrefObj().getString(TestLoc,""));
+        LocationDTO locationDTO = new LocationDTO();
+        Gson gson = new Gson();
+        gson.fromJson(TestLo, LocationDTO.class);
+        locationDTO = gson.fromJson(TestLo, LocationDTO.class);
+        if(locationDTO!=null){
+            if(locationDTO.getDoc().size()>0){
+                Log.e("token",locationDTO.getDoc().get(0).getLat()+"-"+locationDTO.getDoc().get(0).getLon());
+            }
+            if(locationDTO.getDoc()!=null){
+                if(locationDTO.getDoc().size()==0){
+                    getTrackingListFromLocalDbCheckDBNotSyncCount();
+                } else {
+
+                    txtFiledTracking.setText(locationDTO.getDoc().size()+"");
+                    Log.e("====>txtFiledTracking",txtFiledTracking.getText().toString());
+                }
+
+            } else {
+                getTrackingListFromLocalDbCheckDBNotSyncCount();
+            }
+        }
+
+        if (appHelper.isNetworkAvailable()) { // TODO: Checking internet connection
+            // syncProgressDialog = new ProgressDialog(SettingsActivity.this, R.style.AppCompatAlertDialogStyle);
+//            syncProgressDialog.setCancelable(false);
+//            syncProgressDialog.setMessage("checking  data sync to server please wait..");
+//            syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            syncProgressDialog.show();
+            locationtrackmethod();
+        } else {
+            appHelper.getDialogHelper().getConfirmationDialog().show(ConfirmationDialog.ALERT,
+                    MESSAGE_NO_INTERNET_CONNECTION);
+        }
 
     }
+
+
 
     private void ui() {
         cardComplaints = findViewById(R.id.cardComplaints);
@@ -181,9 +230,196 @@ public class DashBoardActivity extends BaseActivity  implements HasSupportFragme
         cardGrowth = findViewById(R.id.cardGrowth);
         cardPlantation = findViewById(R.id.cardPlantation);
         imgRefresh = findViewById(R.id.imgRefresh);
-
+        txtFiledTracking = findViewById(R.id.txtFiledTracking);
         click();
+
+
+
     }
+
+    private void locationtrackmethod() {
+        if(Integer.parseInt(txtFiledTracking.getText().toString())>0){
+            String  TestLo = appHelper.getSharedPrefObj().getString(TestLoc,"");
+            Log.e("token",appHelper.getSharedPrefObj().getString(TestLoc,""));
+            LocationDTO  locationDTO = new LocationDTO();
+            Gson  gson = new Gson();
+            gson.fromJson(TestLo, LocationDTO.class);
+            locationDTO = gson.fromJson(TestLo, LocationDTO.class);
+            if(locationDTO!=null){
+                if(locationDTO.getDoc().size()>0){
+                    Log.e("trackData",locationDTO.getDoc().get(0).getLat()+"-"+locationDTO.getDoc().get(0).getLon());
+                    for(int i=0;i<locationDTO.getDoc().size();i++){
+                        if((locationDTO.getDoc().get(i).getLon()!=0.0)&&(locationDTO.getDoc().get(i).getLat()!=0.0)){
+                            AddGeoBoundariesTrackingTable addGeoBoundariesTrackingTable = new AddGeoBoundariesTrackingTable();
+                            addGeoBoundariesTrackingTable.setLatitude(String.valueOf(locationDTO.getDoc().get(i).getLat()));
+                            addGeoBoundariesTrackingTable.setLongitude(String.valueOf(locationDTO.getDoc().get(i).getLon()));
+                            addGeoBoundariesTrackingTable.setId(null);
+                            addGeoBoundariesTrackingTable.setUserId(Integer.parseInt(appHelper.getSharedPrefObj().getString(DeviceUserID,"")));
+                            addGeoBoundariesTrackingTable.setSeqNo(i);
+                            addGeoBoundariesTrackingTable.setIsActive(true);
+                            //  addGeoBoundariesTrackingTable.setIsActive(true);
+                            String dateTime = appHelper.getCurrentDateTime(AppConstant.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS);
+                            Log.d("TAG", "onClick: date" + dateTime);
+                            addGeoBoundariesTrackingTable.setServerStatus(false);
+                            addGeoBoundariesTrackingTable.setCreatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+                            addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+                            addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+                            addGeoBoundariesTrackingTable.setUpdatedDate(locationDTO.getDoc().get(i).getCreatedDate());
+//                        addGeoBoundariesTrackingTable.setCreatedDate(dateTime);
+//                        addGeoBoundariesTrackingTable.setCreatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+//                        addGeoBoundariesTrackingTable.setUpdatedByUserId(appHelper.getSharedPrefObj().getString(DeviceUserID,""));
+//                        addGeoBoundariesTrackingTable.setUpdatedDate(dateTime);
+
+                            viewModel.insertTracking(addGeoBoundariesTrackingTable);
+                        }
+
+
+                        if(locationDTO.getDoc().size()==i+1){
+                            LocationDTO locationDTOChange = new LocationDTO();
+                            ArrayList<Doc> doc= new ArrayList<Doc>();
+                            locationDTOChange.setDoc(doc);
+                            Gson gsonChange = new Gson();
+                            String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
+                            appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+                            getTrackingListFromLocalDbCheckDBNotSync();
+                        }
+                    }
+                }
+                else {
+                    getTrackingListFromLocalDbCheckDBNotSync();
+                }
+
+            }
+            else {
+                LocationDTO locationDTOChange = new LocationDTO();
+                ArrayList<Doc> doc= new ArrayList<Doc>();
+                locationDTOChange.setDoc(doc);
+                Gson gsonChange = new Gson();
+                String jsonArray = gsonChange.toJson(locationDTOChange, LocationDTO.class);
+                appHelper.getSharedPrefObj().edit().putString(TestLoc, jsonArray).apply();
+                getTrackingListFromLocalDbCheckDBNotSync();
+            }
+
+            if(locationDTO!=null){
+                txtFiledTracking.setText(locationDTO.getDoc().size()+"");
+            }
+
+        }
+    }
+
+    public  void getTrackingListFromLocalDbCheckDBNotSync() {
+        try {
+            viewModel.getTrackingListFromLocalDBNotSync();
+            viewModel.getInsertedTrackingLiveData();
+            viewModel.getInsertedTrackingLiveData().observe(this, trackingTable -> {
+                if (trackingTable != null) {
+                    Log.e("==============1053 ", trackingTable.getLatitude());
+                    Log.e("==============1053 ", trackingTable.getCreatedByUserId());
+                }
+            });
+
+            if (viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData() != null) {
+                Observer getLeadRawDataObserver = new Observer<List<AddGeoBoundariesTrackingTable>>() {
+                    @Override
+                    public void onChanged(List<AddGeoBoundariesTrackingTable> addFertilizerDetailsTables) {
+                        viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().removeObserver(this);
+
+                        if (addFertilizerDetailsTables != null && addFertilizerDetailsTables.size() > 0) {
+                            for (AddGeoBoundariesTrackingTable addFertilizerDetailsTable : addFertilizerDetailsTables) {
+                                if (!addFertilizerDetailsTable.getServerStatus()) {
+                                    Log.e("==============1063 ","addFertilizerDetailsTable" );
+                                    syncTrackingDetailsToServer(addFertilizerDetailsTable);
+                                }
+                            }
+                        } else {
+                            // Handle case when the list is empty
+                        }
+                    }
+                };
+
+                viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().observe(this, getLeadRawDataObserver);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+    }
+
+    public void syncTrackingDetailsToServer(AddGeoBoundariesTrackingTable addFertilizerDetailsTable) {
+        try {
+            viewModel.syncTrackingDetailsDataToServer(addFertilizerDetailsTable);
+            if (viewModel.getStringLiveData() != null) {
+                Observer getLeadRawDataObserver = new Observer() {
+                    @Override
+                    public void onChanged(@Nullable Object o) {
+                        viewModel.getStringLiveData().removeObserver(this);
+                        String dataResponse = (String) o;
+                        if (dataResponse.equals(SUCCESS_RESPONSE_MESSAGE)) {
+                            Toast.makeText(DashBoardActivity.this, "Tracking Details are Submitted", Toast.LENGTH_SHORT).show();
+
+
+//                            new Handler().postDelayed(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    try {
+//                                        getOrganicListFromLocalDbCheckDBNotSync();
+//                                    } catch (Exception e) {
+//
+//                                    }
+//                                }
+//                            }, 40);
+                            getTrackingListFromLocalDbCheckDBNotSyncCount();
+
+//                            getPlotOfferListFromLocalDbCheckDBNotSync(false);
+                            Log.e("testProgress","Tracking Details are Submitted");
+                        } else {
+
+                            appHelper.getDialogHelper().getConfirmationDialog().show(ConfirmationDialog.ERROR, dataResponse);
+                        }
+
+
+                    }
+                };
+                viewModel.getStringLiveData().observe(this, getLeadRawDataObserver);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void getTrackingListFromLocalDbCheckDBNotSyncCount() {
+        try {
+            viewModel.getTrackingListFromLocalDBNotSync();
+            if (viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData() != null) {
+                Observer getLeadRawDataObserver = new Observer() {
+                    @Override
+                    public void onChanged(@Nullable Object o) {
+                        List<AddGeoBoundariesTrackingTable> addFertilizerDetailsTables = (List<AddGeoBoundariesTrackingTable>) o;
+                        viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().removeObserver(this);
+
+                        if (addFertilizerDetailsTables != null && addFertilizerDetailsTables.size() > 0) {
+
+                            txtFiledTracking.setText(addFertilizerDetailsTables.size()+"");
+
+                        } else {
+                            txtFiledTracking.setText("0");
+
+//                            fertlizerCountZero = true;
+                            //getOrganicListFromLocalDbCheckDBNotSync();
+                        }
+
+                    }
+
+                };
+                viewModel.getTrackingDetailsTableDetailsListNotSyncLiveData().observe(this, getLeadRawDataObserver);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+
+        }
+    }
+
 
     private void click() {
         cardGrowth.setOnClickListener(new View.OnClickListener() {
@@ -2097,8 +2333,19 @@ public class DashBoardActivity extends BaseActivity  implements HasSupportFragme
     @Override
     protected void onResume() {
         super.onResume();
+//
+        if (appHelper.isNetworkAvailable()) { // TODO: Checking internet connection
+            // syncProgressDialog = new ProgressDialog(SettingsActivity.this, R.style.AppCompatAlertDialogStyle);
+//            syncProgressDialog.setCancelable(false);
+//            syncProgressDialog.setMessage("checking  data sync to server please wait..");
+//            syncProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            syncProgressDialog.show();
+            locationtrackmethod();
+        } else {
+            appHelper.getDialogHelper().getConfirmationDialog().show(ConfirmationDialog.ALERT,
+                    MESSAGE_NO_INTERNET_CONNECTION);
+        }
 
-//        startService(new Intent(this, FalogService.class));
 
         if(!isMyServiceRunning(FalogService.class)){
             if (isLocationPermissionGranted(this) ) {
